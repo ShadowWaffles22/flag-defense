@@ -3,6 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0a0e14">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Flag Defense">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Flag Defense FPS</title>
 <style>
   :root{--fg:#e8ecf1;--bg:#0a0e14;--accent:#ff4d4d;--flag:#4dafff;}
@@ -3654,7 +3662,7 @@ function resetGame(){
 
 // ---------- co-op multiplayer (room capability) ----------
 // Host-authoritative: the host runs beans, waves and the flag and broadcasts snapshots (~10/s); guests mirror them and send their hits back.
-const GAME_VERSION = '46-p2p';
+const GAME_VERSION = '47-p2p';
 const verTag = ()=>`<div style="position:fixed;right:12px;bottom:8px;font:600 12px system-ui,sans-serif;color:#9fb3cc;opacity:.8;pointer-events:none">Version ${GAME_VERSION}</div>`;
 const MP = {pub:false, pubOff:null, advKey:'', advT:0, lobby:false, startCap:null, startGrp:null, guestLobby:false, role:null, code:'', room:null, ns:null, hostPeer:null, began:false, byId:new Map(), pend:{}, pendT:0, snapT:0, avatars:new Map(), offs:[], warned:false};
 const MP_KINDS = [null, 'shield', 'support', 'reinforcer'];        // snapshot kind codes 0-3; 4 = Nacho Libre, 5 = the chopper
@@ -4411,6 +4419,7 @@ function frame(now){
 updateHotbarUI();
 showHome();
 requestAnimationFrame(animate);
+if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) addEventListener('load', ()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
 </script>
 </body>
 </html>
