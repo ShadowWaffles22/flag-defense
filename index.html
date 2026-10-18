@@ -931,6 +931,10 @@ function updateConfetti(dt){
     const left = u.life - u.age; m.scale.setScalar(left < 0.4 ? Math.max(0.01, left/0.4) : 1);   // shrink away at the end
   }
 }
+function fxConfetti(o, n, rd, tier){                                      // host-side confetti: also shown on every guest's screen
+  burstConfetti(o, n, rd, tier ? TIER_CONFETTI[tier] : undefined);
+  if(MP.role === 'host') mpFx({k:'c', p:[r2(o.x), r2(o.y), r2(o.z)], n:n === undefined ? 90 : n, rd:rd ? 1 : 0, t:tier || null});
+}
 // END confetti
 
 // BEGIN chests
@@ -1008,7 +1012,14 @@ function pickChestSpot(){
   }
   return {x, z};
 }
-function spawnChest(forceId, at){                                              // forceId: optional tier id; at: {x,z} to place it exactly (the supply van's door)
+function chestNameTag(name, mine){
+  const cv = document.createElement('canvas'); cv.width = 256; cv.height = 64; const cx = cv.getContext('2d');
+  cx.textAlign = 'center'; cx.lineWidth = 6; cx.strokeStyle = '#000'; cx.font = '700 30px system-ui,sans-serif'; cx.fillStyle = mine ? '#ffd24a' : '#fff'; cx.strokeText(name, 128, 42); cx.fillText(name, 128, 42);
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 0.375), new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(cv), transparent:true, depthWrite:false, fog:false}));
+  m.position.y = 1.95; m.raycast = ()=>{}; return m;
+}
+function mpMyId(){ if(!MP.role || !MP.room) return null; const q = MP.room.peers().find(x=>x.isMe); return q ? q.peer : null; }
+function spawnChest(forceId, at, opt){          // opt: {owner, name} in co-op: a chest with someone's name on it that only they can open                                              // forceId: optional tier id; at: {x,z} to place it exactly (the supply van's door)
   const tier = forceId ? CHEST_TIERS.find(t=>t.id===forceId) : pickTier();
   const spot = at || pickChestSpot(), b = buildChest(tier);
   b.g.position.set(spot.x, 0, spot.z);
@@ -1016,16 +1027,18 @@ function spawnChest(forceId, at){                                              /
   scene.add(b.g);
   const collider = {minX:spot.x-0.55, maxX:spot.x+0.55, minZ:spot.z-0.55, maxZ:spot.z+0.55, h:2, top:0.75};   // h: blocks beans; top: surface you can stand on
   colliders.push(collider);
-  const chest = {group:b.g, lid:b.lid, beam:b.beam, arrow:b.arrow, mats:b.mats, tier, opened:false, openT:0, collider};
+  const chest = {group:b.g, lid:b.lid, beam:b.beam, arrow:b.arrow, mats:b.mats, tier, opened:false, openT:0, collider, owner:(opt && opt.owner) || null, ownerName:(opt && opt.name) || ''};
+  if(opt && (opt.owner || opt.name)){ chest.label = chestNameTag(opt.name || 'Player', opt.owner === mpMyId()); b.g.add(chest.label); }
   b.g.userData.chest = chest;
   chests.push(chest);
   waitingForChest = true;
-  showToast(tier.spawnMsg + (at ? ' Open it and pick an upgrade - wave ' + wave + ' starts when the van drives off.' : ' Open it to start wave ' + wave), tier.id, true);
+  if(!opt || !opt.owner || opt.owner === mpMyId()) showToast(tier.spawnMsg + (at ? ' Pick an upgrade at the table - wave ' + wave + ' starts when the van drives off.' : ' Open it to start wave ' + wave), tier.id, true);
   return chest;
 }
 function lookedChest(){
   const targets = [];
-  for(const c of chests) if(!c.opened && !c.locked) targets.push(c.group);       // (locked: still flying out of the van)
+  const me = mpMyId();
+  for(const c of chests) if(!c.opened && !c.locked && (!c.owner || c.owner === me)) targets.push(c.group);       // only the chest with your name on it       // (locked: still flying out of the van)
   if(!targets.length) return null;
   camera.updateMatrixWorld();
   chestRay.setFromCamera({x:0, y:0}, camera);
@@ -1035,10 +1048,11 @@ function lookedChest(){
   while(o && !(o.userData && o.userData.chest)) o = o.parent;
   return o ? o.userData.chest : null;
 }
-function openChest(c){
+function openChest(c, remote){                                                 // remote: someone else opened theirs, we only show it (no loot, no wave logic)
   if(!c || c.opened) return;
   c.opened = true; c.openT = 0;
-  const startsWave = waitingForChest && !van;
+  if(!remote && MP.role && c.owner) mpFx({k:'o', o:c.owner});
+  const startsWave = !remote && waitingForChest && !van;
   if(startsWave){ waitingForChest = false; spawnTimer = 0; }   // (no van: opening the chest starts the next wave; with a van it starts once the van drives off)
   c.collider.top = 0.5;                                  // lid is up now: you stand on the box itself
   if(c.arrow) c.arrow.visible = false;
@@ -1047,6 +1061,7 @@ function openChest(c){
   Snd.play('chestOpen', null, CHEST_TIERS.indexOf(T)); if(startsWave) setTimeout(()=>Snd.play('waveStart'), 1000);
   const top = c.group.position.clone(); top.y = 0.7;
   burstConfetti(top, T.confetti, true, TIER_CONFETTI[T.id]);
+  if(remote) return;
   showToast(T.openMsg + dropLoot(T, c) + (startsWave ? ' — wave ' + wave + ' incoming!' : ''), T.id);
 }
 function updateChests(dt){
@@ -1067,6 +1082,7 @@ function updateChests(dt){
         }
       }
     } else {
+      if(c.label) c.label.rotation.y = Math.atan2(camera.position.x - c.group.position.x, camera.position.z - c.group.position.z) - c.group.rotation.y;
       if(c.arrow){ c.arrow.position.y = 1.35 + Math.sin(chestClock*3 + i)*0.12; c.arrow.rotation.y += dt*(c.tier.id==='diamond' ? 3.5 : 2); }
       const T = c.tier;
       if(T.glow){
@@ -1352,6 +1368,14 @@ function grantUpgrade(u){
 }
 const TERM_CMDS = {
   freeze(){ frozen = true; termPrint('game frozen: beans, spawns and the van are stopped. /unfreeze to resume', 'ok'); },
+  view(a){
+    const w = (a[0]||'').toLowerCase();
+    if(!w) return termPrint('view: ' + VIEW + '   (usage: /view host | /view client)');
+    if(w !== 'host' && w !== 'client') return termPrint('usage: /view host | /view client', 'err');
+    VIEW = w; viewTagUpdate();
+    if(MP.role === 'guest') termPrint(w === 'host' ? 'host view: magenta spheres mark where the host says each bean is. The beans you see are the smoothed copies.' : 'client view: this is what a guest sees (the normal guest screen).', 'ok');
+    else termPrint(w === 'client' ? 'client view: beans are drawn the way a guest sees them (10 updates a second, smoothed, 80 at most). Your shots hit those and reach the real beans after a short delay. /view host goes back.' : 'host view: the real game.', 'ok');
+  },
   unfreeze(){ frozen = false; termPrint('game resumed', 'ok'); },
   eliminate(){
     if(!gameLive()) return termPrint('start a game first (open Settings from the pause menu)', 'err');
@@ -1375,9 +1399,11 @@ const TERM_CMDS = {
     '/freeze  /unfreeze         stop / resume the world (beans, spawns, van); you can still move',
     '/eliminate                 remove every bean (and boss) right now',
     '/fly                       toggle flying: no gravity, Space = up, Shift = down',
+    '/view host | client        see the game as the host or as a co-op guest sees it (testing)',
     '/reset                     erase your account (asks first)',
     '/wave <n>                  jump to wave n (game must be running)',
     '/spawn <what> [n]          regular shield support reinforcer nacho chopper',
+    '/spawn player [item] [n]   stand-in players that just stand there (item: a gun or item name)',
     '/kill                      knock down every bean',
     '/upgrades                  list upgrades (and how many you have)',
     '/upgrade <name>            equip an upgrade, e.g. /upgrade iron flag',
@@ -1408,11 +1434,24 @@ const TERM_CMDS = {
   },
   spawn(a){
     if(!gameLive()) return termPrint('start a game first', 'err');
-    const what = (a[0]||'regular').toLowerCase(), n = Math.min(20, Math.max(1, parseInt(a[1], 10) || 1));
+    const what = (a[0]||'regular').toLowerCase();
+    if(what === 'player'){                                                  // /spawn player [item] [n]
+      const rest = a.slice(1), last = rest.length && /^\d+$/.test(rest[rest.length-1]) ? rest.pop() : null, item = normName(rest.join(' '));
+      if(item === 'clear'){ const k = DUMMIES.length; dummiesClear(); return termPrint('removed ' + k + ' player' + (k === 1 ? '' : 's'), 'ok'); }
+      const cnt = Math.min(8, Math.max(1, parseInt(last, 10) || 1));
+      let hold = '';
+      if(item){
+        const wk = Object.keys(WEAPONS).find(k=>normName(k) === item || normName(WEAPONS[k].name) === item), ik = Object.keys(ITEM_DEFS).find(k=>normName(k) === item || normName(ITEM_DEFS[k].name) === item);
+        hold = wk ? 'g:' + wk : ik ? 'i:' + ik : null;
+        if(hold === null) return termPrint('unknown item. weapons: ' + Object.keys(WEAPONS).join(' ') + '  items: ' + Object.keys(ITEM_DEFS).join(' '), 'err');
+      }
+      dummySpawn(hold, cnt); return termPrint('spawned ' + cnt + ' player' + (cnt === 1 ? '' : 's') + (hold ? ' holding ' + item : '') + '  (/spawn player clear removes them)', 'ok');
+    }
+    const n = Math.min(20, Math.max(1, parseInt(a[1], 10) || 1));
     if(['regular','bean','shield','support','reinforcer'].includes(what)){ for(let i=0;i<n;i++) spawnEnemy(false, ['shield','support','reinforcer'].includes(what) ? what : null); }
     else if(what === 'nacho'){ const w = wave; wave = BOSS_WAVE; spawnEnemy(true, null); wave = w; }
     else if(what === 'chopper'){ const w = wave; wave = CHOPPER_WAVE; spawnEnemy(true, null); wave = w; }
-    else return termPrint('regular shield support reinforcer nacho chopper', 'err');
+    else return termPrint('regular shield support reinforcer nacho chopper player', 'err');
     termPrint('spawned ' + what + (['nacho','chopper'].includes(what) ? '' : ' x' + n), 'ok');
   },
   kill(){ if(!gameLive()) return termPrint('start a game first', 'err'); let k = 0; for(const e of enemies.slice()){ if(e.state === 'alive'){ hurt(e, 1e6); k++; } } termPrint('knocked down ' + k, 'ok'); },
@@ -1426,7 +1465,7 @@ const TERM_CMDS = {
     grantUpgrade(u); termPrint('equipped ' + u.name + ' (' + upN(u.name) + '/' + UPGRADE_MAX + ')', 'ok');
   },
 };
-function termRun(line){ if(MP.role === 'guest'){ termPrint('The terminal is host-only in co-op.', 'err'); return; }
+function termRun(line){
   line = line.trim(); if(!line) return;
   termPrint('> ' + line, 'cmd'); termHist.push(line); termHistI = termHist.length;
   if(termAsk){                                                             // answering a yes/no question
@@ -1446,11 +1485,12 @@ function termRun(line){ if(MP.role === 'guest'){ termPrint('The terminal is host
   if(cmd === 'terminal'){
     const sub = (parts[0]||'').toLowerCase();
     if(sub === 'start'){ if(termOn) return termPrint('terminal is already running'); termOn = true; termPrint('terminal started', 'ok'); }
-    else if(sub === 'stop'){ termOn = false; termAsk = null; flyOn = false; frozen = false; termPrint('terminal stopped'); }
+    else if(sub === 'stop'){ termOn = false; termAsk = null; flyOn = false; frozen = false; VIEW = 'host'; viewTagUpdate(); termPrint('terminal stopped'); }
     else termPrint('unknown terminal option', 'err');
     return;
   }
   if(!termOn) return termPrint('the terminal is off', 'err');
+  if(MP.role === 'guest' && !['view','help','clear','exit','status'].includes(cmd)) return termPrint('That command is host-only in co-op. Guests can use /view.', 'err');
   const fn = TERM_CMDS[cmd];
   if(!fn) return termPrint('unknown command: /' + cmd, 'err');
   try{ fn(parts); }catch(err){ termPrint('error: ' + err.message, 'err'); }
@@ -1632,11 +1672,13 @@ function setFireMode(m){
   if(typeof refreshModeBtn==='function') refreshModeBtn();
 }
 function pickUp(e){
+  if(e.proxy){ mpGrab(e); return; }
   cancelReload(); // grabbing a bean interrupts any reload; press R again after throwing
   e.state = 'carried'; carriedEnemy = e; Snd.play('grab');
 }
 function throwCarried(){
   const e = carriedEnemy; if(!e) return;
+  if(e.proxy){ mpThrow(e); return; }
   Snd.play('throw');
   e.state = 'thrown'; e.mesh.scale.setScalar(1);
   const fdir = new THREE.Vector3(0,0,-1).applyQuaternion(camera.quaternion);
@@ -1880,7 +1922,8 @@ function clearBossFx(){
   if(bossMarker){ scene.remove(bossMarker); bossMarker = null; }
   bossBarEl.classList.remove('show');
 }
-function bossShockwave(p){
+function bossShockwave(p, fromNet){
+  if(!fromNet && MP.role === 'host') mpFx({k:'s', p:[r2(p.x), r2(p.y), r2(p.z)]});
   const mk = (c,o,w)=>{ const m = new THREE.Mesh(new THREE.RingGeometry(1-w,1,48), new THREE.MeshBasicMaterial({color:c, transparent:true, opacity:o, side:THREE.DoubleSide, depthWrite:false})); m.rotation.x = -Math.PI/2; m.position.set(p.x,0.08,p.z); scene.add(m); return m; };
   bossRings.push({m:mk(0xffd24a,0.9,0.12), r:1, hit:false, main:true}, {m:mk(0xff5a2a,0.6,0.35), r:0.6, hit:false, main:false});
   Snd.play('slam', p); shake = Math.max(shake, 0.5*Math.max(0.25, 1 - camera.position.distanceTo(p)/40));
@@ -1905,17 +1948,27 @@ function updateBossFx(dt){
     if(q.r > BOSS_RING_MAX){ scene.remove(q.m); bossRings.splice(i,1); }
   }
 }
+function bossTargets(){                                                    // everyone Nacho can go after: you, the other players, and /spawn player dummies
+  const out = [{x:camera.position.x, z:camera.position.z, me:true}];
+  if(MP.role === 'host' && MP.room) for(const q of MP.room.peers()){
+    if(q.isMe || q.kind !== 'viewer') continue;
+    const d = q.presence || {}; if(Number.isFinite(d.x) && Number.isFinite(d.z)) out.push({x:d.x, z:d.z, id:q.peer});
+  }
+  for(const dm of DUMMIES) out.push({x:dm.g.position.x, z:dm.g.position.z, dummy:true});
+  return out;
+}
+function bossTarget(pos){ let best = null, bd = 1e9; for(const t of bossTargets()){ const d = Math.hypot(t.x-pos.x, t.z-pos.z); if(d < bd){ bd = d; best = t; } } return best; }
 function bossFace(e, tx, tz){ const p = e.mesh.position; if(Math.hypot(tx-p.x, tz-p.z) > 0.01) e.mesh.lookAt(tx, p.y, tz); }
 // returns true while he is draining the flag
 function updateBoss(e, dt){
-  const m = e.mesh, pos = m.position, cp = camera.position, fp = flagGroup.position, U = m.userData;
+  const m = e.mesh, pos = m.position, fp = flagGroup.position, U = m.userData;
   e.bt0 += dt; e.bt += dt; e.jumpCd -= dt; e.punchCd -= dt;
-  const dxp = cp.x-pos.x, dzp = cp.z-pos.z, dP = Math.hypot(dxp,dzp);
+  const cp0 = bossTarget(pos), dxp = cp0.x-pos.x, dzp = cp0.z-pos.z, dP = Math.hypot(dxp,dzp);       // he goes after the nearest player, not only the host
   const lim = W-1.6; let capturing = false, flap = 0;
   const setArms = (a,b)=>{ if(U.armL) U.armL.rotation.x = a; if(U.armR) U.armR.rotation.x = b; };
   if(e.bs === 'walk'){
     if(e.punchCd <= 0 && dP < 7){ e.bs = 'wind'; e.bt = 0; Snd.play('bossRoar', pos); }
-    else if(e.jumpCd <= 0 && dP < 36 && dP > 8){ e.bs = 'crouch'; e.bt = 0; e.jt = {x:Math.max(-lim,Math.min(lim,cp.x)), z:Math.max(-lim,Math.min(lim,cp.z))};
+    else if(e.jumpCd <= 0 && dP < 36 && dP > 8){ e.bs = 'crouch'; e.bt = 0; e.jt = {x:Math.max(-lim,Math.min(lim,cp0.x)), z:Math.max(-lim,Math.min(lim,cp0.z))};
       if(!bossMarker){ bossMarker = new THREE.Mesh(new THREE.RingGeometry(0.85,1,40), new THREE.MeshBasicMaterial({color:0xff2020, transparent:true, opacity:0.7, side:THREE.DoubleSide, depthWrite:false})); bossMarker.rotation.x = -Math.PI/2; scene.add(bossMarker); }
       bossMarker.position.set(e.jt.x,0.1,e.jt.z); bossMarker.scale.setScalar(5); Snd.play('bossRoar', pos); }
     else {
@@ -1939,7 +1992,7 @@ function updateBoss(e, dt){
         if(flagHP <= 0){ flagHP = 0; barFill.style.width = '0%'; endGame(); } }
     }
   } else if(e.bs === 'wind'){                                  // pull the fist back
-    bossFace(e, cp.x, cp.z); const u = Math.min(1, e.bt/0.7);
+    bossFace(e, cp0.x, cp0.z); const u = Math.min(1, e.bt/0.7);
     setArms(0.2, 1.1*u); pos.y = BOSS_Y - 0.15*u; flap = -0.1*u;
     if(e.bt >= 0.7){ e.bs = 'strike'; e.bt = 0; e.struck = false; Snd.play('swoosh', pos); }
   } else if(e.bs === 'strike'){                                // lunge + haymaker
@@ -1950,12 +2003,15 @@ function updateBoss(e, dt){
     pos.y = BOSS_Y;
     if(!e.struck && e.bt >= 0.12){
       e.struck = true;
-      const d = Math.hypot(cp.x-pos.x, cp.z-pos.z);
-      if(d < 7.2){
-        const di = d||1;
-        knockX += (cp.x-pos.x)/di*30; knockZ += (cp.z-pos.z)/di*30; playerVy = Math.max(playerVy,0) + 7; playerGrounded = false;
-        shake = Math.max(shake, 0.55); Snd.play('slam', pos); Snd.play('hit');
+      let hit = false;
+      for(const t of bossTargets()){                          // everyone in reach gets shoved: us here, guests by message
+        const d = Math.hypot(t.x-pos.x, t.z-pos.z); if(d >= 7.2) continue;
+        const di = d||1, kx = (t.x-pos.x)/di*30, kz = (t.z-pos.z)/di*30;
+        if(t.me){ knockX += kx; knockZ += kz; playerVy = Math.max(playerVy,0) + 7; playerGrounded = false; shake = Math.max(shake, 0.55); hit = true; }
+        else if(t.id){ mpFx({k:'k', to:t.id, v:[r1(kx), r1(kz), 7]}); hit = true; }
+        else hit = true;
       }
+      if(hit){ Snd.play('slam', pos); Snd.play('hit'); }
     }
     if(e.bt >= 0.7){ e.bs = 'walk'; e.punchCd = 3.2 + Math.random()*1.6; e.stuckT = 0; e.stuckMoved = 0; }
   } else if(e.bs === 'crouch'){                                // squat before the leap
@@ -1992,7 +2048,7 @@ function bossDefeated(e){
   score += 500; scoreEl.textContent = score;
   showToast('NACHO LIBRE IS DOWN! +500');
   Snd.play('down', e.mesh.position); Snd.play('slam', e.mesh.position); Snd.play('boom', e.mesh.position, 2);
-  burstConfetti(new THREE.Vector3(e.mesh.position.x, 3, e.mesh.position.z));
+  fxConfetti(new THREE.Vector3(e.mesh.position.x, 3, e.mesh.position.z));
   clearBossFx();
   const f = new THREE.Vector3(0,0,1).applyQuaternion(e.mesh.quaternion); e.dyYaw0 = Math.atan2(f.x, f.z);
 }
@@ -2129,14 +2185,14 @@ function updateChopperDeath(e, dt, toRemove){                                // 
     e.puffT -= dt; if(e.puffT <= 0){ e.puffT = 0.08; spawnPuff(m.position.clone(), 0.9, 1.1, 0x2a2a2a, 0.7); if(Math.random() < 0.5) spawnPuff(m.position.clone(), 0.6, 0.5, 0xff7a18, 0.8); }
     if(m.position.y <= 1.3){
       e.crashed = true; e.tc = e.bt; m.position.y = 1.3; m.rotation.set(0.25, e.yaw, 0.35, 'YXZ');
-      explode(new THREE.Vector3(m.position.x, 0.8, m.position.z), {r:7.5}); burstConfetti(new THREE.Vector3(m.position.x, 3, m.position.z));
+      explode(new THREE.Vector3(m.position.x, 0.8, m.position.z), {r:7.5}); fxConfetti(new THREE.Vector3(m.position.x, 3, m.position.z));
       Snd.play('boom', m.position, 2);
     }
   } else {
     e.puffT -= dt; if(e.puffT <= 0){ e.puffT = 0.2; spawnPuff(new THREE.Vector3(m.position.x+(Math.random()-0.5)*2, 1.5, m.position.z+(Math.random()-0.5)*2), 0.8, 1.2, 0x333333, 0.6); }
     if(!e.blown && e.bt - e.tc > 2){                                        // 2 s after hitting the ground the wreck blows up
       e.blown = true; const bp = new THREE.Vector3(m.position.x, 1.2, m.position.z);
-      explode(bp, {r:9}); burstConfetti(new THREE.Vector3(bp.x, 3, bp.z)); Snd.play('boom', m.position, 2.4);
+      explode(bp, {r:9}); fxConfetti(new THREE.Vector3(bp.x, 3, bp.z)); Snd.play('boom', m.position, 2.4);
       for(let i=0;i<8;i++) spawnPuff(new THREE.Vector3(bp.x+(Math.random()-0.5)*3, 1+Math.random()*2.5, bp.z+(Math.random()-0.5)*3), 1.2, 1.4, i%2 ? 0xff7a18 : 0x2a2a2a, 0.8);
       m.visible = false;
     }
@@ -2347,13 +2403,25 @@ function showWaveSplash(w){                                              // big 
   Snd.play('waveStart');
   if(upN('Bottomless Mags')){ bottomlessT = 10; showToast('Bottomless Mags: infinite ammo for 10 s!'); }
 }
-function startVan(forceId){
-  clearVan();
+function mpChestPlan(forceId){                                              // one chest per player, each with its own roll for rarity
+  const plan = [{owner:MP.role === 'host' ? 'host' : null, name:playerName, tier:forceId || pickTier().id}];
+  if(MP.role === 'host' && MP.room) for(const q of MP.room.peers()){
+    if(q.isMe || q.kind !== 'viewer' || plan.length >= 8) continue;
+    plan.push({owner:q.peer, name:cleanName(q.presence && q.presence.name) || 'Player', tier:forceId || pickTier().id});
+  }
+  for(const dm of DUMMIES){ if(plan.length >= 8) break; plan.push({owner:'dummy' + plan.length, name:dm.nm || 'Dummy', tier:forceId || pickTier().id}); }   // a /spawn player dummy gets a chest too (nobody can open it)
+  if(!MP.role && !DUMMIES.length) plan[0].name = '';
+  return plan;
+}
+function startVan(forceId, net){                                            // net: what the host decided (guests): {plan, offers}
+  const plan = net ? net.plan : mpChestPlan(forceId), offers = net ? net.offers : rollOffers();
+  if(MP.role === 'host' && MP.room) MP.room.emit('van', {t:forceId || null, w:wave, o:offers.map(u=>UPGRADES.indexOf(u)), c:plan.map(x=>[x.owner, x.name, x.tier])}).catch(()=>{});     // tell every guest: a van is coming, with everyone's chests and the one set of upgrades
+  clearVan(); clearChests();
   const R = vanRoute(), M = buildVanModel(), guy = buildGuyModel();
   scene.add(M.group); scene.add(guy); guy.visible = false;
   const cw = {minX:0, maxX:0, minZ:0, maxZ:0, h:2.6}; colliders.push(cw);
   for(const b of M.body) worldMeshes.push(b);
-  van = {R, group:M.group, tilt:M.tilt, door:M.door, wheels:M.wheels, body:M.body, guy, cw, forceId, phase:'in', t:0, s:0, v:0, vPrev:0, angPrev:0, pitch:0, roll:0, x:0, z:0, ang:0, open:0, started:false, chest:null, doorIn:null, chestTo:null, guyTo:null};
+  van = {plan, offers0:offers, R, group:M.group, tilt:M.tilt, door:M.door, wheels:M.wheels, body:M.body, guy, cw, forceId, phase:'in', t:0, s:0, v:0, vPrev:0, angPrev:0, pitch:0, roll:0, x:0, z:0, ang:0, open:0, started:false, chest:null, doorIn:null, chestTo:null, guyTo:null};
   const p0 = pathAt(R.inP, 0); van.x = p0.x; van.z = p0.z; van.ang = p0.ang; van.angPrev = p0.ang; placeVan(0.001);
   waitingForChest = true;                                              // the next wave waits until the chest from this van is opened
   showToast('Supply van incoming!');
@@ -2415,30 +2483,54 @@ function drawUpgradePanel(P, u, n){
   cx.fillText(state === 'equipped' ? 'EQUIPPED' : state === 'locked' ? 'ONE PER VISIT' : state === 'max' ? 'MAX LEVEL' : 'EQUIP', bx+bw/2, by+bh/2+2);
   P.tex.needsUpdate = true;
 }
+function uiSelect(i){                                                         // show upgrade card i (or put the card away with -1): the same on every screen
+  const V = van, P = V && V.panel; if(!P || !V.offers) return;
+  if(i < 0){ P.want = 0; P.idx = -1; return; }
+  if(!V.offers[i]) return;
+  const b = V.table && V.table.userData.btns[i]; if(b && b.press <= 0) b.press = 0.0001;
+  Snd.play('btnDown', null, i);
+  P.idx = i; P.want = 1; P.hover = false; drawUpgradePanel(P, V.offers[i], i+1); Snd.play('upChime', null, V.offers[i].r);
+}
+function equipIdx(i){                                                         // the table's upgrade is equipped: everyone gets it in their own list
+  const V = van, P = V && V.panel; if(!P || V.taken >= 0 || !V.table || !V.table.userData.ready || !V.offers || !V.offers[i]) return;
+  const u = V.offers[i]; P.idx = i; P.want = 1; V.taken = i;
+  if(upN(u.name) < UPGRADE_MAX) grantUpgrade(u);
+  V.table.userData.btns.forEach((b, j)=>{ if(j !== i && b.cap.material){ b.cap.material.emissiveIntensity = 0; b.cap.material.color.setHex(0x4a4f57); } });
+  drawUpgradePanel(P, u, i+1);
+  showToast('Equipped: ' + u.name); Snd.play('equip', null, u.r);
+}
+function mpUpApply(k, i){                                                     // an upgrade message arrived (or our own, on the host): run it once the table is out
+  const V = van; if(!V) return;
+  const run = ()=>{ if(k === 'us') uiSelect(i); else equipIdx(i); };
+  if(V.table && V.table.userData.ready) run(); else (V.q = V.q || []).push(run);
+}
+function mpUpHost(k, i, by){                                                  // host: check it, apply it here, tell everyone (a single message)
+  const V = van; if(!V || !V.table || !V.table.userData.ready) return;
+  if(k === 'ue' && V.taken >= 0) return;
+  mpUpApply(k, i); mpFx({k, i, by});
+}
+function mpUpSend(k, i){                                                      // press on the table: solo does it, the host decides, a guest asks the host
+  if(MP.role === 'guest') mpFx({k, i});
+  else if(MP.role === 'host') mpUpHost(k, i, 'host');
+  else mpUpApply(k, i);
+}
 function equipCurrent(){
   const V = van, P = V && V.panel; if(!P || P.idx < 0 || V.taken >= 0 || !V.table || !V.table.userData.ready) return;
   const u = V.offers[P.idx];
   if(upN(u.name) >= UPGRADE_MAX){ showToast(u.name + ' is already maxed (5/5)'); return; }
-  V.taken = P.idx;
-  upgradesOwned[u.name] = upN(u.name) + 1;
-  if(u.name === 'Iron Flag'){ FLAG_MAX = 100 + 25*upN('Iron Flag'); flagHP = Math.min(FLAG_MAX, flagHP + 25); }       // +25 max HP (and the new HP is filled in)
-  MAG_SIZE = magFor(curW.mag); updateAmmoUI();
-  V.table.userData.btns.forEach((b, i)=>{ if(i !== P.idx && b.cap.material){ b.cap.material.emissiveIntensity = 0; b.cap.material.color.setHex(0x4a4f57); } });
-  drawUpgradePanel(P, u, P.idx+1);
-  showToast('Equipped: ' + u.name); Snd.play('equip', null, u.r);
+  mpUpSend('ue', P.idx);
 }
 function pressTableBtn(b){
   if(b.mpStart){ mpStart(); return; }
   if(b.equip){ equipCurrent(); return; }
   if(b.press > 0) return;
-  b.press = 0.0001; Snd.play('btnDown', null, b.i);
   const P = van && van.panel; if(!P || !b.offer) return;
-  if(P.idx === b.i && P.want){ P.want = 0; P.idx = -1; return; }                 // press the same button again to put the card away
-  P.idx = b.i; P.want = 1; P.hover = false; drawUpgradePanel(P, b.offer, b.i+1); Snd.play('upChime', null, b.offer.r);
+  mpUpSend('us', (P.idx === b.i && P.want) ? -1 : b.i);                        // press the same button again to put the card away
 }
 function tickTableBtns(V, dt){                                               // press down quickly, spring back up
   if(!V.table) return;
   const P = V.panel;
+  if(V.table.userData.ready && V.q && V.q.length){ for(const f of V.q.splice(0)) f(); }
   if(P){
     if(!V.table.userData.ready) P.want = 0;
     P.k += (P.want - P.k)*Math.min(1, dt*12);
@@ -2508,7 +2600,7 @@ function updateVan(dt){
       const din = vanW(-1.0, DOOR_Z), dst = vanW(-3.4, DOOR_Z);          // out of the right-hand door
       V.doorIn = din; V.chestTo = dst; V.guyTo = vanW(-3.0, DOOR_Z+1.7);
       V.tableFrom = vanW(-1.0, DOOR_Z); V.tableTo = vanW(-4.2, DOOR_Z+1.7);   // slides out of the side door
-      V.taken = -1; V.offers = rollOffers(); V.table = buildTableModel(V.offers); V.table.rotation.y = V.ang; V.table.position.set(V.tableFrom.x, 0.9, V.tableFrom.z); scene.add(V.table);
+      V.taken = -1; V.offers = V.offers0 || rollOffers(); V.table = buildTableModel(V.offers); V.table.rotation.y = V.ang; V.table.position.set(V.tableFrom.x, 0.9, V.tableFrom.z); scene.add(V.table);
       V.panel = makeUpgradePanel();
       V.table.userData.ready = false; V.table.userData.meshes = []; V.table.traverse(o=>{ if(o.isMesh) V.table.userData.meshes.push(o); });
       Snd.play('hit');
@@ -2522,14 +2614,18 @@ function updateVan(dt){
       const c = Math.abs(Math.cos(V.ang)), sn = Math.abs(Math.sin(V.ang)), ex = c*0.375 + sn*0.75, ez = sn*0.375 + c*0.75;       // hitbox around the whole table (you can stand on it, beans can't walk through)
       V.tableCol = {minX:T.position.x-ex, maxX:T.position.x+ex, minZ:T.position.z-ez, maxZ:T.position.z+ez, h:1, top:0.85}; colliders.push(V.tableCol);
       for(const m of T.userData.meshes) worldMeshes.push(m);
-      V.chest = spawnChest(V.forceId, {x:V.chestTo.x, z:V.chestTo.z}); V.chest.locked = true; V.chest.group.position.set(V.doorIn.x, 0.9, V.doorIn.z);
+      V.chests = []; V.chestTos = [];                                    // one chest per player, in a row along the van
+      V.plan.forEach((pl, j)=>{
+        const to = vanW(-3.4, DOOR_Z - 1.7*j); V.chestTos.push(to);
+        const c = spawnChest(pl.tier, {x:to.x, z:to.z}, (pl.owner || pl.name) ? {owner:pl.owner, name:pl.name} : null); c.locked = true; c.group.position.set(V.doorIn.x, 0.9, V.doorIn.z); V.chests.push(c);
+      });
       Snd.play('chestSpawn');
     }
   } else if(V.phase === 'chest'){                                        // the chest pops out in an arc
     restTilt();
-    const k = Math.min(1, V.t/0.7), g = V.chest.group;
-    g.position.set(V.doorIn.x+(V.chestTo.x-V.doorIn.x)*k, 0.9*(1-k) + 1.6*4*k*(1-k), V.doorIn.z+(V.chestTo.z-V.doorIn.z)*k);
-    if(k >= 1){ g.position.y = 0; V.chest.locked = false; V.phase = 'guyout'; V.t = 0; V.guy.visible = true; V.guy.position.set(V.doorIn.x, 0.9, V.doorIn.z); Snd.play('hit'); }
+    const k = Math.min(1, V.t/0.7);
+    V.chests.forEach((c, j)=>{ const to = V.chestTos[j]; c.group.position.set(V.doorIn.x+(to.x-V.doorIn.x)*k, 0.9*(1-k) + 1.6*4*k*(1-k), V.doorIn.z+(to.z-V.doorIn.z)*k); });
+    if(k >= 1){ for(const c of V.chests){ c.group.position.y = 0; c.locked = false; } V.phase = 'guyout'; V.t = 0; V.guy.visible = true; V.guy.position.set(V.doorIn.x, 0.9, V.doorIn.z); Snd.play('hit'); }
   } else if(V.phase === 'guyout'){                                       // then the man hops out
     restTilt();
     const k = Math.min(1, V.t/0.7), G = V.guy;
@@ -2539,9 +2635,8 @@ function updateVan(dt){
   } else if(V.phase === 'wait'){                                         // waits by the chest; leaves once the opened chest has gone
     restTilt();
     const G = V.guy; G.position.y = 0.9 + Math.abs(Math.sin(V.t*3))*0.06; G.lookAt(camera.position.x, G.position.y, camera.position.z);
-    const opened = chests.indexOf(V.chest) < 0, picked = V.taken >= 0;
-    if(opened && picked){ V.phase = 'guyin'; V.t = 0; V.from = {x:G.position.x, z:G.position.z}; }   // the van leaves (and the wave starts) once the chest is open AND an upgrade is equipped
-    else if((opened || picked) && !V.hinted){ V.hinted = true; showToast(opened ? 'Pick an upgrade at the table to start wave ' + wave : 'Open the chest to start wave ' + wave); }
+    if(V.taken >= 0){ V.phase = 'guyin'; V.t = 0; V.from = {x:G.position.x, z:G.position.z}; }   // the van leaves (and the wave starts) once an upgrade is equipped; chests are a bonus and can wait
+    else if(!V.hinted && V.t > 6){ V.hinted = true; showToast('Equip an upgrade at the table to start wave ' + wave); }
   } else if(V.phase === 'guyin'){                                        // hops back in
     restTilt();
     const k = Math.min(1, V.t/0.7), G = V.guy;
@@ -2870,6 +2965,11 @@ const joyEl = document.getElementById('joy'), joyKnob = document.getElementById(
 const tModeEl = document.getElementById('tMode'), tSprintEl = document.getElementById('tSprint');
 const lookPtrs = new Map();                                   // pointerId -> last position (look drags, incl. dragging off the fire button)
 function refreshModeBtn(){ tModeEl.textContent = fireModeEl.textContent.replace(' (Q)','').trim(); }
+// Installed app: ask for landscape as soon as the app opens and on the first touch. An installed Android app can lock without fullscreen; iPhones cannot lock, so the rotate notice below covers them.
+const isInstalledApp = ()=>{ try{ return !!(navigator.standalone || (matchMedia && (matchMedia('(display-mode: standalone)').matches || matchMedia('(display-mode: fullscreen)').matches))); }catch(e){ return false; } };
+function lockInstalledLandscape(){ try{ if(isInstalledApp() && screen.orientation && screen.orientation.lock){ const r = screen.orientation.lock('landscape'); if(r && r.catch) r.catch(()=>{}); } }catch(e){} }
+lockInstalledLandscape();
+addEventListener('pointerdown', lockInstalledLandscape, {once:true});
 function lockLandscape(){                                       // best effort: needs fullscreen on Android; iOS can't lock, so a rotate notice covers portrait
   try{
     const go = ()=>{ try{ const r = screen.orientation && screen.orientation.lock && screen.orientation.lock('landscape'); if(r && r.catch) r.catch(()=>{}); }catch(e){} };
@@ -2998,7 +3098,8 @@ function shoot(){
   if(curW.grenade){ throwGrenade(); return; }
   camera.updateMatrixWorld();
   const start = camera.localToWorld(curW.muzzle.clone().add(new THREE.Vector3(0,0,-0.1)));
-  const alive = enemies.filter(e=>e.state==='alive').map(e=>e.mesh);
+  const pool = (VIEW === 'client' && MP.role !== 'guest') ? [...VIEWM.map.values()] : enemies;      // /view client: you shoot the guest's copies
+  const alive = pool.filter(e=>e.state==='alive').map(e=>e.mesh);
   const blockers = worldMeshes.concat(chests.map(c=>c.group));
   for(let p=0;p<curW.pellets;p++){
     const r = curW.spread*Math.pow(0.85, upN('Steady Aim'))*Math.sqrt(Math.random()), a = Math.random()*Math.PI*2;
@@ -3017,7 +3118,7 @@ function shoot(){
     scene.add(tracer); tracers.push({obj:tracer, life:0.08});
     if(hits.length){
       let ho = hits[0].object, e = null;
-      while(ho && !e){ e = enemies.find(en=>en.mesh===ho); ho = ho.parent; }
+      while(ho && !e){ e = pool.find(en=>en.mesh===ho); ho = ho.parent; }
       if(e && e.state==='alive'){
         const d = hits[0].distance;
         const fall = d<=curW.fallStart ? 1 : Math.max(0,(curW.fallEnd-d)/(curW.fallEnd-curW.fallStart)); // shotgun pellets fade with range
@@ -3153,6 +3254,7 @@ function blastDamage(d, R){
 }
 function explode(p, o){
   Snd.play('boom', p, ((o && o.r) || BLAST_BEAN_R)/BLAST_BEAN_R);
+  if(MP.role && !(o && o.fxOnly)) mpFx({k:'x', p:[r2(p.x), r2(p.y), r2(p.z)], r:r1((o && o.r) || BLAST_BEAN_R), nk:(o && o.noKnock) ? 1 : 0});   // everyone else sees it and gets shoved, but only we deal the damage
   const R = (o && o.r) || BLAST_BEAN_R, PR = BLAST_PLAYER_R*R/BLAST_BEAN_R;   // o.r: smaller blasts (mine, grenade)
   const mk = (c, o)=>new THREE.Mesh(blastGeo, new THREE.MeshBasicMaterial({color:c, transparent:true, opacity:o, depthWrite:false}));
   const fire = mk(0xff8a1a,0.95), core = mk(0xfff2b0,1), smoke = mk(0x3a3a3a,0.6);
@@ -3166,6 +3268,7 @@ function explode(p, o){
   // beans in the blast: full damage at the centre, fading out to the edge (a near hit downs one)
   const killed = [], dmgMul = Math.pow(1.5, upN('Double Trouble'));
   for(const e of enemies){
+    if(o && o.fxOnly) break;                    // someone else's blast: looks and shoves, never damages
     if(e.state !== 'alive') continue;
     const d = e.mesh.position.distanceTo(p);
     if(d < R){                                  // rocket, mine and grenade: 30 at the centre, lethal out to 2/3 of the radius, fading to 0 at the edge
@@ -3287,7 +3390,9 @@ function makeDropMesh(type){
   return g;
 }
 const DROP_LIFT = {grenade:0.15, slime:0, mine:0, turret:0.03, taco:0, cloth:0, energy:0, newflag:0};
-function spawnDrop(type, n, extra, from, side){
+let dropSeq = 0;
+const DROP_RESERVE = 10, DROP_COUNT = 5;                                      // a chest's items are only for its owner for 10 s (the last 5 s show a countdown)
+function spawnDrop(type, n, extra, from, side, opt){                           // opt: {owner, ownerName} for a chest's items; {id, ang, sp, yaw, ...} when copying someone else's drop
   const root = new THREE.Group(), pivot = new THREE.Group();
   const mesh = makeDropMesh(type); mesh.position.y = DROP_LIFT[type] || 0; pivot.add(mesh); root.add(pivot);
   pivot.rotation.set((Math.random()-0.5)*0.35, 0, (Math.random() < 0.5 ? -1 : 1)*(0.15 + Math.random()*0.15));   // lies at a slight tilt
@@ -3296,26 +3401,38 @@ function spawnDrop(type, n, extra, from, side){
   disc.rotation.x = -Math.PI/2; disc.position.y = 0.03; root.add(disc);
   const halo = new THREE.Mesh(new THREE.SphereGeometry(0.5,16,12), new THREE.MeshBasicMaterial({color:col, transparent:true, opacity:0.16, blending:THREE.AdditiveBlending, depthWrite:false}));
   halo.position.y = 0.22; root.add(halo);
-  const yaw = Math.random()*Math.PI*2; root.rotation.y = yaw;
+  const yaw = (opt && opt.yaw !== undefined) ? opt.yaw : Math.random()*Math.PI*2; root.rotation.y = yaw;
   Snd.play('pop');
   const pos = new THREE.Vector3(from.x, 0.8, from.z); root.position.copy(pos); scene.add(root);
   // pop out of the chest, toward the player's side
-  const ang = Math.atan2(camera.position.x - from.x, camera.position.z - from.z) + (Math.random()-0.5)*1.0 + (side || 0)*0.75, sp = 2.4 + Math.random()*0.7;
+  const ang = (opt && opt.ang !== undefined) ? opt.ang : Math.atan2(camera.position.x - from.x, camera.position.z - from.z) + (Math.random()-0.5)*1.0 + (side || 0)*0.75, sp = (opt && opt.sp !== undefined) ? opt.sp : 2.4 + Math.random()*0.7;
   const vel = new THREE.Vector3(Math.sin(ang)*sp, 4.6, Math.cos(ang)*sp);
-  drops.push({type, n, extra, root, disc, halo, pos, vel, yaw, age:0, landed:false, bounced:false, phase:Math.random()*6, pivot});
+  const d = {type, n, extra, root, disc, halo, pos, vel, yaw, age:0, landed:false, bounced:false, phase:Math.random()*6, pivot, id:(opt && opt.id) || ((mpMyId() || 's') + ':' + (++dropSeq)), owner:(opt && opt.owner) || null, ownerName:(opt && opt.ownerName) || '', pend:0, cd:null, cdN:-1};
+  drops.push(d);
+  if(MP.role && !(opt && opt.id)) mpFx({k:'dr', id:d.id, t:type, n, ex:extra || null, x:r2(from.x), z:r2(from.z), a:r2(ang), sp:r2(sp), yw:r2(yaw), o:d.owner, on:d.ownerName});     // everyone sees it pop out
+  return d;
 }
 const TWO_ITEM_CHANCE = {wood:0, iron:0.25, gold:0.5, diamond:1};          // chance a chest holds a second item
 function dropLoot(T, c){
   const rolls = [rollLoot(T)];
   if(Math.random() < Math.min(1, (TWO_ITEM_CHANCE[T.id] || 0) + 0.2*upN('Lucky Chests'))) rolls.push(rollLoot(T));
-  rolls.forEach((r, i)=> spawnDrop(r.type, r.n, r.extra, c.group.position, rolls.length > 1 ? (i ? 1 : -1) : 0));
+  rolls.forEach((r, i)=> spawnDrop(r.type, r.n, r.extra, c.group.position, rolls.length > 1 ? (i ? 1 : -1) : 0, c.owner ? {owner:c.owner, ownerName:c.ownerName} : null));
   return ' — ' + rolls.map(r=>itemLabel(r.type, r.n)).join(' + ') + ' popped out!';
 }
-function removeDrop(d){ scene.remove(d.root); d.disc.material.dispose(); d.halo.material.dispose(); const i = drops.indexOf(d); if(i >= 0) drops.splice(i,1); }
+function removeDrop(d){ if(d.cd){ d.root.remove(d.cd.mesh); d.cd.mesh.material.map && d.cd.mesh.material.map.dispose && d.cd.mesh.material.map.dispose(); d.cd.mesh.material.dispose(); d.cd = null; } scene.remove(d.root); d.disc.material.dispose(); d.halo.material.dispose(); const i = drops.indexOf(d); if(i >= 0) drops.splice(i,1); }
 function updateDrops(dt){
   const now = performance.now()/1000;
   for(let i=drops.length-1;i>=0;i--){
-    const d = drops[i]; d.age += dt;
+    const d = drops[i]; d.age += dt; if(d.pend > 0) d.pend -= dt;
+    if(d.owner && d.age < DROP_RESERVE && d.age >= DROP_RESERVE - DROP_COUNT){                  // the last 5 s of the owner-only time: a countdown over the item
+      const n = Math.ceil(DROP_RESERVE - d.age);
+      if(!d.cd){ const cv = document.createElement('canvas'); cv.width = 128; cv.height = 128; const mesh = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.8), new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(cv), transparent:true, depthWrite:false, fog:false})); mesh.position.y = 1.5; mesh.raycast = ()=>{}; d.root.add(mesh); d.cd = {mesh, cx:cv.getContext('2d')}; }
+      if(d.cdN !== n){
+        d.cdN = n; const cx = d.cd.cx; cx.clearRect(0, 0, 128, 128); cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.lineWidth = 10; cx.strokeStyle = '#000'; cx.font = '800 96px system-ui,sans-serif'; cx.fillStyle = n <= 2 ? '#ff6a4d' : '#ffd24a';
+        cx.strokeText(String(n), 64, 68); cx.fillText(String(n), 64, 68); d.cd.mesh.material.map.needsUpdate = true;
+      }
+      d.cd.mesh.rotation.y = Math.atan2(camera.position.x - d.pos.x, camera.position.z - d.pos.z) - d.root.rotation.y;
+    } else if(d.cd){ d.root.remove(d.cd.mesh); d.cd.mesh.material.dispose(); d.cd = null; }
     if(!d.landed){
       d.vel.y -= 14*dt; d.pos.addScaledVector(d.vel, dt); resolveCollision(d.pos, 0.3);
       d.root.rotation.y += dt*7;
@@ -3335,9 +3452,33 @@ function updateDrops(dt){
     d.disc.material.opacity = (0.28 + 0.2*pulse)*k; d.halo.material.opacity = (0.1 + 0.1*pulse)*k;
   }
 }
+function canAddItem(type){
+  if(hotbarSlot > 0 && !hotbar[hotbarSlot]) return true;
+  if(ITEM_DEFS[type].stack) for(let i=1;i<HOTBAR_SIZE;i++){ const it = hotbar[i]; if(it && it !== 'gun' && it.type === type) return true; }
+  for(let i=1;i<HOTBAR_SIZE;i++) if(!hotbar[i]) return true;
+  return false;
+}
+function dropReservedFor(d, who){ return !!(d.owner && d.age < DROP_RESERVE && d.owner !== who); }
+function dropTake(d){                                                         // this player gets the item
+  if(!addItem(d.type, d.n, d.extra)){ showToast('Hotbar full'); return false; }
+  const lab = itemLabel(d.type, d.n); removeDrop(d); Snd.play('pickup'); showToast('Picked up ' + lab); return true;
+}
 function pickUpDrop(d){
-  if(!addItem(d.type, d.n, d.extra)){ showToast('Hotbar full'); return; }
-  const lab = itemLabel(d.type, d.n); removeDrop(d); Snd.play('pickup'); showToast('Picked up ' + lab);
+  if(!MP.role){ dropTake(d); return; }
+  if(d.pend > 0) return;
+  if(dropReservedFor(d, mpMyId())){ showToast('Reserved for ' + (d.ownerName || 'its owner') + ' - ' + Math.ceil(DROP_RESERVE - d.age) + ' s'); return; }
+  if(!canAddItem(d.type)){ showToast('Hotbar full'); return; }
+  d.pend = 1.5;                                                                // asked: the host decides who gets it when two players go for the same one
+  if(MP.role === 'host') mpDropGrant(d.id, 'host'); else mpFx({k:'dp', id:d.id});
+}
+function mpDropGrant(id, by){                                                // host: say who got the drop (one message to everyone)
+  const d = drops.find(x=>x.id === id); if(!d || dropReservedFor(d, by)) return;
+  mpFx({k:'dg', id, by}); mpDropGot(id, by);
+}
+function mpDropGot(id, by){                                                  // everyone: that drop is gone; the one who got it gets the item
+  const d = drops.find(x=>x.id === id); if(!d) return;
+  if(by === mpMyId()){ if(!dropTake(d)){ const q = d.pos; removeDrop(d); spawnDrop(d.type, d.n, d.extra, {x:q.x, z:q.z}, 0, null); } }
+  else { Snd.play('pickup', d.pos); removeDrop(d); }
 }
 function makeMine(p){ const mesh = makeMineMesh(1); mesh.position.copy(p); scene.add(mesh); return {mesh, pos:p.clone(), armT:MINE_ARM*Math.pow(0.6, upN('Quick Fuses')), t:0}; }
 function makeTurret(p, time){
@@ -3345,7 +3486,8 @@ function makeTurret(p, time){
   return {mesh, pos:p.clone(), time, maxT:time, yaw:0, pitch:0, cd:0, scanT:0, target:null, kick:0, bar:makeBar(0.9, 0x4db8ff)};
 }
 function makeTaco(p, hp){ const mesh = makeTacoMesh(1); mesh.position.copy(p); scene.add(mesh); return {mesh, pos:p.clone(), hp, maxHp:hp, bar:makeBar(1.2, 0xffa030)}; }
-function removeObj(o){ scene.remove(o.mesh); if(o.bar){ scene.remove(o.bar); } }
+let itemSeq = 0;
+function removeObj(o){ scene.remove(o.mesh); if(o.bar){ scene.remove(o.bar); } if(o.nid && MP.role) mpFx({k:'pr', id:o.nid}); }
 function clearItems(){
   for(const l of [mines, turrets, tacos]){ for(const o of l) removeObj(o); l.length = 0; }
   for(const g of nades) scene.remove(g.mesh); nades.length = 0;
@@ -3398,9 +3540,9 @@ function useHeldItem(){
   const it = heldItem();
   if(!it || !started || gameOver || carriedEnemy || itemCd > 0) return;
   let ok = false, p;
-  if(it.type === 'mine'){ p = placeSpot(0.5); if(p){ mines.push(makeMine(p)); ok = true; } }
-  else if(it.type === 'turret'){ p = placeSpot(0.8); if(p){ { const tt = makeTurret(p, it.boosted ? it.time : (it.time + 5*upN('Long Battery'))*Math.pow(2, upN('Turret Overdrive'))); if(it.maxT) tt.maxT = it.maxT; turrets.push(tt); } ok = true; } }
-  else if(it.type === 'taco'){ p = placeSpot(1.0); if(p){ { const tc = makeTaco(p, it.boosted ? it.hp : it.hp*(1+0.1*upN('Tough Taco')+0.25*upN('Hardened Taco'))); if(it.maxHp) tc.maxHp = it.maxHp; tacos.push(tc); } ok = true; } }
+  if(it.type === 'mine'){ p = placeSpot(0.5); if(p){ const mo = makeMine(p); mo.nid = ++itemSeq; mines.push(mo); ok = true; } }
+  else if(it.type === 'turret'){ p = placeSpot(0.8); if(p){ { const tt = makeTurret(p, it.boosted ? it.time : (it.time + 5*upN('Long Battery'))*Math.pow(2, upN('Turret Overdrive'))); if(it.maxT) tt.maxT = it.maxT; tt.nid = ++itemSeq; turrets.push(tt); } ok = true; } }
+  else if(it.type === 'taco'){ p = placeSpot(1.0); if(p){ { const tc = makeTaco(p, it.boosted ? it.hp : it.hp*(1+0.1*upN('Tough Taco')+0.25*upN('Hardened Taco'))); if(it.maxHp) tc.maxHp = it.maxHp; tc.nid = ++itemSeq; tacos.push(tc); } ok = true; } }
   else if(it.type === 'cloth'){
     if(flagHP >= FLAG_MAX) showToast('The flag is already at full health');
     else { const heal = 25 + 5*upN('Sturdy Cloth'); flagHP = Math.min(FLAG_MAX, flagHP + heal); showToast('Flag +' + heal + ' HP'); ok = true; }
@@ -3624,7 +3766,7 @@ function endGame(){
 }
 
 function resetGame(){
-  career.runs++; careerSave(); MP.byId.clear();
+  career.runs++; careerSave(); MP.byId.clear(); dummiesClear(); mpGhostsClear();
   applyLoadout();
   for(const e of enemies) disposeEnemy(e, true);
   for(const s of sinkingHats) scene.remove(s.hat);
@@ -3662,9 +3804,9 @@ function resetGame(){
 
 // ---------- co-op multiplayer (room capability) ----------
 // Host-authoritative: the host runs beans, waves and the flag and broadcasts snapshots (~10/s); guests mirror them and send their hits back.
-const GAME_VERSION = '47-p2p';
+const GAME_VERSION = 'beta 0.58.5';
 const verTag = ()=>`<div style="position:fixed;right:12px;bottom:8px;font:600 12px system-ui,sans-serif;color:#9fb3cc;opacity:.8;pointer-events:none">Version ${GAME_VERSION}</div>`;
-const MP = {pub:false, pubOff:null, advKey:'', advT:0, lobby:false, startCap:null, startGrp:null, guestLobby:false, role:null, code:'', room:null, ns:null, hostPeer:null, began:false, byId:new Map(), pend:{}, pendT:0, snapT:0, avatars:new Map(), offs:[], warned:false};
+const MP = {seq:0, hitLog:[], acks:{}, pub:false, pubOff:null, advKey:'', advT:0, lobby:false, startCap:null, startGrp:null, guestLobby:false, role:null, code:'', room:null, ns:null, hostPeer:null, began:false, byId:new Map(), pend:{}, pendT:0, snapT:0, avatars:new Map(), ghosts:new Map(), itemT:0, hadItems:false, offs:[], warned:false};
 const MP_KINDS = [null, 'shield', 'support', 'reinforcer'];        // snapshot kind codes 0-3; 4 = Nacho Libre, 5 = the chopper
 // ---- direct player-to-player connection (PeerJS / WebRTC): a small stand-in for the claude.ai `room` API ----
 // Star topology: the host's PeerJS id is the room code; guests connect to it. The host relays the presence table.
@@ -3758,6 +3900,7 @@ const mpBadge = document.createElement('div');
 mpBadge.style.cssText = 'position:fixed;right:10px;top:10px;z-index:30;font:600 12px system-ui,sans-serif;color:#fff;background:rgba(0,0,0,.55);padding:5px 9px;border-radius:7px;pointer-events:none;display:none';
 document.body.appendChild(mpBadge);
 function mpBadgeUpdate(){
+  if(typeof viewTagUpdate === 'function') viewTagUpdate();
   if(!MP.role){ mpBadge.style.display = 'none'; return; }
   const n = MP.room ? MP.room.peers().filter(p=>p.kind==='viewer').length : 1;
   mpBadge.textContent = 'Co-op · room ' + MP.code + (MP.pub ? ' (public)' : '') + ' · ' + n + ' player' + (n===1?'':'s') + (MP.role==='guest' && !MP.began ? ' · connecting…' : '');
@@ -3768,7 +3911,7 @@ async function mpOpen(code, role){
   if(!MP.ns) throw new Error('The connection library did not load (check your internet connection).');
   MP.room = await MP.ns.join(code, role);
   MP.role = role; MP.code = code; MP.hostPeer = null; MP.began = (role === 'host'); MP.warned = false;
-  MP.offs.push(MP.room.on('snap', mpOnSnap), MP.room.on('hit', mpOnHit), MP.room.onPeers(mpBadgeUpdate));
+  MP.offs.push(MP.room.on('snap', mpOnSnap), MP.room.on('hit', mpOnHit), MP.room.on('van', mpOnVan), MP.room.on('fx', mpOnFx), MP.room.on('grab', mpOnGrab), MP.room.on('throw', mpOnThrow), MP.room.on('carry', mpOnCarry), MP.room.onPeers(mpBadgeUpdate));
   { const r = MP.room; r.onClosed(()=>{ if(MP.room !== r) return; mpLeave(); paused = false; gameOver = true; mouseDown = false; toastEl.classList.remove('show'); showHome(); showToast('The host closed the room.'); }); }
   mpBadgeUpdate();
 }
@@ -3777,10 +3920,12 @@ function mpLeave(){
   MP.offs = [];
   if(MP.room){ try{ MP.room.leave().catch(()=>{}); }catch(e){} }
   for(const a of MP.avatars.values()) scene.remove(a.g);
+  mpGhostsClear(); MP.hadItems = false;
   MP.avatars.clear(); MP.byId.clear(); MP.pend = {};
   if(MP.pub && MP.ns){ try{ MP.ns.presence({pub:null}).catch(()=>{}); }catch(e){} }
   MP.pub = false; MP.advKey = '';
-  MP.room = null; MP.role = null; MP.began = false; MP.hostPeer = null; MP.lobby = false; MP.guestLobby = false;
+  MP.room = null; MP.role = null; MP.began = false; MP.hostPeer = null; MP.lobby = false; MP.guestLobby = false; carriedEnemy = null;
+  MP.hitLog = []; MP.seq = 0; MP.acks = {};
   if(MP.startGrp) MP.startGrp.visible = false;
   mpBadgeUpdate();
 }
@@ -3797,7 +3942,8 @@ async function mpHost(pub){
   showToast('Room ' + code + ' — share the code. Press the green button under the hoop to start.', null, true);
 }
 function mpMenuUI(){
-  msg.innerHTML = '<h1>Multiplayer</h1><p class="hint">Co-op against the beans. Everyone must be on the same game version.</p><button id="hostBtn">Host a room</button> <button id="joinBtn">Join with a code</button><p class="hint" id="mpHomeStat"></p><button id="mpBack">Back</button>' + verTag();
+  msg.innerHTML = '<h1>Multiplayer</h1><p class="hint">Co-op against the beans. Everyone must be on the same game version.</p><p class="hint">Your name tag: <input id="mpName" maxlength="16" autocomplete="off" spellcheck="false" placeholder="Player" value="' + playerName.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;') + '" style="font-size:16px;width:9em;padding:6px 8px;border-radius:8px;border:1px solid #3a465c;background:#10151f;color:#fff"></p><button id="hostBtn">Host a room</button> <button id="joinBtn">Join with a code</button><p class="hint" id="mpHomeStat"></p><button id="mpBack">Back</button>' + verTag();
+  const nm = document.getElementById('mpName'); nm.oninput = ()=>setPlayerName(nm.value); nm.onkeydown = e=>e.stopPropagation(); nm.onkeyup = e=>e.stopPropagation();
   document.getElementById('hostBtn').onclick = mpOptionsUI;
   document.getElementById('joinBtn').onclick = mpJoinUI;
   document.getElementById('mpBack').onclick = showHome;
@@ -3898,16 +4044,24 @@ function mpJoinUI(){
   inp.addEventListener('keydown', e=>{ if(e.key === 'Enter') go(); e.stopPropagation(); });
 }
 const r1 = v=>Math.round(v*10)/10, r2 = v=>Math.round(v*100)/100;
-function mpSnap(go){
-  if(MP.role !== 'host' || !MP.room) return;
+function mpSt(e){ return e.state === 'alive' ? 0 : e.state === 'ragdoll' ? 1 : e.state === 'bossdead' ? 2 : e.state === 'thrown' ? 3 : e.state === 'carried' ? 4 : 5; }   // 1 = can be grabbed, 3 = flying, 4 = carried, 5 = getting up / going down
+function mpRows(){                                                      // what the host tells guests about every bean
   const b = [];
   for(const e of enemies){
-    if(b.length >= 80 || !e.id) continue;
+    if(b.length >= 80 || !e.id || e.mirror) continue;
     const k = e.chopper ? 5 : e.boss ? 4 : Math.max(0, MP_KINDS.indexOf(e.kind || null));
-    const st = e.state === 'alive' ? 0 : e.state === 'bossdead' ? 2 : 1, p = e.mesh.position;
-    b.push([e.id, k, r2(p.x), r2(p.z), r2(e.mesh.rotation.y), Math.max(0, Math.round(e.hp)), st, r1(p.y)]);
+    const st = mpSt(e), p = e.mesh.position;
+    const dn = e.state === 'ragdoll' || e.state === 'thrown' || e.state === 'dying';                  // downed: the hp slot carries how much of the 30 s revive bar is left (0-100); 101 = getting back up
+    const slot = dn ? Math.round(Math.max(0, 1 - (e.deathTimer || 0)/REVIVE_TIME)*100) : e.state === 'rising' ? 101 : Math.max(0, Math.round(e.hp));
+    b.push([e.id, k, r2(p.x), r2(p.z), r2(e.mesh.rotation.y), slot, st, r1(p.y)]);
   }
+  return b;
+}
+function mpSnap(go){
+  if(MP.role !== 'host' || !MP.room) return;
+  const b = mpRows();
   const o = {v:GAME_VERSION, lb:MP.lobby ? 1 : 0, w:wave, f:Math.round(flagHP*10)/10, fm:FLAG_MAX, s:score, l:Math.max(0, waveTarget - spawnedThisWave), b};
+  if(Object.keys(MP.acks).length) o.ak = MP.acks;
   if(go || gameOver) o.go = 1;
   while(JSON.stringify(o).length > 3900 && b.length) b.pop();
   MP.room.emit('snap', o).catch(()=>{});
@@ -3929,6 +4083,8 @@ function mpOnSnap(m){
   if(d.w !== wave){ wave = d.w; waveEl.textContent = wave; showWaveSplash(wave); }
   score = d.s|0; scoreEl.textContent = score; FLAG_MAX = d.fm > 0 ? d.fm : FLAG_MAX; flagHP = Math.max(0, +d.f || 0);
   waveTarget = Math.max(0, d.l|0); spawnedThisWave = 0;
+  const me = MP.room && MP.room.peers().find(x=>x.isMe), ack = (d.ak && me && Number.isInteger(d.ak[me.peer])) ? d.ak[me.peer] : 0;
+  mpAckPrune(ack);
   const seen = new Set();
   for(const r of d.b){
     if(!Array.isArray(r) || r.length < 8) continue;
@@ -3939,14 +4095,18 @@ function mpOnSnap(m){
       const k = r[1]|0;
       spawnEnemy(k >= 4, k >= 4 ? null : MP_KINDS[k]);
       e = enemies[enemies.length-1]; e.proxy = true; e.id = id;
-      e.mesh.position.set(+r[2]||0, +r[7]||0, +r[3]||0); e.marker.material.color.set(0xff3b3b);
+      e.mesh.position.set(+r[2]||0, +r[7]||0, +r[3]||0); e.marker.material.color.set(aliveMarkerColor(e));
       MP.byId.set(id, e);
     }
-    e.tx = +r[2]||0; e.tz = +r[3]||0; e.yaw = +r[4]||0; e.hp = +r[5]||0; e.st = r[6]|0; e.ty = e.st ? (e.boss ? (+r[7]||0) : 0.3) : (+r[7]||0);
-    e.state = e.st === 0 ? 'alive' : 'down';
+    e.tx = +r[2]||0; e.tz = +r[3]||0; e.yaw = +r[4]||0; e.st = r[6]|0; mpSetLook(e, +r[5]||0, id, ack); e.ty = (e.st === 0 || e.st >= 3 || e.boss) ? (+r[7]||0) : 0.3;
+    e.state = e.st === 0 ? 'alive' : e.st === 1 ? 'ragdoll' : 'down';
+    if(e === carriedEnemy && e.st !== 4){ carriedEnemy = null; }                         // the host took it back (or it was thrown)
+    if(e === carriedEnemy) e.state = 'carried';
+    if(e.st === 0 && e.hp <= 0.0001) mpLocalDown(e);                                       // our hits would have downed it: show it down while the host catches up
   }
   for(const [id, e] of MP.byId){
     if(seen.has(id)) continue;
+    if(e === carriedEnemy) carriedEnemy = null;
     disposeEnemy(e, true); MP.byId.delete(id);
     const i = enemies.indexOf(e); if(i >= 0) enemies.splice(i, 1);
   }
@@ -3954,23 +4114,196 @@ function mpOnSnap(m){
 function mpProxyStep(e, dt){
   const m = e.mesh, p = m.position, k = Math.min(1, dt*12);
   if(e.tx === undefined) return;
+  if(e.grabT > 0) e.grabT -= dt;
+  if(carriedEnemy === e){                                              // the bean you are carrying follows your camera right away
+    m.position.copy(camera.localToWorld(new THREE.Vector3(0.6, -0.5, -1.4)));
+    if(p.y < 0.45) p.y = 0.45;
+    m.quaternion.copy(camera.quaternion); m.scale.setScalar(0.5); m.visible = true;
+    e.bar.visible = false; e.marker.visible = false; return;
+  }
   p.x += (e.tx - p.x)*k; p.z += (e.tz - p.z)*k; p.y += (e.ty - p.y)*k;
   let dy = e.yaw - m.rotation.y; dy = Math.atan2(Math.sin(dy), Math.cos(dy)); m.rotation.y += dy*k;
-  if(!e.boss) m.rotation.x = e.st ? -1.5 : 0;
+  if(!e.boss){
+    if(e.st === 3){ m.rotation.x += dt*10; m.rotation.z += dt*7; }          // flying: tumbling like on the host
+    else { m.rotation.x = (e.st === 1 || e.st === 5) ? -1.5 : 0; m.rotation.z = 0; }
+    m.scale.setScalar(e.st === 4 ? 0.5 : 1);
+  }
   m.visible = e.st !== 2;
   e.fill.scale.x = Math.max(0, Math.min(1, e.hp/e.maxHp));
   e.bar.position.set(p.x, p.y + (e.boss ? 2.5 : e.st === 0 ? 1.25 : 0.75), p.z);
   e.bar.quaternion.copy(camera.quaternion);
   e.marker.scale.setScalar(Math.max(1, camera.position.distanceTo(p)/12));
-  e.marker.visible = e.st === 0; e.bar.visible = e.st !== 2;
+  const alive = e.st === 0 || e.rv > 1, hid = e.st === 2 || e.st === 4;                      // alive (or standing back up): red / purple; downed: yellow, orange when about to get up
+  const col = alive ? aliveMarkerColor(e) : (e.rv < 0.25 ? DOWNED_ORANGE : DOWNED_YELLOW);
+  e.marker.material.color.set(col); e.fill.material.color.set(alive ? 0x44e05a : col);
+  if(!alive && !e.boss) e.fill.scale.x = Math.max(0.001, Math.min(1, e.rv));
+  e.marker.visible = !hid; e.bar.visible = !hid;
 }
 function mpHit(e, dmg){                                                  // guest: show the hit now, tell the host in a batch
   e.hp -= dmg; Snd.play('hit', e.mesh.position);
   MP.pend[e.id] = (MP.pend[e.id] || 0) + dmg;
+  if(e.hp <= 0.0001) mpLocalDown(e);
+}
+function mpSetLook(e, slot, id, ack){                                     // the hp slot is hp for a live bean, the revive bar for a downed one
+  if(e.st === 1 || e.st === 3 || e.st === 5){ e.hp = 0; e.rv = slot > 100 ? 2 : slot/100; }
+  else { e.hp = mpHp(id, slot, ack); e.rv = 0; }
+}
+function mpLocalDown(e){ e.rv = 1; e.st = 5; e.state = 'down'; e.ty = e.boss ? e.ty : 0.3; Snd.play('hit', e.mesh.position); }     // downed on this screen right away; the host confirms in its next update
+function mpHp(id, snapHp, ack){                                          // the host's hp, minus our hits it has not counted yet: an update that is missing our damage is ignored for that part
+  let h = snapHp;
+  for(const x of MP.hitLog){ if(x.s > ack && x.id === id) h -= x.dmg; }
+  if(MP.pend[id]) h -= MP.pend[id];
+  return Math.max(0, h);
+}
+function mpAckPrune(ack){ MP.hitLog = MP.hitLog.filter(x=>x.s > ack); if(MP.hitLog.length > 600) MP.hitLog.splice(0, MP.hitLog.length - 600); }
+function mpNoteHits(h){ const s = ++MP.seq; for(const [id, dmg] of h) MP.hitLog.push({s, id, dmg}); return s; }
+function mpGrab(e){                                                      // guest: ask the host to hand us this downed bean
+  if(!MP.room || e.grabT > 0 || carriedEnemy) return;
+  e.grabT = 1; MP.room.emit('grab', {id:e.id}).catch(()=>{});
+}
+function mpThrow(e){                                                     // guest: tell the host where we threw it from and which way; the host flies it and scores it
+  const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion), p = e.mesh.position;
+  MP.room.emit('throw', {id:e.id, p:[r2(p.x), r2(p.y), r2(p.z)], d:[r2(dir.x), r2(dir.y), r2(dir.z)]}).catch(()=>{});
+  Snd.play('throw'); carriedEnemy = null; e.state = 'down'; e.mesh.scale.setScalar(1);
+}
+function mpCarrierPose(peerId){
+  if(!MP.room) return null;
+  const pr = MP.room.peers().find(x=>x.peer === peerId), d = pr && pr.presence;
+  return (d && [d.x, d.y, d.z, d.yaw].every(Number.isFinite)) ? d : null;
+}
+function mpOnGrab(m){                                                    // host: a guest wants to pick up a downed bean
+  if(MP.role !== 'host' || m.isMe) return;
+  const d = m.data, e = d && enemies.find(en=>en.id === d.id), pose = mpCarrierPose(m.peer);
+  if(!e || !pose || e.state !== 'ragdoll' || e.heldBy || enemies.some(en=>en.heldBy === m.peer)) return;
+  if(Math.hypot(pose.x - e.mesh.position.x, pose.z - e.mesh.position.z) > 4) return;           // must be close (a little slack for lag)
+  e.state = 'carried'; e.heldBy = m.peer; Snd.play('grab', e.mesh.position);
+  MP.room.emit('carry', {id:e.id, by:m.peer}).catch(()=>{});
+}
+function mpOnThrow(m){                                                   // host: the guest let go; fly it from their spot and direction (scoring stays on the host)
+  if(MP.role !== 'host' || m.isMe) return;
+  const d = m.data, e = d && enemies.find(en=>en.id === d.id);
+  if(!e || e.state !== 'carried' || e.heldBy !== m.peer || !Array.isArray(d.d) || d.d.length !== 3 || !d.d.every(Number.isFinite)) return;
+  const dir = new THREE.Vector3(d.d[0], d.d[1], d.d[2]); if(dir.lengthSq() < 0.01) return; dir.normalize();
+  const pose = mpCarrierPose(m.peer);
+  if(pose && Array.isArray(d.p) && d.p.length === 3 && d.p.every(Number.isFinite) && Math.hypot(d.p[0]-pose.x, d.p[2]-pose.z) < 6) e.mesh.position.set(d.p[0], Math.max(0.45, d.p[1]), d.p[2]);
+  e.mesh.scale.setScalar(1); e.heldBy = null; e.state = 'thrown';
+  e.vel = dir.multiplyScalar(15).add(new THREE.Vector3(0, 7, 0));
+  Snd.play('throw', e.mesh.position);
+}
+function mpOnCarry(m){                                                   // guest: the host says this bean is now ours
+  if(MP.role !== 'guest' || m.isMe || !MP.hostPeer || m.peer !== MP.hostPeer || carriedEnemy) return;
+  const d = m.data, me = MP.room && MP.room.peers().find(x=>x.isMe);
+  if(!d || !me || d.by !== me.peer) return;
+  const e = MP.byId.get(d.id); if(!e) return;
+  cancelReload(); e.state = 'carried'; carriedEnemy = e; Snd.play('grab');
+}
+function mpOnVan(m){                                                     // guest: the host's van is coming, so summon our own
+  if(MP.role !== 'guest' || m.isMe || !MP.hostPeer || m.peer !== MP.hostPeer || !started || gameOver) return;
+  const d = m.data; if(!d || typeof d !== 'object') return;
+  const tier = d.t === null ? undefined : (CHEST_TIERS.some(t=>t.id === d.t) ? d.t : null);
+  if(tier === null || !Number.isInteger(d.w) || d.w < 1 || d.w > 99) return;
+  wave = d.w; waveEl.textContent = wave;
+  const offers = (Array.isArray(d.o) && d.o.length === 3 && d.o.every(i=>Number.isInteger(i) && i >= 0 && i < UPGRADES.length)) ? d.o.map(i=>UPGRADES[i]) : rollOffers();
+  let plan = Array.isArray(d.c) ? d.c.slice(0, 8).filter(x=>Array.isArray(x) && typeof x[0] === 'string' && x[0].length <= 40 && CHEST_TIERS.some(t=>t.id === x[2])).map(x=>({owner:x[0], name:cleanName(x[1]) || 'Player', tier:x[2]})) : [];
+  if(!plan.length) plan = [{owner:mpMyId(), name:playerName, tier:'wood'}];
+  startVan(tier, {plan, offers});
+}
+const FXC = {t:0, n:0};
+function mpFx(o){ if(MP.room && MP.role) MP.room.emit('fx', o).catch(()=>{}); }
+function fxVec(a){ return (Array.isArray(a) && a.length === 3 && a.every(Number.isFinite) && Math.abs(a[0]) < 400 && Math.abs(a[2]) < 400 && a[1] > -5 && a[1] < 80) ? new THREE.Vector3(a[0], a[1], a[2]) : null; }
+function mpOnFx(m){                                                      // effects other players made: shown here, never damaging
+  if(!MP.role || m.isMe || !MP.room) return;
+  const d = m.data; if(!d || typeof d !== 'object') return;
+  const now = performance.now(); if(now - FXC.t > 1000){ FXC.t = now; FXC.n = 0; } if(++FXC.n > 160) return;
+  const me = MP.room.peers().find(x=>x.isMe), fromHost = MP.role === 'guest' && m.peer === MP.hostPeer;
+  if(MP.role === 'guest' && !fromHost) return;
+  if(d.k === 'dg'){                                                      // the host says who got a drop (this one is meant for the winner too, so it skips the echo check below)
+    if(fromHost && typeof d.id === 'string' && typeof d.by === 'string') mpDropGot(d.id, d.by);
+    return;
+  }
+  if(d.k === 'us' || d.k === 'ue'){                                      // the shared upgrade table: any player's choice reaches everyone through the host
+    if(!Number.isInteger(d.i) || d.i < (d.k === 'ue' ? 0 : -1) || d.i > 2) return;
+    if(MP.role === 'host') mpUpHost(d.k, d.i, m.peer); else mpUpApply(d.k, d.i);
+    return;
+  }
+  if(fromHost && d.by && me && d.by === me.peer) return;                 // the host passes our own effects back: we already showed them
+  const v = fxVec(d.p);
+  if(d.k === 'x' && v){
+    const r = Math.max(1, Math.min(12, +d.r || 4)), nk = d.nk ? 1 : 0;
+    if(MP.role === 'host') mpFx({k:'x', p:[r2(v.x), r2(v.y), r2(v.z)], r:r1(r), nk, by:m.peer});     // relay to the other guests
+    explode(v, {r, fxOnly:true, noKnock:!!nk});
+  } else if(d.k === 'c' && v){
+    const n = Math.max(1, Math.min(260, d.n|0)), tier = CHEST_TIERS.some(t=>t.id === d.t) ? d.t : null;
+    if(MP.role === 'host') mpFx({k:'c', p:[r2(v.x), r2(v.y), r2(v.z)], n, rd:d.rd ? 1 : 0, t:tier, by:m.peer});
+    burstConfetti(v, n, !!d.rd, tier ? TIER_CONFETTI[tier] : undefined);
+  } else if(d.k === 'dr' && typeof d.id === 'string' && d.id.length <= 40){            // an item popped out somewhere: show it here too
+    if(!ITEM_DEFS[d.t] || !Number.isFinite(d.x) || !Number.isFinite(d.z) || Math.abs(d.x) > 400 || Math.abs(d.z) > 400 || drops.length >= 60 || drops.some(x=>x.id === d.id)) return;
+    const n = Math.max(1, Math.min(99, d.n|0)), ex = (d.ex && typeof d.ex === 'object') ? (Number.isFinite(d.ex.time) ? {time:Math.max(0, Math.min(600, d.ex.time))} : Number.isFinite(d.ex.hp) ? {hp:Math.max(1, Math.min(5000, d.ex.hp))} : null) : null;
+    let owner = typeof d.o === 'string' && d.o.length <= 40 ? d.o : null; if(MP.role === 'host' && owner && owner !== m.peer) owner = null;
+    const on = cleanName(d.on);
+    if(MP.role === 'host') mpFx({k:'dr', id:d.id, t:d.t, n, ex, x:r2(d.x), z:r2(d.z), a:r2(+d.a||0), sp:r2(+d.sp||3), yw:r2(+d.yw||0), o:owner, on, by:m.peer});
+    spawnDrop(d.t, n, ex, {x:d.x, z:d.z}, 0, {id:d.id, owner, ownerName:on, ang:+d.a||0, sp:Math.max(0.5, Math.min(5, +d.sp||3)), yaw:+d.yw||0});
+  } else if(d.k === 'dp' && typeof d.id === 'string'){                              // host: a guest wants to pick one up
+    if(MP.role === 'host') mpDropGrant(d.id, m.peer);
+  } else if(d.k === 'pu' && Array.isArray(d.r)){                           // someone's placed mines, turrets and tacos
+    const rows = d.r.slice(0, 24).filter(r=>Array.isArray(r) && r.length === 9 && r.every(Number.isFinite) && Number.isInteger(r[0]) && (r[1] === 0 || r[1] === 1 || r[1] === 2) && Math.abs(r[2]) < 400 && Math.abs(r[4]) < 400 && r[3] > -5 && r[3] < 80);
+    const by = MP.role === 'host' ? m.peer : (typeof d.by === 'string' ? d.by : 'host');
+    if(MP.role === 'host') mpFx({k:'pu', r:rows, by:m.peer});
+    mpGhostApply(by, rows);
+  } else if(d.k === 'pr' && Number.isInteger(d.id)){                         // one of them is gone
+    const by = MP.role === 'host' ? m.peer : (typeof d.by === 'string' ? d.by : 'host');
+    if(MP.role === 'host') mpFx({k:'pr', id:d.id, by:m.peer});
+    mpGhostRemove(by + ':' + d.id);
+  } else if(d.k === 'o' && typeof d.o === 'string'){                       // someone opened their chest: show it open here (their loot is theirs)
+    if(MP.role === 'host'){ if(d.o !== m.peer) return; mpFx({k:'o', o:d.o, by:m.peer}); }
+    const c = chests.find(x=>x.owner === d.o && !x.opened); if(c) openChest(c, true);
+  } else if(fromHost && d.k === 's' && v){
+    bossShockwave(v, true);
+  } else if(fromHost && d.k === 'k' && me && d.to === me.peer && Array.isArray(d.v) && d.v.length === 3 && d.v.every(Number.isFinite)){
+    knockX += Math.max(-40, Math.min(40, d.v[0])); knockZ += Math.max(-40, Math.min(40, d.v[1]));
+    playerVy = Math.max(playerVy, 0) + Math.max(0, Math.min(10, d.v[2])); playerGrounded = false;
+    shake = Math.max(shake, 0.55); Snd.play('slam'); Snd.play('hit');
+  }
+}
+function mpItemsSend(){                                                 // our placed mines / turrets / tacos, so everyone else can see them (a few times a second)
+  const rows = [];
+  const add = (o, t)=>{ if(!o.nid || rows.length >= 24) return; rows.push([o.nid, t, r2(o.pos.x), r2(o.pos.y), r2(o.pos.z), r2(o.yaw || 0), r2(o.pitch || 0), t === 1 ? r2(o.time/o.maxT) : t === 2 ? r2(o.hp/o.maxHp) : 1, (o.kick || 0) > 0.5 ? 1 : 0]); };
+  for(const o of mines) add(o, 0); for(const o of turrets) add(o, 1); for(const o of tacos) add(o, 2);
+  if(!rows.length && !MP.hadItems) return;
+  MP.hadItems = rows.length > 0; mpFx({k:'pu', r:rows});
+}
+function mpGhostMake(t){
+  if(t === 0){ const mesh = makeMineMesh(1); scene.add(mesh); return {t, mesh, bar:null, yaw:0, pitch:0, kick:0}; }
+  if(t === 1){ const mesh = makeTurretMesh(1); scene.add(mesh); return {t, mesh, bar:makeBar(0.9, 0x4db8ff), yaw:0, pitch:0, kick:0}; }
+  if(t === 2){ const mesh = makeTacoMesh(1); scene.add(mesh); return {t, mesh, bar:makeBar(1.2, 0xffa030), yaw:0, pitch:0, kick:0}; }
+  return null;
+}
+function mpGhostRemove(key){ const g = MP.ghosts.get(key); if(!g) return; scene.remove(g.mesh); if(g.bar) scene.remove(g.bar); MP.ghosts.delete(key); }
+function mpGhostsClear(){ for(const k of [...MP.ghosts.keys()]) mpGhostRemove(k); }
+function mpGhostApply(by, rows){
+  const now = performance.now();
+  for(const r of rows){
+    const key = by + ':' + r[0]; let g = MP.ghosts.get(key);
+    if(!g){ if(MP.ghosts.size >= 60) continue; g = mpGhostMake(r[1]); if(!g) continue; g.mesh.position.set(r[2], r[3], r[4]); g.yaw = r[5]; g.pitch = r[6]; g.born = 0; MP.ghosts.set(key, g); }
+    g.seen = now; g.yawT = r[5]; g.pitchT = r[6]; g.frac = r[7]; if(r[8]) g.kick = 1;
+  }
+}
+function mpGhostStep(dt){
+  const now = performance.now(), k = Math.min(1, dt*12);
+  for(const [key, g] of [...MP.ghosts]){
+    if(now - g.seen > 1500){ mpGhostRemove(key); continue; }                    // its owner stopped reporting it (picked up, gone, or left)
+    g.born += dt;
+    if(g.t === 0){ g.mesh.userData.light.visible = Math.floor(g.born*2) % 2 === 0; continue; }
+    let dy = g.yawT - g.yaw; dy = Math.atan2(Math.sin(dy), Math.cos(dy)); g.yaw += dy*k; g.pitch += (g.pitchT - g.pitch)*k;
+    g.kick = Math.max(0, g.kick - dt*8);
+    if(g.t === 1){ const hd = g.mesh.userData.head, gn = g.mesh.userData.gun; hd.rotation.y = g.yaw; gn.rotation.x = g.pitch; gn.position.z = g.kick*0.08; }
+    const p = g.mesh.position; g.bar.position.set(p.x, p.y + (g.t === 1 ? 1.35 : 1.3), p.z); g.bar.quaternion.copy(camera.quaternion); g.bar.userData.fill.scale.x = Math.max(0.001, Math.min(1, g.frac));
+  }
 }
 function mpOnHit(m){                                                     // host: apply a guest's damage (untrusted: clamped)
   if(MP.role !== 'host' || m.isMe) return;
   const d = m.data; if(!d || !Array.isArray(d.h)) return;
+  if(Number.isInteger(d.s) && d.s > (MP.acks[m.peer] || 0)) MP.acks[m.peer] = d.s;      // told back in every update: "I have counted your hits up to here"
   for(const x of d.h.slice(0, 24)){
     if(!Array.isArray(x)) continue;
     const dmg = Math.min(60, Math.max(0, +x[1] || 0)); if(!(dmg > 0)) continue;
@@ -3980,8 +4313,9 @@ function mpOnHit(m){                                                     // host
 }
 function mpTick(dt){
   if(!MP.role || !MP.room) return;
-  MP.room.presence({x:r2(camera.position.x), y:r2(camera.position.y), z:r2(camera.position.z), yaw:r2(yaw)}).catch(()=>{});
-  mpAvatars(dt);
+  MP.room.presence({x:r2(camera.position.x), y:r2(camera.position.y), z:r2(camera.position.z), yaw:r2(yaw), pitch:r2(pitch), hold:mpHoldStr(), name:playerName}).catch(()=>{});
+  mpAvatars(dt); mpGhostStep(dt);
+  MP.itemT += dt; if(MP.itemT >= 0.2){ MP.itemT = 0; mpItemsSend(); }
   if(MP.pub){ MP.advT += dt; if(MP.advT >= 1){ MP.advT = 0; mpAdvertise(false); } }
   if(MP.startLbl && MP.lobby) MP.startLbl.quaternion.copy(camera.quaternion);
   if(MP.role === 'host'){ MP.snapT += dt; if(MP.snapT >= 0.1){ MP.snapT = 0; mpSnap(false); } }
@@ -3990,18 +4324,58 @@ function mpTick(dt){
     if(MP.pendT >= 0.1){
       MP.pendT = 0;
       const h = Object.keys(MP.pend).map(id=>[+id, r1(MP.pend[id])]); MP.pend = {};
-      if(h.length) MP.room.emit('hit', {h}).catch(err=>{
+      if(h.length) MP.room.emit('hit', {s:mpNoteHits(h), h}).catch(err=>{
         if(err && err.code === 'not_permitted' && !MP.warned){ MP.warned = true; showToast('You need Contributor access to the artifact to damage beans.'); }
       });
     }
   }
 }
+function mpHoldStr(){                                                   // what this player holds, shared in their presence
+  if(carriedEnemy) return 'b';
+  if(holdingGun()) return 'g:' + loadout.weapon;
+  const it = heldItem(); if(it && ITEM_DEFS[it.type]) return 'i:' + it.type + (it.n > 1 ? ':' + Math.min(99, it.n|0) : '');
+  return '';
+}
+function mpHoldInfo(h){                                                 // untrusted text from another player -> a copy of the real first-person gun / item model, or nothing
+  if(typeof h !== 'string' || h.length > 24) return null;
+  const copy = src=>{ if(!src) return null; const m = cloneModel(src); m.visible = true; m.position.set(0, 0, 0); m.rotation.set(0, 0, 0); m.scale.setScalar(0.85); return m; };
+  if(h === 'b'){ const g = new THREE.Group(), bean = new THREE.Mesh(beanGeo, new THREE.MeshLambertMaterial({color:0xd9a066})); bean.scale.setScalar(0.45); bean.position.set(0, 0.1, -0.15); g.add(bean); return {name:'carrying a bean', model:g}; }
+  let m = /^g:([a-z]+)$/.exec(h);
+  if(m && WEAPONS[m[1]]) return {name:WEAPONS[m[1]].name, model:copy(weaponGroups[m[1]])};
+  m = /^i:([a-z]+)(?::(\d{1,2}))?$/.exec(h);
+  if(m && ITEM_DEFS[m[1]]){ const n = m[2] ? +m[2] : 1; return {name:ITEM_DEFS[m[1]].name + (n > 1 ? ' x' + n : ''), model:copy(itemModels[m[1]])}; }
+  return null;
+}
+function mpLabelDraw(a, name){
+  const c = a.cx; c.clearRect(0, 0, 256, 64);
+  if(name){ c.textAlign = 'center'; c.lineWidth = 6; c.strokeStyle = '#000'; c.font = '700 30px system-ui,sans-serif'; c.fillStyle = '#fff'; c.strokeText(name, 128, 42); c.fillText(name, 128, 42); }
+  a.tex.needsUpdate = true;
+}
+function avatarLook(a, name, hs){                                       // the name tag and what they hold; redrawn only when one changes
+  if(hs === a.held && name === a.nm) return;
+  const info = mpHoldInfo(hs);
+  if(hs !== a.held){ for(const c of a.hold.children.slice()) a.hold.remove(c); if(info && info.model) a.hold.add(info.model); a.held = hs; }
+  a.nm = name; mpLabelDraw(a, name);
+}
 function mpAvatarMesh(){
   const g = new THREE.Group(), mat = new THREE.MeshLambertMaterial({color:0x3a7bd5}), skin = new THREE.MeshLambertMaterial({color:0xf1c9a0});
   const body = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.95, 0.35), mat); body.position.y = 0.95;
-  const head = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.34, 0.34), skin); head.position.y = 1.62;
-  const gun = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.12, 0.6), new THREE.MeshLambertMaterial({color:0x222222})); gun.position.set(0.3, 1.1, -0.35);
-  g.add(body, head, gun); scene.add(g); return g;
+  const head = new THREE.Group(); head.position.y = 1.62;
+  const skull = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.34, 0.34), skin);
+  head.add(skull);
+  const arm = new THREE.Group(); arm.position.set(0.34, 1.3, 0);                                    // right shoulder (holds the gun or item): swings up and down with where they look
+  const sleeve = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.12, 0.4), mat); sleeve.position.set(0, -0.08, -0.2);
+  const hold = new THREE.Group(); hold.position.set(0, -0.06, -0.42);
+  arm.add(sleeve, hold);
+  const arm2 = new THREE.Group(); arm2.position.set(-0.34, 1.3, 0);                                 // left arm, swings along
+  const sleeve2 = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.12, 0.4), mat); sleeve2.position.set(0, -0.08, -0.2);
+  const hand2 = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.1), skin); hand2.position.set(0, -0.08, -0.43);
+  arm2.add(sleeve2, hand2);
+  const cv = document.createElement('canvas'); cv.width = 256; cv.height = 64;
+  const tex = new THREE.CanvasTexture(cv);
+  const label = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 0.65), new THREE.MeshBasicMaterial({map:tex, transparent:true, depthWrite:false, depthTest:false})); label.position.y = 2.35; label.renderOrder = 999;   // depthTest off: the name shows through walls
+  g.add(body, head, arm, arm2, label); scene.add(g);
+  return {g, head, arm, arm2, hold, label, cx:cv.getContext('2d'), tex, held:'\u0000'};
 }
 function mpAvatars(dt){
   const seen = new Set(), k = Math.min(1, dt*12);
@@ -4011,14 +4385,116 @@ function mpAvatars(dt){
     if(![d.x, d.y, d.z, d.yaw].every(Number.isFinite)) continue;
     seen.add(p.peer);
     let a = MP.avatars.get(p.peer);
-    if(!a){ a = {g:mpAvatarMesh()}; a.g.position.set(d.x, 0, d.z); MP.avatars.set(p.peer, a); }
+    if(!a){ a = mpAvatarMesh(); a.g.position.set(d.x, 0, d.z); a.g.rotation.y = d.yaw; MP.avatars.set(p.peer, a); }
     const ty = Math.max(0, Math.min(40, d.y - 1.6));
     a.g.position.x += (Math.max(-300, Math.min(300, d.x)) - a.g.position.x)*k; a.g.position.z += (Math.max(-300, Math.min(300, d.z)) - a.g.position.z)*k; a.g.position.y += (ty - a.g.position.y)*k;
-    a.g.rotation.y = d.yaw;
+    let dy = d.yaw - a.g.rotation.y; dy = Math.atan2(Math.sin(dy), Math.cos(dy)); a.g.rotation.y += dy*k;      // turn the short way round, smoothly
+    const pt = Number.isFinite(d.pitch) ? Math.max(-1.2, Math.min(1.2, d.pitch)) : 0;
+    a.head.rotation.x += (pt - a.head.rotation.x)*k; a.arm.rotation.x += (pt*0.9 - a.arm.rotation.x)*k; a.arm2.rotation.x = a.arm.rotation.x;       // head and arm follow where they look
+    avatarLook(a, cleanName(d.name) || 'Player', typeof d.hold === 'string' ? d.hold.slice(0, 24) : '');
+    a.label.rotation.y = yaw - a.g.rotation.y;                                                               // the name tag faces you
   }
   for(const [id, a] of MP.avatars){ if(!seen.has(id)){ scene.remove(a.g); MP.avatars.delete(id); } }
 }
+function dummyTick(){ for(const dm of DUMMIES) dm.label.rotation.y = yaw - dm.g.rotation.y; }
+function dummiesClear(){ for(const dm of DUMMIES) scene.remove(dm.g); DUMMIES.length = 0; }
+function dummySpawn(hold, n){                                            // /spawn player: stand-in players that just stand there (Nacho goes after them too)
+  for(let i=0;i<n;i++){
+    const a = mpAvatarMesh(), off = (i - (n-1)/2)*1.6;
+    const fx = -Math.sin(yaw), fz = -Math.cos(yaw), sx = Math.cos(yaw), sz = -Math.sin(yaw);
+    const pos = new THREE.Vector3(camera.position.x + fx*5 + sx*off, 0, camera.position.z + fz*5 + sz*off);
+    resolveCollision(pos, 0.5);
+    a.g.position.set(pos.x, 0, pos.z); a.g.rotation.y = Math.atan2(-(camera.position.x - pos.x), -(camera.position.z - pos.z));
+    avatarLook(a, 'Dummy ' + (DUMMIES.length + 1), hold);
+    DUMMIES.push(a);
+  }
+}
 let beanSeq = 0;
+const DUMMIES = [];
+function cleanName(t){ try{ return String(t || '').replace(/[^\p{L}\p{N} _.\-]/gu, '').replace(/\s+/g, ' ').trim().slice(0, 16); }catch(e){ return ''; } }
+let playerName = 'Player';
+try{ playerName = cleanName(localStorage.getItem('ffps_name')) || 'Player'; }catch(e){}
+function setPlayerName(t){ playerName = cleanName(t) || 'Player'; try{ localStorage.setItem('ffps_name', playerName); }catch(e){} }
+
+// ---------- /view: see the game as the host or as a guest sees it (for testing) ----------
+let VIEW = 'host';
+const VIEWM = {ack:0, map:new Map(), t:0, hitT:0, q:[], ghosts:new Map()};
+const VIEW_LAG = 0.08;                                                  // simulated one-way delay for hits in the simulated client view
+const viewTag = document.createElement('div');
+viewTag.style.cssText = 'position:fixed;left:50%;top:8px;transform:translateX(-50%);z-index:30;font:700 12px system-ui,sans-serif;letter-spacing:.08em;color:#fff;background:rgba(160,40,200,.75);padding:4px 10px;border-radius:7px;pointer-events:none;display:none';
+document.body.appendChild(viewTag);
+function viewTagUpdate(){
+  const on = MP.role === 'guest' ? VIEW === 'host' : VIEW === 'client';
+  viewTag.style.display = on ? 'block' : 'none';
+  viewTag.textContent = MP.role === 'guest' ? 'VIEW: HOST POSITIONS (magenta)' : 'VIEW: CLIENT (simulated)';
+}
+function mkMirror(k, id){
+  const chop = k === 5, boss = k === 4, kind = MP_KINDS[k] || null;
+  const m = chop ? buildChopperModel() : boss ? buildBossModel() : kind ? buildVariantModel(kind) : (settings.costume === 'outlaw' ? enemyTemplate : thiefTemplate).clone();
+  if(boss) m.scale.setScalar(BOSS_SCALE);
+  scene.add(m);
+  const bar = new THREE.Group();
+  const bg = new THREE.Mesh(new THREE.PlaneGeometry(1,0.12), new THREE.MeshBasicMaterial({color:0x111111}));
+  const fillGeo = new THREE.PlaneGeometry(1,0.09); fillGeo.translate(0.5,0,0);
+  const fill = new THREE.Mesh(fillGeo, new THREE.MeshBasicMaterial({color:0x44e05a})); fill.position.set(-0.5,0,0.002);
+  const marker = new THREE.Mesh(markerGeo, new THREE.MeshBasicMaterial({color:0xff3b3b, depthTest:false, depthWrite:false, fog:false}));
+  marker.material.color.set(aliveMarkerColor({kind})); marker.rotation.x = Math.PI; marker.position.y = 0.45; marker.renderOrder = 999;
+  bar.add(bg, fill, marker); scene.add(bar);
+  if(boss || chop){ bg.visible = false; fill.visible = false; }
+  const maxHp = chop ? CHOPPER_HP : boss ? BOSS_HP : kind ? BEAN_KINDS[kind].hp : BEAN_HP;
+  return {proxy:true, mirror:true, id, mesh:m, bar, fill, marker, boss:boss || chop, hp:maxHp, maxHp, state:'alive', st:0, hat:m.getObjectByName('hat'), kind};
+}
+function viewApply(rows){                                               // the same thing a guest does with a snapshot, into a private set of copies
+  mpAckPrune(VIEWM.ack);
+  const seen = new Set();
+  for(const r of rows){
+    const id = r[0]; seen.add(id);
+    let e = VIEWM.map.get(id);
+    if(!e){ e = mkMirror(r[1]|0, id); e.mesh.position.set(r[2], r[7], r[3]); VIEWM.map.set(id, e); }
+    e.tx = r[2]; e.tz = r[3]; e.yaw = r[4]; e.st = r[6]; mpSetLook(e, r[5], id, VIEWM.ack); e.ty = (e.st === 0 || e.st >= 3 || e.boss) ? r[7] : 0.3;
+    e.state = e.st === 0 ? 'alive' : e.st === 1 ? 'ragdoll' : 'down';
+    if(e.st === 0 && e.hp <= 0.0001) mpLocalDown(e);
+  }
+  for(const [id, e] of VIEWM.map){ if(!seen.has(id)){ disposeEnemy(e, true); VIEWM.map.delete(id); } }
+}
+function viewClear(){
+  for(const e of VIEWM.map.values()) disposeEnemy(e, true);
+  VIEWM.map.clear(); VIEWM.q.length = 0; MP.pend = {}; MP.hitLog = []; MP.seq = 0; VIEWM.ack = 0;
+  for(const e of enemies){ if(e.mesh) e.mesh.visible = true; }
+  for(const g of VIEWM.ghosts.values()) scene.remove(g);
+  VIEWM.ghosts.clear();
+}
+function viewTick(dt){
+  if(MP.role === 'guest'){                                              // guest: /view host marks where the host says each bean is
+    if(VIEW !== 'host'){ if(VIEWM.ghosts.size){ for(const g of VIEWM.ghosts.values()) scene.remove(g); VIEWM.ghosts.clear(); } return; }
+    const seen = new Set();
+    for(const [id, e] of MP.byId){
+      if(e.tx === undefined) continue;
+      seen.add(id);
+      let g = VIEWM.ghosts.get(id);
+      if(!g){ g = new THREE.Mesh(new THREE.SphereGeometry(0.4, 10, 8), new THREE.MeshBasicMaterial({color:0xff00ff, wireframe:true, depthTest:false, transparent:true, opacity:0.9})); g.renderOrder = 998; scene.add(g); VIEWM.ghosts.set(id, g); }
+      g.position.set(e.tx, e.ty + 0.4, e.tz);
+    }
+    for(const [id, g] of VIEWM.ghosts){ if(!seen.has(id)){ scene.remove(g); VIEWM.ghosts.delete(id); } }
+    return;
+  }
+  if(VIEW !== 'client'){ if(VIEWM.map.size || VIEWM.q.length) viewClear(); return; }
+  VIEWM.t += dt; VIEWM.hitT += dt;
+  if(VIEWM.t >= 0.1){ VIEWM.t = 0; viewApply(mpRows()); }
+  for(const e of VIEWM.map.values()) mpProxyStep(e, dt);
+  for(const e of enemies){ if(e.mesh) e.mesh.visible = false; if(e.bar) e.bar.visible = false; }   // you only see the guest's copies
+  if(VIEWM.hitT >= 0.1){                                                // hits take a short trip to the "host"
+    VIEWM.hitT = 0;
+    const h = Object.keys(MP.pend).map(id=>[+id, MP.pend[id]]); MP.pend = {};
+    if(h.length) VIEWM.q.push({due:VIEW_LAG, h, s:mpNoteHits(h)});
+  }
+  for(const it of VIEWM.q) it.due -= dt;
+  while(VIEWM.q.length && VIEWM.q[0].due <= 0){
+    const it = VIEWM.q.shift();
+    for(const [id, dmg] of it.h){ const e = enemies.find(en=>en.id === id); if(e && e.state === 'alive') hurt(e, dmg); }
+    VIEWM.ack = it.s;
+  }
+}
 
 let last=performance.now();
 let lastErr = '';
@@ -4177,7 +4653,7 @@ function frame(now){
               const nb = enemies[enemies.length-1], a = Math.random()*Math.PI*2;
               nb.mesh.position.set(e.mesh.position.x + Math.cos(a)*1.6, 0.9, e.mesh.position.z + Math.sin(a)*1.6);
               resolveCollision(nb.mesh.position, 0.6);
-              burstConfetti(new THREE.Vector3(nb.mesh.position.x, 1.2, nb.mesh.position.z), 8);
+              fxConfetti(new THREE.Vector3(nb.mesh.position.x, 1.2, nb.mesh.position.z), 8);
             }
           }
         }
@@ -4246,11 +4722,19 @@ function frame(now){
         if(prog >= 1 && e.dyGround){ e.state = 'ragdoll'; layOnBack(e, e.dyYaw0 + e.dyYawD); }
       } else if(e.state==='carried'){
         e.deathTimer += wdt;
+        const gp = e.heldBy ? mpCarrierPose(e.heldBy) : null;
+        if(e.heldBy && !gp){ e.heldBy = null; e.state = 'thrown'; e.vel = new THREE.Vector3(); e.mesh.scale.setScalar(1); }     // the guest left: it drops
+        else if(gp){                                                      // carried by a guest: sit where their camera holds it
+          const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(+gp.pitch || 0, gp.yaw, 0, 'YXZ'));
+          const o = new THREE.Vector3(0.6,-0.5,-1.4).applyQuaternion(q);
+          e.mesh.position.set(gp.x + o.x, Math.max(0.45, gp.y + o.y), gp.z + o.z); e.mesh.quaternion.copy(q); e.mesh.scale.setScalar(0.5);
+        } else {
         const off = new THREE.Vector3(0.6,-0.5,-1.4);
         e.mesh.position.copy(camera.localToWorld(off));
         if(e.mesh.position.y < 0.45) e.mesh.position.y = 0.45; // don't dip into the floor when looking down
         e.mesh.quaternion.copy(camera.quaternion);
         e.mesh.scale.setScalar(0.5);
+        }
         if(e.deathTimer >= REVIVE_TIME) e.mesh.rotateZ(Math.sin(performance.now()*0.04)*0.25);   // timer's up: it struggles, but can't get up while carried
       } else if(e.state==='thrown'){
         e.deathTimer += wdt;
@@ -4274,7 +4758,7 @@ function frame(now){
           const hdx = e.mesh.position.x-hoopWorldCenter.x, hdz = e.mesh.position.z-hoopWorldCenter.z;
           if(Math.hypot(hdx,hdz) < HOOP_RADIUS && Math.abs(e.mesh.position.y-hoopWorldCenter.y) < 0.35 && e.vel.y < 0){
             e.scored = true;
-            burstConfetti(hoopWorldCenter);
+            fxConfetti(hoopWorldCenter);
             score += 20; hoopMade++; scoreEl.textContent = score; Snd.play('hoop');
             toRemove.push(e);
           }
@@ -4406,7 +4890,9 @@ function frame(now){
       if(t.life <= 0){ scene.remove(t.obj); t.obj.geometry.dispose(); t.obj.material.dispose(); tracers.splice(i,1); }
     }
   }
+  dummyTick();
   if(MP.role) mpTick(dt);                                                   // co-op keeps talking while paused or on the lose screen
+  viewTick(dt);
   updateScoreboard();
   renderer.clear();
   renderer.render(scene, camera);
