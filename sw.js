@@ -1,6 +1,6 @@
 // Flag Defense FPS service worker: lets the game open offline after the first visit.
 // Bump VERSION when you upload a new index.html, so installed copies pick it up.
-const VERSION = 'ffps-beta-0.78';
+const VERSION = 'ffps-beta-0.89';
 const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/maskable-512.png', 'icons/apple-touch-icon.png'];
 const CDN = ['cdnjs.cloudflare.com', 'unpkg.com'];                       // three.js and PeerJS
 const CDN_FILES = ['https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js', 'https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js'];   // saved on install so the first visit also works offline later
