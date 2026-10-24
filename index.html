@@ -54,7 +54,9 @@
   #msg .home .hLoad{left:4%;top:56%;width:clamp(130px,19vw,215px);height:clamp(60px,11vh,84px);border-radius:999px;background:linear-gradient(#8fd2f7,#5fb4ea)}
   #msg .home .hCosm{right:4%;top:36%;width:clamp(130px,19vw,215px);height:clamp(60px,11vh,84px);border-radius:999px;background:linear-gradient(#ee6cff,#c93df0)}
   #msg .home .hMp{right:4%;top:54%;width:clamp(130px,19vw,215px);height:clamp(60px,11vh,84px);border-radius:999px;background:linear-gradient(#ffb066,#ff8a24)}
-  #msg .home .hDeploy{left:50%;bottom:5%;transform:translateX(-50%);width:clamp(190px,28vw,300px);height:clamp(64px,12vh,96px);border-radius:999px;background:linear-gradient(#52ff7d,#18d84a);font-size:clamp(22px,3.6vmin,34px);letter-spacing:.04em;box-shadow:0 7px 0 #0c8a2c,0 12px 32px rgba(40,255,100,.35)}
+  #msg .home .hDeploy{left:50%;bottom:calc(2.5% + clamp(32px,6vh,48px) + 14px);transform:translateX(-50%);width:clamp(190px,28vw,300px);height:clamp(64px,12vh,96px);border-radius:999px;background:linear-gradient(#52ff7d,#18d84a);font-size:clamp(22px,3.6vmin,34px);letter-spacing:.04em;box-shadow:0 7px 0 #0c8a2c,0 12px 32px rgba(40,255,100,.35)}
+  #msg .home .hModes{left:50%;bottom:2.5%;transform:translateX(-50%);width:clamp(190px,28vw,300px);height:clamp(32px,6vh,48px);padding:0;border-radius:999px;background:linear-gradient(#6fc0ff,#2f7fe0);color:#05213f;font-size:clamp(14px,2.2vmin,20px);letter-spacing:.04em;box-shadow:0 4px 0 #1a5aa8,0 8px 22px rgba(60,150,255,.35)}
+  #msg .home .hModes:hover{transform:translateX(-50%) translateY(-2px) scale(1.04)}.home .hModes:active{transform:translateX(-50%) translateY(2px) scale(.98)}
   #msg .home .hDeploy:hover{transform:translateX(-50%) translateY(-3px) scale(1.05)}.home .hDeploy:active{transform:translateX(-50%) translateY(2px) scale(.98)}
   #msg .home .hTitle{position:absolute;left:50%;top:14px;transform:translateX(-50%);margin:0;padding:6px 18px;font-size:clamp(20px,4vmin,38px);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;text-shadow:0 3px 0 #0a3a66,0 0 22px rgba(77,175,255,.6)}
   .lvTrack{display:flex;overflow-x:auto;overflow-y:hidden;width:min(100vw,1100px);padding:40px 10px 10px;margin:18px 0;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;box-sizing:border-box}
@@ -65,13 +67,14 @@
   .c3.vis .c3r{animation:lvSpin 9s linear infinite}
   .c3 .bx{position:absolute;width:0;height:0;transform-style:preserve-3d}.c3 .clid{position:absolute;width:0;height:0;transform-style:preserve-3d;transform-origin:0 0 -35px;transition:transform .4s}
   .c3.open .clid{transform:rotateX(112deg)}
-  .c3 .fc{position:absolute;left:0;top:0;background:var(--c);backface-visibility:hidden;border:1px solid rgba(0,0,0,.35);box-sizing:border-box}
-  .c3 .fr{filter:brightness(.95)}.c3 .bk{filter:brightness(.6)}.c3 .rt{filter:brightness(.8)}.c3 .lf{filter:brightness(.7)}.c3 .tp{filter:brightness(1.15)}.c3 .bt{filter:brightness(.5)}
+  .c3 .fc{position:absolute;left:0;top:0;background:var(--c);-webkit-backface-visibility:hidden;backface-visibility:hidden;border:1px solid rgba(0,0,0,.35);box-sizing:border-box}
+  .c3 .fr{box-shadow:inset 0 0 0 99px rgba(0,0,0,.05)}.c3 .bk{box-shadow:inset 0 0 0 99px rgba(0,0,0,.4)}.c3 .rt{box-shadow:inset 0 0 0 99px rgba(0,0,0,.2)}.c3 .lf{box-shadow:inset 0 0 0 99px rgba(0,0,0,.3)}.c3 .tp{box-shadow:inset 0 0 0 99px rgba(255,255,255,.15)}.c3 .bt{box-shadow:inset 0 0 0 99px rgba(0,0,0,.5)}
   .c3 .cbody .fr,.c3 .cbody .bk{background:linear-gradient(90deg,transparent 14%,var(--bd) 14% 22%,transparent 22% 78%,var(--bd) 78% 86%,transparent 86%),var(--c)}
   .c3 .clidb .fr,.c3 .clidb .bk,.c3 .clidb .tp{background:linear-gradient(90deg,transparent 14%,var(--bd) 14% 22%,transparent 22% 78%,var(--bd) 78% 86%,transparent 86%),var(--c)}
   .c3 .clatch .fc{background:#f0a500}
   .c3 .cin{display:none}.c3.open .cin{display:block}.c3 .cin .fc{background:var(--in)}.c3 .cin .tp{background:radial-gradient(circle,var(--gl),var(--in) 80%)}.c3 .cin .bt,.c3 .cin .fr,.c3 .cin .bk,.c3 .cin .lf,.c3 .cin .rt{display:none}
-  .c3.can{cursor:pointer;filter:drop-shadow(0 0 10px #ffd24a)}.c3.gold:not(.open){filter:drop-shadow(0 0 8px rgba(255,200,60,.55))}.c3.diamond:not(.open){filter:drop-shadow(0 0 10px rgba(110,240,255,.7))}.c3.can{filter:drop-shadow(0 0 12px #fff)!important}
+  .c3::before{content:'';position:absolute;left:50%;bottom:6px;width:170px;height:80px;margin-left:-85px;border-radius:50%;background:radial-gradient(closest-side,var(--glow,transparent),transparent);pointer-events:none}
+  .c3.can{cursor:pointer;--glow:rgba(255,235,150,.8)}.c3.gold:not(.open):not(.can){--glow:rgba(255,200,60,.5)}.c3.diamond:not(.open):not(.can){--glow:rgba(110,240,255,.6)}
   @keyframes lvSpin{from{transform:rotateX(-24deg) rotateY(0)}to{transform:rotateX(-24deg) rotateY(360deg)}}
   .lvBar{position:relative;width:100%;height:18px;background:#b0aeb0;margin-top:0}.lvBar i{position:absolute;left:0;top:0;bottom:0;background:#00e800}
   .lvDot{position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;background:#a9aca8}.lvDot.on{background:#0f0}
@@ -84,6 +87,10 @@
   #updCard ul{margin:0 0 16px;padding-left:20px;display:flex;flex-direction:column;gap:7px;font-size:14px;line-height:1.35}
   #updCard li b{font-size:11px;padding:1px 6px;border-radius:5px;margin-right:2px}#updCard .kNEW{background:#1f8a42;color:#fff}#updCard .kCHANGED{background:#2f6fd0;color:#fff}#updCard .kFIXED{background:#b0752a;color:#fff}
   #updCard button{display:block;margin:0 auto;padding:12px 40px;border:0;border-radius:12px;font-weight:800;font-size:16px;cursor:pointer;background:linear-gradient(#6fc0ff,#3b8fe0);color:#06203a}
+  .frCode{display:flex;gap:10px;align-items:center;justify-content:center;margin:4px 0}.frCode b{font:800 28px ui-monospace,monospace;letter-spacing:.15em}
+  .frAdd{display:flex;gap:8px;justify-content:center;margin:8px 0}.frAdd input{font:700 18px ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase;width:9em;padding:8px;border-radius:8px;border:1px solid #3a465c;background:#10151f;color:#fff;text-align:center}
+  .frList{display:flex;flex-direction:column;gap:6px;width:min(480px,92vw);margin:8px 0}.frRow{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid #3a465c;border-radius:8px;background:#10151d;text-align:left}
+  .frDot{width:10px;height:10px;border-radius:50%;background:#555;flex:none}.frDot.on{background:#3df06a;box-shadow:0 0 6px #3df06a}.frInfo{flex:1;display:flex;flex-direction:column}.frInfo small{opacity:.7}.frX{padding:6px 12px!important;font-size:13px!important;opacity:.8}
   .hLevel{cursor:pointer}.hBang{position:absolute;top:-10px;right:-10px;width:26px;height:26px;border-radius:50%;background:#e8222a;color:#fff;font-weight:900;font-size:18px;line-height:26px;text-align:center;box-shadow:0 0 8px rgba(255,40,40,.8);animation:bangPulse 1.2s ease-in-out infinite;pointer-events:none}@keyframes bangPulse{50%{transform:scale(1.15)}}
   #msg .home .hLevel{position:absolute;left:3%;top:14px;width:min(300px,34vw);text-align:left}
   #msg .home .hBadge{display:inline-block;padding:4px 14px;border-radius:8px;background:linear-gradient(#e8e8e8,#bcbcbc);color:#111;font-weight:800;letter-spacing:.08em;font-size:clamp(14px,2.2vmin,20px)}
@@ -1829,6 +1836,9 @@ let career = {xp:0, coins:0, level:1, bestWave:0, bestScore:0, runs:0, dailyDate
 try { const saved = JSON.parse(localStorage.getItem(CAREER_KEY)||'null'); if(saved && typeof saved==='object') career={...career,...saved}; } catch(e){}
 function careerSave(){ try{ localStorage.setItem(CAREER_KEY, JSON.stringify(career)); }catch(e){} }
 career.cos = {owned:Object.assign({}, career.cos && career.cos.owned), eq:Object.assign({head:'',top:'',bottom:'',cape:''}, career.cos && career.cos.eq)};   // cosmetics won from chests / what is worn
+if(!/^[A-Z2-9]{8}$/.test(String(career.fid || ''))){ career.fid = Array.from({length:8}, ()=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random()*32)]).join(''); careerSave(); }   // friend code
+career.friends = Array.isArray(career.friends) ? career.friends.filter(f=>f && /^[A-Z2-9]{8}$/.test(String(f.id))).slice(0, 30).map(f=>({id:String(f.id), name:String(f.name || 'Friend').slice(0, 16)})) : [];
+if(career.fshow === undefined) career.fshow = true;
 career.lvc = Object.assign({}, career.lvc);                                 // level-track chests already claimed
 career.wild = Object.assign({common:0, rare:0, epic:0, legendary:0}, career.wild);   // wild parts: one rarity, works for any gun of it
 career.parts = Object.assign({}, career.parts);                                // gun parts won from shop chests
@@ -1978,16 +1988,17 @@ function showGunUpgrade(note){
 // ---- level track: a chest every level (wood on 1 2 4 6 7 9, iron on 3 5 8 0 of every ten), claim them as you reach them ----
 const lvUnclaimed = ()=>{ for(let L = 1; L <= Math.min(career.level, LV_MAX); L++) if(!career.lvc[L]) return true; return false; };
 const LV_MAX = 100, lvChest = L=>L % 10 === 0 ? 'diamond' : L % 10 === 5 ? 'gold' : [1,2,4,6,7,9].includes(L % 10) ? 'wood' : 'iron';
-function box3(w, h, d, cls, extra){                                         // one CSS-3D box centred on its own origin: six faces
-  const f = (n, W, H, t)=>`<i class="fc ${n}" style="width:${W}px;height:${H}px;margin:${-H/2}px 0 0 ${-W/2}px;transform:${t}"></i>`;
+function box3(w, h, d, cls, extra, only){                                   // one CSS-3D box centred on its own origin; `only` lists the faces to build (fewer layers = loads everywhere)
+  const f = (n, W, H, t)=>(only || 'fr bk rt lf tp bt').includes(n) ? `<i class="fc ${n}" style="width:${W}px;height:${H}px;margin:${-H/2}px 0 0 ${-W/2}px;transform:${t}"></i>` : '';
   return `<b class="bx ${cls}" style="${extra || ''}">` + f('fr', w, h, `translateZ(${d/2}px)`) + f('bk', w, h, `rotateY(180deg) translateZ(${d/2}px)`) + f('rt', d, h, `rotateY(90deg) translateZ(${w/2}px)`) + f('lf', d, h, `rotateY(-90deg) translateZ(${w/2}px)`) + f('tp', w, d, `rotateX(90deg) translateZ(${h/2}px)`) + f('bt', w, d, `rotateX(-90deg) translateZ(${h/2}px)`) + '</b>';
 }
-function chest3d(kind, open, extraCls, attrs){                              // a small spinning 3D chest (pure CSS, so a hundred of them are cheap)
-  return `<div class="c3 ${kind}${open ? ' open' : ''} ${extraCls || ''}" ${attrs || ''}><div class="c3r">`
-    + box3(112, 46, 70, 'cbody', 'left:0;top:-23px')
-    + `<b class="clid" style="left:0;top:-46px">` + box3(112, 26, 70, 'clidb', 'left:0;top:-13px') + box3(10, 16, 4, 'clatch', 'left:0;top:-12px;transform:translateZ(36px)') + '</b>'
-    + box3(100, 2, 58, 'cin', 'left:0;top:-45px')
-    + '</div></div>';
+function chestInner(){
+  return box3(112, 46, 70, 'cbody', 'left:0;top:-23px', 'fr bk rt lf')
+    + `<b class="clid" style="left:0;top:-46px">` + box3(112, 26, 70, 'clidb', 'left:0;top:-13px') + box3(10, 16, 4, 'clatch', 'left:0;top:-12px;transform:translateZ(36px)', 'fr') + '</b>'
+    + box3(100, 2, 58, 'cin', 'left:0;top:-45px', 'tp');
+}
+function chest3d(kind, open, extraCls, attrs, lazy){                         // a small spinning 3D chest (pure CSS). lazy: the faces are built only while it is on screen
+  return `<div class="c3 ${kind}${open ? ' open' : ''} ${extraCls || ''}" ${attrs || ''}><div class="c3r">${lazy ? '' : chestInner()}</div></div>`;
 }
 function showLevels(){
   msg.classList.remove('hidden'); document.body.classList.remove('playing'); captureWarningEl.classList.remove('show');
@@ -1996,11 +2007,12 @@ function showLevels(){
   for(let L = 1; L <= LV_MAX; L++){
     const kind = lvChest(L), claimed = !!career.lvc[L], reached = L <= cur, can = reached && !claimed;
     const fill = L < cur ? 100 : L === cur ? 50 + 50*frac : 0;
-    items += `<div class="lvI${L === cur ? ' now' : ''}">${chest3d(kind, claimed, 'lvC' + (can ? ' can' : ''), `data-l="${L}" ${can ? 'role="button" tabindex="0" title="Claim"' : ''}`)}<div class="lvBar"><i style="width:${fill}%"></i><b class="lvDot${reached ? ' on' : ''}"></b></div><div class="lvLbl">Level ${L}${can ? '<small>Tap chest to claim</small>' : ''}</div></div>`;
+    items += `<div class="lvI${L === cur ? ' now' : ''}">${chest3d(kind, claimed, 'lvC' + (can ? ' can' : ''), `data-l="${L}" ${can ? 'role="button" tabindex="0" title="Claim"' : ''}`, true)}<div class="lvBar"><i style="width:${fill}%"></i><b class="lvDot${reached ? ' on' : ''}"></b></div><div class="lvLbl">Level ${L}${can ? '<small>Tap chest to claim</small>' : ''}</div></div>`;
   }
   msg.innerHTML = `<h1>Level track</h1><div class="hint">Level ${cur} · ${Math.max(0, career.xp-lo)} / ${hi-lo} XP</div><div class="lvTrack" id="lvTrack">${items}</div><button id="lvBack">Back</button>`;
   const tr = document.getElementById('lvTrack'), now = tr.querySelector('.now');
-  try{ const io = new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle('vis', e.isIntersecting)), {root:tr, rootMargin:'0px 200px'}); tr.querySelectorAll('.c3').forEach(c=>io.observe(c)); }catch(e){ tr.querySelectorAll('.c3').forEach(c=>c.classList.add('vis')); }
+  const mount = (c, on)=>{ const r = c.firstElementChild; if(on){ if(!r.firstChild) r.innerHTML = chestInner(); c.classList.add('vis'); } else { c.classList.remove('vis'); r.textContent = ''; } };
+  try{ const io = new IntersectionObserver(es=>es.forEach(e=>mount(e.target, e.isIntersecting)), {root:tr, rootMargin:'0px 320px'}); tr.querySelectorAll('.c3').forEach(c=>io.observe(c)); }catch(e){ tr.querySelectorAll('.c3').forEach(c=>mount(c, true)); }
   if(now) tr.scrollLeft = Math.max(0, now.offsetLeft - tr.clientWidth/2 + now.offsetWidth/2);
   tr.querySelectorAll('.lvC.can').forEach(el=>{ const go = ()=>{ const L = +el.dataset.l, kind = lvChest(L); if(career.lvc[L] || L > career.level) return; career.lvc[L] = true; if(!career.chests) career.chests = {wood:0, iron:0}; career.chests[kind] = (career.chests[kind]||0) + 1; careerSave(); chestBack = showLevels; Snd.play('pickup'); showChestOpen(kind); }; el.onclick = go; el.onkeydown = e=>{ if(e.key === 'Enter' || e.key === ' ') go(); }; });
   document.getElementById('lvBack').onclick = ()=>{ Snd.play('click'); showHome(); };
@@ -2317,7 +2329,7 @@ function deliverShopChests(){                                            // owne
 function fnv8(str){ let h = 0x811c9dc5; for(let i = 0; i < str.length; i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return h.toString(16).padStart(8, '0'); }
 function saveCodeMake(){
   const c = career, d = {v:1, n:playerName, l:{w:loadout.weapon, f:loadout.finish},
-    c:{xp:c.xp, co:c.coins, bw:c.bestWave, bs:c.bestScore, ru:c.runs, dd:c.dailyDate, dw:c.dailyWave, dc:c.dailyClaimed ? 1 : 0, g:c.guns, p:c.parts, up:c.up, lc:Object.keys(c.lvc || {}).map(Number), wp:c.wild, co2:c.cos, ch:c.chests, sh:(()=>{ const t = shopState(); return {wf:t.woodFree ? 1 : 0, wb:t.woodBought, wt:t.woodT, ib:t.ironBought, it:t.ironT}; })()}};
+    c:{xp:c.xp, co:c.coins, bw:c.bestWave, bs:c.bestScore, ru:c.runs, dd:c.dailyDate, dw:c.dailyWave, dc:c.dailyClaimed ? 1 : 0, g:c.guns, p:c.parts, up:c.up, lc:Object.keys(c.lvc || {}).map(Number), wp:c.wild, fi:c.fid, fr:(c.friends || []).map(f=>[f.id, f.name]), fs:c.fshow === false ? 0 : 1, co2:c.cos, ch:c.chests, sh:(()=>{ const t = shopState(); return {wf:t.woodFree ? 1 : 0, wb:t.woodBought, wt:t.woodT, ib:t.ironBought, it:t.ironT}; })()}};
   const b = btoa(unescape(encodeURIComponent(JSON.stringify(d)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   return 'FFPS1-' + b + '-' + fnv8(b);
 }
@@ -2333,6 +2345,8 @@ function saveCodeParse(code){                                            // retu
   o.xp = I(c.xp, 1e9); o.coins = I(c.co, 1e9); o.level = careerLevel(o.xp); o.bestWave = I(c.bw, 9999); o.bestScore = I(c.bs, 1e9); o.runs = I(c.ru, 1e7);
   o.dailyDate = typeof c.dd === 'string' ? c.dd.slice(0, 12) : ''; o.dailyWave = I(c.dw, 99); o.dailyClaimed = !!c.dc;
   o.guns = {pistol:true}; o.parts = {}; for(const id in WEAPONS){ if(c.g && c.g[id] === true) o.guns[id] = true; if(c.p) o.parts[id] = I(c.p[id], 9999); }
+  o.fid = (typeof c.fi === 'string' && /^[A-Z2-9]{8}$/.test(c.fi)) ? c.fi : career.fid; o.fshow = c.fs !== 0;
+  o.friends = Array.isArray(c.fr) ? c.fr.slice(0, 30).filter(x=>Array.isArray(x) && /^[A-Z2-9]{8}$/.test(String(x[0]))).map(x=>({id:String(x[0]), name:(typeof x[1] === 'string' ? x[1] : 'Friend').replace(/[^\p{L}\p{N} _.\-]/gu, '').slice(0, 16) || 'Friend'})) : [];
   o.wild = {}; for(const r of ['common','rare','epic','legendary']) o.wild[r] = I(c.wp && c.wp[r], 9999);
   o.lvc = {}; if(Array.isArray(c.lc)) for(const L of c.lc.slice(0, 200)){ const n = I(L, LV_MAX); if(n >= 1) o.lvc[n] = true; }
   o.up = {}; for(const id in GUN_UPG_TABLE){ o.up[id] = {}; for(const k of UPG_KEYS) o.up[id][k] = (k === 'f' && !GUN_UPG_TABLE[id].f) ? 0 : Math.min(5, I(c.up && c.up[id] && c.up[id][k], 5)); }
@@ -2382,6 +2396,19 @@ function showAccount(){
 }
 // ---- update card: shown once, the first time a player opens the game on a new version. To add one: put a new entry FIRST in UPDATES (same v as GAME_VERSION). ----
 const UPDATES = [
+  {v:'beta 0.95', title:'Bug fixes', items:[
+    'FIXED You now hear other players\' guns (louder the closer they are).',
+    'FIXED Some shop and level-track chests not loading fully: the chests are lighter, no longer use effects that some browsers drop, and only the ones on screen are built.']},
+  {v:'beta 0.94', title:'Gamemodes page', items:[
+    'NEW A blue Gamemodes button under Deploy opens the new Gamemodes page. More modes are coming.']},
+  {v:'beta 0.93', title:'Friends', items:[
+    'NEW Friends: Multiplayer > Friends. Share your friend code, add theirs, see who is online and which room they are in, and join it with one tap. There is no server behind it, so each of you adds the other and there are no requests or messages.',
+    'NEW Visible to friends can be switched off. Your friend code is saved in your save code.']},
+  {v:'beta 0.92', title:'Voice chat volume', items:[
+    'NEW Voice chat volume sliders (global and per player) now go up to 200%.',
+    'NEW Mute myself: a button on the voice card that stops your mic from sending without leaving the room.']},
+  {v:'beta 0.91', title:'Public rooms', items:[
+    'NEW Public rooms: choose Public when hosting and your room shows up under Multiplayer > Public rooms for everyone, no extra server needed. Use Refresh to look again. Each listing shows the host\'s name, the player count and whether VC is on or off. (Experimental)']},
   {v:'beta 0.89', title:'Gun upgrades, level track & wild parts', items:[
     'NEW Gun upgrades: every gun has an Upgrade button (next to Select) with Fire rate, Damage, Capacity and Reload speed, 5 levels each. Levels 1-3 cost 1 part, levels 4-5 cost 2 parts.',
     'CHANGED All guns have new base stats (they start weaker and grow with upgrades). The rocket launcher\'s blast damage is now its own stat.',
@@ -2409,6 +2436,11 @@ function maybeUpdateCard(){
     document.body.appendChild(el);
   }catch(e){}
 }
+function showGamemodes(){
+  msg.classList.remove('hidden'); document.body.classList.remove('playing'); captureWarningEl.classList.remove('show');
+  msg.innerHTML = `<h1>Gamemodes</h1><p class="hint">Pick how you want to play.</p><div class="card big equipped"><h3>Protect the Flag<small>Classic</small></h3><p>Hold off the beans for as long as you can and keep the flag standing. This is the mode you play when you press Deploy.</p></div><p class="hint">More gamemodes are coming soon.</p><button id="gmBack">Back</button>` + verTag();
+  document.getElementById('gmBack').onclick = ()=>{ Snd.play('click'); showHome(); };
+}
 function showHome(){
   mpPubStop(); mpLeave();
   msg.classList.remove('hidden'); document.body.classList.remove('playing'); captureWarningEl.classList.remove('show');
@@ -2424,12 +2456,14 @@ function showHome(){
     <button class="hb hMp" id="mpBtn">🌐 Multiplayer</button>
     <div class="hModel"></div>
     <button class="hb hDeploy" id="startBtn">Deploy</button>
+    <button class="hb hModes" id="modesBtn">Gamemodes</button>
     <details class="hHelp"><summary>How to play</summary><div>${isTouch() ? 'Left stick move · drag anywhere else to look · right-side buttons: fire, jump, sprint, reload, use (grab / throw / open chest), fire mode · tap a hotbar slot to switch' : 'WASD move · Space jump · Shift sprint (no firing) · 1-5 hotbar (gun is slot 1) · Mouse look · Click/hold fire · Q auto/semi · R reload'}<br>E grabs a downed bean, E again throws it out: over the wall for +10, or through the hoop for +20. Shooting a bean down scores nothing, and downed beans get back up after 30s. Your gun is stowed while you carry one.${HANDS_ENABLED ? ' Empty hotbar slots are your fists: four punches drop a bean.' : ''} After every wave a supply van delivers a chest — look at it and press E to open it; it holds a loot item that pops out onto the ground (E to pick it up within 30 s; it goes into your selected slot if that one is empty, otherwise the next free one): land mines, grenades, a turret (E to pick it back up), flag cloth, a big taco that distracts beans, or a slime hand that drags downed beans to you; the next wave starts when the van drives off (iron, golden and diamond chests are rarer and can hold two items).</div></details>
     <button id="gearBtn" title="Settings" aria-label="Settings">⚙</button></div>` + verTag();
   setupHomeModel();
   document.getElementById('mpBtn').onclick = mpMenuUI;
   document.getElementById('gunsBtn').onclick = ()=>{ gunView = null; showGuns(); };
   document.getElementById('startBtn').onclick = resetGame;
+  document.getElementById('modesBtn').onclick = ()=>{ Snd.play('click'); showGamemodes(); };
   document.getElementById('shopBtn').onclick = showShop;
   document.querySelector('.hLevel').onclick = e=>{ if(!e.target.closest('summary')){ Snd.play('click'); showLevels(); } };
   document.getElementById('acctBtn').onclick = showAccount;
@@ -4641,7 +4675,7 @@ function resetGame(){
 
 // ---------- co-op multiplayer (room capability) ----------
 // Host-authoritative: the host runs beans, waves and the flag and broadcasts snapshots (~10/s); guests mirror them and send their hits back.
-const GAME_VERSION = 'beta 0.89';
+const GAME_VERSION = 'beta 0.95';
 let CAPNOW = false;
 const verTag = ()=>`<div style="position:fixed;right:12px;bottom:8px;font:600 12px system-ui,sans-serif;color:#9fb3cc;opacity:.8;pointer-events:none">Version ${GAME_VERSION}</div>`;
 const MP = {seq:0, hitLog:[], acks:{}, pub:false, pubOff:null, advKey:'', advT:0, lobby:false, startCap:null, startGrp:null, guestLobby:false, role:null, code:'', room:null, ns:null, hostPeer:null, began:false, byId:new Map(), pend:{}, pendT:0, snapT:0, avatars:new Map(), ghosts:new Map(), fps:0, ping:null, fN:0, fT0:0, pgT:0, itemT:0, hadItems:false, offs:[], warned:false};
@@ -4736,10 +4770,10 @@ const MPNet = {
 };
 MP.ns = window.Peer ? MPNet : null;
 // ---------- voice chat: WebRTC audio calls between every pair of players in the room (PeerJS media calls) ----------
-const VC = {vol:1, prox:true, deaf:false, muted:{}, pvol:{}, open:null, force:false, ctx:null, dest:null, gate:null, ana:null, src:null, stream:null, micOk:null, micBusy:false, talking:false, hang:0, room:null, calls:new Map(), auds:new Map(), buf:null, hud:null, timer:0, back:null};
+const VC = {selfMute:false, comp:null, vol:1, prox:true, deaf:false, muted:{}, pvol:{}, open:null, force:false, ctx:null, dest:null, gate:null, ana:null, src:null, stream:null, micOk:null, micBusy:false, talking:false, hang:0, room:null, calls:new Map(), auds:new Map(), buf:null, hud:null, timer:0, back:null};
 try{ const sv = JSON.parse(localStorage.getItem('ffps_voice2') || 'null');
-  if(sv && typeof sv === 'object'){ if(Number.isFinite(sv.vol)) VC.vol = Math.max(0, Math.min(1, sv.vol)); if(typeof sv.prox === 'boolean') VC.prox = sv.prox; VC.deaf = !!sv.deaf;
-    if(sv.pvol && typeof sv.pvol === 'object') for(const k of Object.keys(sv.pvol).slice(0, 20)) if(Number.isFinite(sv.pvol[k]) && k.length < 60) VC.pvol[k] = Math.max(0, Math.min(1, sv.pvol[k]));
+  if(sv && typeof sv === 'object'){ if(Number.isFinite(sv.vol)) VC.vol = Math.max(0, Math.min(2, sv.vol)); if(typeof sv.prox === 'boolean') VC.prox = sv.prox; VC.deaf = !!sv.deaf; VC.selfMute = !!sv.selfMute;
+    if(sv.pvol && typeof sv.pvol === 'object') for(const k of Object.keys(sv.pvol).slice(0, 20)) if(Number.isFinite(sv.pvol[k]) && k.length < 60) VC.pvol[k] = Math.max(0, Math.min(2, sv.pvol[k]));
     if(sv.muted && typeof sv.muted === 'object') for(const k of Object.keys(sv.muted).slice(0, 20)) if(sv.muted[k] === true && k.length < 60) VC.muted[k] = true; }
 }catch(e){}
 const MPVC = {on:true};                                                         // the host's "VC on/off" choice when creating a room
@@ -4749,13 +4783,14 @@ function roomVcOn(){                                                           /
   const h = MP.room.peers().find(p=>p.peer === 'host'); return !(h && h.presence && h.presence.vcr === 0);
 }
 const vcAvail = ()=>(!!MP.role && roomVcOn()) || VC.force;                                         // voice chat is for online rooms, unless switched on in the terminal (/vc on)
-function vcSave(){ try{ localStorage.setItem('ffps_voice2', JSON.stringify({pvol:VC.pvol, vol:VC.vol, prox:VC.prox, deaf:VC.deaf, muted:VC.muted})); }catch(e){} }
+function vcSave(){ try{ localStorage.setItem('ffps_voice2', JSON.stringify({pvol:VC.pvol, vol:VC.vol, prox:VC.prox, deaf:VC.deaf, selfMute:VC.selfMute, muted:VC.muted})); }catch(e){} }
 const vcReal = id=>id === 'host' ? NET_PREFIX + MP.code : id;                       // room ids -> real PeerJS ids (the host's room id is just "host")
 const vcLogical = id=>(MP.role === 'guest' && id === NET_PREFIX + MP.code) ? 'host' : id;
 function vcAudio(){                                                                 // our outgoing audio goes through a gate we open only while talking
   if(VC.ctx) return VC.ctx;
   const AC = window.AudioContext || window.webkitAudioContext; if(!AC) return null;
   VC.ctx = new AC(); VC.dest = VC.ctx.createMediaStreamDestination(); VC.gate = VC.ctx.createGain(); VC.gate.gain.value = 0; VC.gate.connect(VC.dest);
+  try{ VC.comp = VC.ctx.createDynamicsCompressor(); VC.comp.threshold.value = -6; VC.comp.ratio.value = 8; VC.comp.connect(VC.ctx.destination); }catch(e){ VC.comp = null; }   // keeps the boosted (up to 200%) voices from clipping
   VC.ana = VC.ctx.createAnalyser(); VC.ana.fftSize = 512; VC.buf = new Uint8Array(VC.ana.fftSize);
   return VC.ctx;
 }
@@ -4781,8 +4816,9 @@ function vcWire(call){
 function vcAttach(id, rs){
   vcDetach(id);
   const a = new Audio(); a.srcObject = rs; a.autoplay = true; a.volume = 0; VC.auds.set(id, a); const p = a.play(); if(p && p.catch) p.catch(()=>{});
+  try{ if(VC.ctx){ a._s = VC.ctx.createMediaStreamSource(rs); a._g = VC.ctx.createGain(); a._g.gain.value = 0; a._s.connect(a._g); a._g.connect(VC.comp || VC.ctx.destination); } }catch(e){ a._g = null; }       // heard through Web Audio so the volume can go past 100%
 }
-function vcDetach(id){ const a = VC.auds.get(id); if(a){ try{ a.pause(); a.srcObject = null; }catch(e){} VC.auds.delete(id); } }
+function vcDetach(id){ const a = VC.auds.get(id); if(a){ try{ a.pause(); a.srcObject = null; if(a._s) a._s.disconnect(); if(a._g) a._g.disconnect(); }catch(e){} VC.auds.delete(id); } }
 function vcDrop(id){ const c = VC.calls.get(id); VC.calls.delete(id); vcDetach(id); if(c){ try{ c.call.close(); }catch(e){} } }
 function vcSync(){                                                                  // keep exactly one call per pair: the player with the smaller id rings the other
   const raw = VC.room && VC.room.rawPeer; if(!raw || !raw.id) return;
@@ -4818,12 +4854,14 @@ function vcTick(){
   if(!VC.room){ return; }
   const lvl = vcLevel(), now = performance.now();
   let want = false;
-  if(VC.src){ if(lvl > 0.04) VC.hang = now + 450; want = now < VC.hang; }                // voice activation: the mic opens while you are speaking
+  if(VC.src){ if(lvl > 0.04) VC.hang = now + 450; want = now < VC.hang; }
+  if(VC.selfMute) want = false;                                                          // you muted yourself                // voice activation: the mic opens while you are speaking
   if(want !== VC.talking){ VC.talking = want; if(VC.gate) VC.gate.gain.setTargetAtTime(want ? 1 : 0, VC.ctx.currentTime, 0.015); }
   for(const [id, a] of VC.auds){                                                    // each friend's loudness: your volume, mutes, and (optionally) distance
     const lg = vcLogical(id); let v = (VC.deaf || VC.muted[lg]) ? 0 : VC.vol * (VC.pvol[lg] === undefined ? 1 : VC.pvol[lg]);
     if(v > 0 && VC.prox){ const av = MP.avatars.get(lg); if(av){ const d = camera.position.distanceTo(av.g.position); v *= Math.max(0, Math.min(1, 1 - (d - 6)/40)); } }
-    a.volume = Math.max(0, Math.min(1, v));
+    v = Math.max(0, Math.min(2, v));
+    if(a._g){ a.volume = 0; a._g.gain.setTargetAtTime(v, VC.ctx.currentTime, 0.03); } else a.volume = Math.min(1, v);
   }
   const names = []; if(VC.talking) names.push('You');
   for(const p of VC.room.peers()){ if(p.isMe || p.kind !== 'viewer' || !p.presence || p.presence.vc !== 1 || VC.muted[p.peer]) continue; names.push(cleanName(p.presence.name) || 'Player'); }
@@ -4842,9 +4880,10 @@ function voiceInner(backLabel){
   return `<h1>Voice chat</h1>
     <div class="hint">${VC.room ? 'Connected to your room.' : 'Not in a room.'} ${micTxt}.</div>
     <div style="height:10px;background:rgba(255,255,255,.12);border-radius:6px;overflow:hidden;margin:6px auto;width:min(420px,90vw)"><div class="vcMeter" style="height:100%;width:0;background:#52ff7d"></div></div>
-    ${all.length ? '<div class="vcList"><div class="sub">Players (click one for its own volume)</div>' + all.map(p=>p.isMe ? `<div class="vcRow"><div class="vcHead"><span class="vcSp" data-p="me"></span><span>You</span></div></div>` : `<div class="vcRow"><div class="vcHead" data-p="${p.peer}"><span class="vcSp" data-p="${p.peer}"></span><span class="vcN" data-p="${p.peer}"></span><em>${VC.muted[p.peer] ? 'Muted' : Math.round(100*(VC.pvol[p.peer] === undefined ? 1 : VC.pvol[p.peer])) + '%'}</em></div>${VC.open === p.peer ? `<div class="vcDet"><input class="vcPV" data-p="${p.peer}" type="range" min="0" max="1" step="0.05" value="${VC.pvol[p.peer] === undefined ? 1 : VC.pvol[p.peer]}"><button class="vcPM" data-p="${p.peer}">${VC.muted[p.peer] ? 'Unmute' : 'Mute'}</button></div>` : ''}</div>`).join('') + '</div>' : ''}
-    <label class="setrow">Global volume<input class="vcVol" type="range" min="0" max="1" step="0.05" value="${VC.vol}"><output class="vcVolO">${Math.round(VC.vol*100)}%</output></label>
+    ${all.length ? '<div class="vcList"><div class="sub">Players (click one for its own volume)</div>' + all.map(p=>p.isMe ? `<div class="vcRow"><div class="vcHead"><span class="vcSp" data-p="me"></span><span>You</span></div></div>` : `<div class="vcRow"><div class="vcHead" data-p="${p.peer}"><span class="vcSp" data-p="${p.peer}"></span><span class="vcN" data-p="${p.peer}"></span><em>${VC.muted[p.peer] ? 'Muted' : Math.round(100*(VC.pvol[p.peer] === undefined ? 1 : VC.pvol[p.peer])) + '%'}</em></div>${VC.open === p.peer ? `<div class="vcDet"><input class="vcPV" data-p="${p.peer}" type="range" min="0" max="2" step="0.05" value="${VC.pvol[p.peer] === undefined ? 1 : VC.pvol[p.peer]}"><button class="vcPM" data-p="${p.peer}">${VC.muted[p.peer] ? 'Unmute' : 'Mute'}</button></div>` : ''}</div>`).join('') + '</div>' : ''}
+    <label class="setrow">Global volume<input class="vcVol" type="range" min="0" max="2" step="0.05" value="${VC.vol}"><output class="vcVolO">${Math.round(VC.vol*100)}%</output></label>
     <div class="setrow"><span>Proximity</span><button class="vcProx" style="grid-column:2/4">${VC.prox ? 'On' : 'Off'}</button></div>
+    <div class="setrow"><span>Mute myself</span><button class="vcSelf" style="grid-column:2/4">${VC.selfMute ? 'On' : 'Off'}</button></div>
     <div class="setrow"><span>Mute everyone</span><button class="vcDeaf" style="grid-column:2/4">${VC.deaf ? 'On' : 'Off'}</button></div>
     ${(VC.micOk === false || (VC.room && VC.micOk === null && !VC.micBusy)) ? '<button class="vcMic">Enable microphone</button>' : ''}
     <div class="hint">Proximity makes players quieter the further away they are. Use headphones to avoid echo.</div>
@@ -4856,6 +4895,7 @@ function vcBind(root, back){
   root.querySelectorAll('.vcPV').forEach(r=>r.oninput = ()=>{ VC.pvol[r.dataset.p] = +r.value; vcSave(); const em = root.querySelector('.vcHead[data-p="' + r.dataset.p + '"] em'); if(em && !VC.muted[r.dataset.p]) em.textContent = Math.round(+r.value*100) + '%'; });
   root.querySelectorAll('.vcPM').forEach(b=>b.onclick = ()=>{ const id = b.dataset.p; if(VC.muted[id]) delete VC.muted[id]; else VC.muted[id] = true; vcSave(); vcPanelRefresh(); });
   root.querySelectorAll('.vcN').forEach(el=>{ const p = others.find(x=>x.peer === el.dataset.p); el.textContent = (p && p.presence && cleanName(p.presence.name)) || 'Player'; });
+  q('.vcSelf').onclick = ()=>{ VC.selfMute = !VC.selfMute; vcSave(); vcPanelRefresh(); };
   q('.vcVol').oninput = e=>{ VC.vol = +e.target.value; q('.vcVolO').textContent = Math.round(VC.vol*100) + '%'; vcSave(); };
   q('.vcProx').onclick = ()=>{ VC.prox = !VC.prox; vcSave(); vcPanelRefresh(); };
   q('.vcDeaf').onclick = ()=>{ VC.deaf = !VC.deaf; vcSave(); vcPanelRefresh(); };
@@ -4915,7 +4955,7 @@ function mpLeave(){
   for(const a of MP.avatars.values()) scene.remove(a.g);
   mpGhostsClear(); MP.hadItems = false;
   MP.avatars.clear(); MP.byId.clear(); MP.pend = {}; MP.ping = null; MP.fps = 0; MP.fN = 0; MP.fT0 = 0; MP.pgT = 0;
-  if(MP.pub && MP.ns){ try{ MP.ns.presence({pub:null}).catch(()=>{}); }catch(e){} }
+  mpBeaconStop();
   MP.pub = false; MP.advKey = '';
   MP.room = null; MP.role = null; VIEW = 'host'; MP.began = false; MP.hostPeer = null; MP.lobby = false; MP.guestLobby = false; carriedEnemy = null;
   MP.hitLog = []; MP.seq = 0; MP.acks = {};
@@ -4929,16 +4969,18 @@ async function mpHost(pub){
     try{ await mpOpen(code, 'host'); break; }catch(e){ err = e; mpLeave(); if(!(e && e.taken)) break; }
   }
   if(err){ mpHomeStatus(String(err.message || 'Could not open a room.')); return; }
-  MP.pub = !!pub; mpBadgeUpdate(); mpAdvertise(true);
+  MP.pub = !!pub; mpBadgeUpdate(); mpAdvertise(true); if(MP.pub) mpBeaconStart().then(()=>mpAdvertise(true));
   resetGame(); countdownT = 0; countdownEl.classList.remove('tick');
   MP.lobby = true; mpStartButton();
   showToast('Room ' + code + ' — share the code. Press the green button under the hoop to start.', null, true);
 }
 function mpMenuUI(){
-  msg.innerHTML = '<h1>Multiplayer</h1><p class="hint">Co-op against the beans. Everyone must be on the same game version.</p><p class="hint">Your name tag: <input id="mpName" maxlength="16" autocomplete="off" spellcheck="false" placeholder="Player" value="' + playerName.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;') + '" style="font-size:16px;width:9em;padding:6px 8px;border-radius:8px;border:1px solid #3a465c;background:#10151f;color:#fff"></p><button id="hostBtn">Host a room</button> <button id="joinBtn">Join with a code</button><p class="hint" id="mpHomeStat"></p><button id="mpBack">Back</button>' + verTag();
+  msg.innerHTML = '<h1>Multiplayer</h1><p class="hint">Co-op against the beans. Everyone must be on the same game version.</p><p class="hint">Your name tag: <input id="mpName" maxlength="16" autocomplete="off" spellcheck="false" placeholder="Player" value="' + playerName.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;') + '" style="font-size:16px;width:9em;padding:6px 8px;border-radius:8px;border:1px solid #3a465c;background:#10151f;color:#fff"></p><button id="hostBtn">Host a room</button> <button id="joinBtn">Join with a code</button> <button id="pubBtn">Public rooms</button> <button id="frBtn">Friends</button><p class="hint" id="mpHomeStat"></p><button id="mpBack">Back</button>' + verTag();
   const nm = document.getElementById('mpName'); nm.oninput = ()=>setPlayerName(nm.value); nm.onkeydown = e=>e.stopPropagation(); nm.onkeyup = e=>e.stopPropagation();
   document.getElementById('hostBtn').onclick = mpOptionsUI;
   document.getElementById('joinBtn').onclick = mpJoinUI;
+  document.getElementById('pubBtn').onclick = mpPublicUI;
+  document.getElementById('frBtn').onclick = mpFriendsUI;
   document.getElementById('mpBack').onclick = showHome;
 }
 function mpStartButton(){                                               // a pedestal with a big green button just under the basketball hoop
@@ -4973,22 +5015,42 @@ async function mpJoinCode(code){
   const r = MP.room;
   setTimeout(()=>{ if(MP.room === r && MP.role === 'guest' && !MP.began){ mpLeave(); mpHomeStatus('No game found for that code (the host must be playing).'); } }, 8000);
 }
-function mpPubStop(){ if(MP.pubOff){ try{ MP.pubOff(); }catch(e){} MP.pubOff = null; } }
-function mpAdvertise(force){                                          // a public room lists itself in the shared lobby's presence; everyone browsing sees it
-  if(!MP.pub || !MP.ns || !MP.room) return;
+// ---- public rooms WITHOUT a server of our own: a public host also claims one of PUB_SLOTS numbered PeerJS ids ("beacons"); the room browser tries every slot
+//      and asks whatever answers for its room info. Same free PeerJS signalling service as the games themselves. ----
+const PUB_SLOTS = 20, pubId = n=>NET_PREFIX + 'pub-' + n;
+function mpBeaconStop(){ const b = MP.beacon; MP.beacon = null; if(b){ b.dead = true; try{ b.peer && b.peer.destroy(); }catch(e){} } }
+async function mpBeaconStart(){
+  mpBeaconStop(); if(!window.Peer) return;
+  const b = MP.beacon = {peer:null, dead:false, info:null};
+  for(let n = 0; n < PUB_SLOTS && !b.dead; n++){
+    const ok = await new Promise(res=>{
+      let p; try{ p = new Peer(pubId(n), NET_OPTS); }catch(e){ res(false); return; }
+      const to = setTimeout(()=>{ try{ p.destroy(); }catch(e){} res(false); }, 7000);
+      p.on('open', ()=>{ clearTimeout(to); b.peer = p; res(true); });
+      p.on('error', e=>{ if(!b.peer || b.peer !== p){ clearTimeout(to); try{ p.destroy(); }catch(_){} res(false); } });
+    });
+    if(ok){
+      if(b.dead){ try{ b.peer.destroy(); }catch(e){} return; }
+      b.peer.on('connection', c=>{ c.on('open', ()=>{ try{ if(b.info) c.send(b.info); }catch(e){} setTimeout(()=>{ try{ c.close(); }catch(e){} }, 2500); }); });
+      return;
+    }
+  }
+}
+function mpAdvertise(force){                                          // a public room keeps its beacon's info current
+  if(!MP.pub || !MP.room) return;
   const n = MP.room.peers().filter(p=>p.kind === 'viewer').length || 1;
-  const o = {c:MP.code, v:GAME_VERSION, n, w:wave, lb:MP.lobby ? 1 : 0}, key = JSON.stringify(o);
+  const o = {c:MP.code, v:GAME_VERSION, n, w:wave, lb:MP.lobby ? 1 : 0, h:playerName, vc:MPVC.on ? 1 : 0}, key = JSON.stringify(o);
   if(!force && key === MP.advKey) return;
-  MP.advKey = key; MP.ns.presence({pub:o}).catch(()=>{});
+  MP.advKey = key; if(MP.beacon) MP.beacon.info = o;
 }
 function mpOptionsUI(){
   let pub = false;
-  msg.innerHTML = '<h1>Room Options</h1><p class="hint">Who can find your room?</p><button id="optPriv">Private</button> <button id="optPub" disabled style="opacity:.4">Public (needs a server)</button><p class="hint" id="optDesc"></p><button id="optVc">VC: ' + (MPVC.on ? 'On' : 'Off') + '</button> <button id="optGo">Create room</button> <button id="mpBack">Back</button><p class="hint" id="mpHomeStat"></p>' + verTag();
+  msg.innerHTML = '<h1>Room Options</h1><p class="hint">Who can find your room?</p><button id="optPriv">Private</button> <button id="optPub">Public</button><p class="hint" id="optDesc"></p><button id="optVc">VC: ' + (MPVC.on ? 'On' : 'Off') + '</button> <button id="optGo">Create room</button> <button id="mpBack">Back</button><p class="hint" id="mpHomeStat"></p>' + verTag();
   const paint = ()=>{
     const a = document.getElementById('optPriv'), b = document.getElementById('optPub');
     a.style.outline = pub ? 'none' : '3px solid #fff'; b.style.outline = pub ? '3px solid #fff' : 'none';
     a.style.opacity = pub ? '.6' : '1'; b.style.opacity = pub ? '1' : '.6';
-    document.getElementById('optDesc').textContent = pub ? 'Public: your room is listed under "Join public room" for everyone on this page.' : 'Private: only people you give the 6-digit code to can join. (Public room lists need a server, so they are not in this version.)';
+    document.getElementById('optDesc').textContent = pub ? 'Public: your room is listed under "Join public room" for everyone on this page.' : 'Private: only people you give the 6-digit code to can join.';
   };
   document.getElementById('optPriv').onclick = ()=>{ pub = false; paint(); };
   document.getElementById('optPub').onclick = ()=>{ pub = true; paint(); };
@@ -4997,33 +5059,123 @@ function mpOptionsUI(){
   document.getElementById('mpBack').onclick = mpMenuUI;
   paint();
 }
+let pubScan = null;
+function mpPubStop(){ const x = pubScan; pubScan = null; if(x){ x.dead = true; try{ x.peer && x.peer.destroy(); }catch(e){} } }
 function mpPublicUI(){
-  msg.innerHTML = '<h1>Public Rooms</h1><div id="mpList" style="display:flex;flex-direction:column;gap:8px;min-width:min(420px,88vw);margin:10px 0"></div><p class="hint" id="mpPubStat"></p><button id="mpBack">Back</button>' + verTag();
+  msg.innerHTML = '<h1>Public Rooms</h1><div id="mpList" style="display:flex;flex-direction:column;gap:8px;min-width:min(420px,88vw);margin:10px 0"></div><p class="hint" id="mpPubStat"></p><button id="pubRefresh">Refresh</button> <button id="mpBack">Back</button>' + verTag();
   mpPubStop();
-  const list = document.getElementById('mpList'), t0 = performance.now();
-  const render = ()=>{
-    const rooms = [];
-    if(MP.ns) for(const p of MP.ns.peers()){
-      const d = p.presence && p.presence.pub;
-      if(p.isMe || p.kind !== 'viewer' || !d || typeof d !== 'object' || !/^\d{6}$/.test(String(d.c))) continue;
-      rooms.push({c:String(d.c), v:String(d.v || '?').slice(0, 12), n:Math.max(1, Math.min(99, d.n|0)), w:Math.max(1, Math.min(999, d.w|0)), lb:d.lb ? 1 : 0});
-    }
+  const list = document.getElementById('mpList'), stat = document.getElementById('mpPubStat');
+  const draw = (rooms, busy)=>{
     list.textContent = '';
-    if(!MP.ns){ list.textContent = 'Co-op needs the published page, opened while signed in.'; return; }
-    if(!rooms.length){ const q = document.createElement('p'); q.className = 'hint'; q.textContent = performance.now() - t0 < 2000 ? 'Looking for rooms…' : 'No public rooms right now. Host one, or join with a code.'; list.appendChild(q); return; }
+    if(!rooms.length){ const q = document.createElement('p'); q.className = 'hint'; q.textContent = busy ? 'Looking for rooms…' : 'No public rooms right now. Host one, or join with a code.'; list.appendChild(q); return; }
     for(const r of rooms){
       const row = document.createElement('div'); row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 12px;border:1px solid #3a465c;border-radius:8px;background:#10151d';
       const info = document.createElement('div'); info.style.textAlign = 'left';
-      info.textContent = 'Room ' + r.c + ' · ' + r.n + ' player' + (r.n === 1 ? '' : 's') + ' · ' + (r.lb ? 'in lobby' : 'wave ' + r.w);
-      const b = document.createElement('button'); const ok = r.v === GAME_VERSION;
+      info.textContent = r.h + ' · ' + r.n + ' player' + (r.n === 1 ? '' : 's') + ' · VC ' + (r.vc ? 'On' : 'Off');
+      const b = document.createElement('button'), ok = r.v === GAME_VERSION;
       b.textContent = ok ? 'Join' : 'Version ' + r.v; b.disabled = !ok; if(!ok) b.style.opacity = '.5';
-      b.onclick = ()=>mpJoinCode(r.c);
+      b.onclick = ()=>{ mpPubStop(); mpJoinCode(r.c); };
       row.append(info, b); list.appendChild(row);
     }
   };
-  render();
-  if(MP.ns){ MP.pubOff = MP.ns.onPeers(render); setTimeout(()=>{ if(MP.pubOff) render(); }, 2100); }
+  const scan = ()=>{
+    mpPubStop(); const sc = pubScan = {dead:false, peer:null}, rooms = new Map();
+    draw([], true); stat.textContent = '';
+    if(!window.Peer){ stat.textContent = 'The connection library did not load (check your internet connection).'; draw([], false); return; }
+    let p; try{ p = new Peer(NET_OPTS); }catch(e){ stat.textContent = 'Could not reach the connection service.'; draw([], false); return; }
+    sc.peer = p;
+    p.on('error', ()=>{});                                           // empty slots answer "peer-unavailable": that just means nobody is there
+    p.on('open', ()=>{
+      for(let n = 0; n < PUB_SLOTS; n++){
+        let c; try{ c = p.connect(pubId(n), {reliable:true, serialization:'json'}); }catch(e){ continue; }
+        c.on('data', d=>{
+          if(sc.dead || !d || typeof d !== 'object' || !/^\d{6}$/.test(String(d.c))) return;
+          rooms.set(String(d.c), {c:String(d.c), v:String(d.v || '?').slice(0, 12), n:Math.max(1, Math.min(99, d.n|0)), w:Math.max(1, Math.min(999, d.w|0)), lb:d.lb ? 1 : 0, h:cleanName(d.h) || 'Player', vc:d.vc ? 1 : 0});
+          draw([...rooms.values()], true);
+        });
+      }
+      setTimeout(()=>{ if(sc.dead) return; draw([...rooms.values()], false); stat.textContent = rooms.size ? '' : ''; try{ p.destroy(); }catch(e){} }, 5000);
+    });
+    setTimeout(()=>{ if(!sc.dead && !p.open && !rooms.size){ draw([], false); stat.textContent = 'Could not reach the connection service.'; } }, 9000);
+  };
+  document.getElementById('pubRefresh').onclick = scan;
   document.getElementById('mpBack').onclick = ()=>{ mpPubStop(); mpMenuUI(); };
+  scan();
+}
+// ---- friends (no server): your friend code is a PeerJS id that is registered while the game is open; friends look it up to see you online and which room you are in ----
+const frId = id=>NET_PREFIX + 'u-' + id;
+const FR = {peer:null, timer:0, busy:false};
+function frInfo(){ const inRoom = MP.role && MP.room && MP.code; return {n:playerName, v:GAME_VERSION, r:inRoom ? String(MP.code) : '', lb:MP.lobby ? 1 : 0, vc:(inRoom && roomVcOn()) ? 1 : 0}; }
+function frPresence(){                                              // keep our own friend-code id registered (so friends can find us), unless the player switched visibility off
+  clearTimeout(FR.timer);
+  const again = ms=>{ FR.timer = setTimeout(frPresence, ms); };
+  if(!window.Peer || career.fshow === false){ if(FR.peer){ try{ FR.peer.destroy(); }catch(e){} FR.peer = null; } return again(20000); }
+  if(FR.peer && FR.peer.open && !FR.peer.destroyed) return again(20000);
+  if(FR.peer){ try{ FR.peer.destroy(); }catch(e){} FR.peer = null; }
+  let p; try{ p = new Peer(frId(career.fid), NET_OPTS); }catch(e){ return again(30000); }
+  FR.peer = p;
+  p.on('open', ()=>{ again(20000); });
+  p.on('connection', c=>{ c.on('open', ()=>{ try{ c.send(frInfo()); }catch(e){} setTimeout(()=>{ try{ c.close(); }catch(e){} }, 2500); }); });
+  p.on('error', e=>{ if(FR.peer === p && !p.open){ try{ p.destroy(); }catch(_){} FR.peer = null; again(e && e.type === 'unavailable-id' ? 60000 : 30000); } });
+  p.on('disconnected', ()=>{ if(FR.peer === p){ try{ p.destroy(); }catch(e){} FR.peer = null; again(15000); } });
+}
+setTimeout(()=>{ try{ frPresence(); }catch(e){} }, 3000);
+let frScanner = null;
+function frStop(){ const x = frScanner; frScanner = null; if(x){ x.dead = true; clearInterval(x.iv); try{ x.peer && x.peer.destroy(); }catch(e){} } }
+function mpFriendsUI(){
+  frStop();
+  msg.innerHTML = '<h1>Friends</h1><div class="hint">Your friend code</div><div class="frCode"><b id="frMine"></b> <button id="frCopy">Copy</button></div><div class="hint">Name: <span id="frName"></span> · you and your friend each add the other\'s code</div><div class="frAdd"><input id="frIn" maxlength="8" autocomplete="off" spellcheck="false" placeholder="Friend code"> <button id="frAddBtn" class="buy">Add</button></div><div class="hint" id="frNote"></div><div id="frList" class="frList"></div><div><button id="frVis"></button></div><p class="hint">Friends can see when you are online and which room you are in, if you let them. There is no server behind this, so there are no requests or messages.</p><button id="mpBack">Back</button>' + verTag();
+  document.getElementById('frMine').textContent = career.fid; document.getElementById('frName').textContent = playerName;
+  const note = t=>{ document.getElementById('frNote').textContent = t || ''; };
+  const status = {}, list = document.getElementById('frList');
+  const visBtn = document.getElementById('frVis'), paintVis = ()=>{ visBtn.textContent = 'Visible to friends: ' + (career.fshow === false ? 'Off' : 'On'); };
+  paintVis(); visBtn.onclick = ()=>{ career.fshow = career.fshow === false; careerSave(); paintVis(); frPresence(); };
+  document.getElementById('frCopy').onclick = ()=>{ try{ navigator.clipboard.writeText(career.fid); note('Code copied.'); }catch(e){ note('Select the code and copy it.'); } };
+  const draw = ()=>{
+    list.textContent = '';
+    if(!career.friends.length){ const q = document.createElement('p'); q.className = 'hint'; q.textContent = 'No friends yet. Add a friend\'s code above.'; list.appendChild(q); return; }
+    for(const f of career.friends){
+      const st = status[f.id], on = !!(st && st.on), row = document.createElement('div'); row.className = 'frRow';
+      const dot = document.createElement('i'); dot.className = 'frDot' + (on ? ' on' : '');
+      const info = document.createElement('div'); info.className = 'frInfo'; const nm = document.createElement('b'); nm.textContent = f.name; const sub = document.createElement('small');
+      sub.textContent = !st ? 'Checking…' : !on ? 'Offline' : st.d.r ? 'In a room · VC ' + (st.d.vc ? 'On' : 'Off') : 'Online';
+      info.append(nm, sub);
+      row.append(dot, info);
+      if(on && st.d.r && /^\d{6}$/.test(st.d.r)){ const j = document.createElement('button'), ok = st.d.v === GAME_VERSION; j.textContent = ok ? 'Join' : 'Version ' + st.d.v; j.disabled = !ok; if(!ok) j.style.opacity = '.5'; j.onclick = ()=>{ frStop(); mpJoinCode(st.d.r); }; row.appendChild(j); }
+      const x = document.createElement('button'); x.textContent = 'Remove'; x.className = 'frX'; x.onclick = ()=>{ career.friends = career.friends.filter(y=>y.id !== f.id); careerSave(); delete status[f.id]; draw(); };
+      row.appendChild(x); list.appendChild(row);
+    }
+  };
+  const inp = document.getElementById('frIn');
+  inp.onkeydown = e=>{ e.stopPropagation(); if(e.key === 'Enter') add(); }; inp.onkeyup = e=>e.stopPropagation();
+  function add(){
+    const id = inp.value.trim().toUpperCase().replace(/[^A-Z2-9]/g, '');
+    if(!/^[A-Z2-9]{8}$/.test(id)){ note('A friend code is 8 letters and numbers.'); return; }
+    if(id === career.fid){ note('That is your own code.'); return; }
+    if(career.friends.some(f=>f.id === id)){ note('Already in your list.'); return; }
+    if(career.friends.length >= 30){ note('The list is full (30).'); return; }
+    career.friends.push({id, name:'Friend'}); careerSave(); inp.value = ''; note('Added. They show as online once they have the game open.'); draw(); scan();
+  }
+  document.getElementById('frAddBtn').onclick = add;
+  const sc = frScanner = {dead:false, peer:null, iv:0};
+  function scan(){
+    if(sc.dead || !window.Peer || !career.friends.length) return;
+    if(!sc.peer){ try{ sc.peer = new Peer(NET_OPTS); sc.peer.on('error', ()=>{}); }catch(e){ return; } }
+    const p = sc.peer, go = ()=>{
+      const asked = career.friends.map(f=>f.id), got = new Set();
+      for(const id of asked){
+        let c; try{ c = p.connect(frId(id), {reliable:true, serialization:'json'}); }catch(e){ continue; }
+        c.on('data', d=>{ if(sc.dead || !d || typeof d !== 'object') return; got.add(id);
+          const dd = {n:cleanName(d.n) || 'Friend', v:String(d.v || '?').slice(0, 12), r:/^\d{6}$/.test(String(d.r)) ? String(d.r) : '', lb:d.lb ? 1 : 0, vc:d.vc ? 1 : 0};
+          status[id] = {on:true, d:dd}; const f = career.friends.find(y=>y.id === id); if(f && f.name !== dd.n){ f.name = dd.n; careerSave(); } draw(); });
+      }
+      setTimeout(()=>{ if(sc.dead) return; for(const id of asked) if(!got.has(id)) status[id] = {on:false}; draw(); }, 4000);
+    };
+    if(p.open) go(); else p.on('open', go);
+  }
+  sc.iv = setInterval(()=>scan(), 15000);
+  document.getElementById('mpBack').onclick = ()=>{ frStop(); mpMenuUI(); };
+  draw(); scan();
 }
 function mpJoinUI(){
   msg.innerHTML = '<h1>Join Co-op</h1><p class="hint">Enter the host\'s 6-digit room code</p><input id="mpCode" inputmode="numeric" maxlength="6" autocomplete="off" style="font-size:28px;letter-spacing:.3em;text-align:center;width:9em;padding:8px;border-radius:8px;border:1px solid #3a465c;background:#10151d;color:#fff"><p class="hint" id="mpStat"></p><button id="mpGo">Join</button> <button id="mpBack">Back</button>' + verTag();
@@ -5299,7 +5451,9 @@ function mpOnFx(m){                                                      // effe
   } else if(d.k === 'tr' && Array.isArray(d.t)){                                          // someone's bullets
     const rows = [];
     for(const r of d.t.slice(0, 24)){ if(!Array.isArray(r) || r.length !== 6) continue; const a = fxVec(r.slice(0, 3)), b = fxVec(r.slice(3)); if(a && b) rows.push([a, b, r]); }
-    if(MP.role === 'host' && rows.length) mpFx({k:'tr', t:rows.map(x=>x[2]), by:m.peer});
+    const wn = (typeof d.w === 'string' && WEAPONS[d.w] && d.w !== 'rocket' && d.w !== 'grenade') ? d.w : 'rifle';
+    if(MP.role === 'host' && rows.length) mpFx({k:'tr', t:rows.map(x=>x[2]), w:wn, by:m.peer});
+    { let n = 0; const lim = wn === 'shotgun' ? 1 : 4; for(const [a] of rows){ if(n++ >= lim) break; Snd.play(wn, a); } }          // you hear their gun from where they stand (louder when close)
     for(const [a, b] of rows){
       if(tracers.length > 120) break;
       const tr = new THREE.Line(new THREE.BufferGeometry().setFromPoints([a, b]), new THREE.LineBasicMaterial({color:0xfff2a0, transparent:true, opacity:0.9}));
@@ -5390,7 +5544,7 @@ function mpTrace(a, b){                                                  // our 
 function mpTick(dt){
   if(!MP.role || !MP.room) return;
   if(flyHit > 0){ flyHit -= dt; if(playerGrounded && flyHit < 2.7) flyHit = 0; }
-  MP.trT = (MP.trT||0) + dt; if(MP.trT >= 0.05 && MP.trQ && MP.trQ.length){ MP.trT = 0; mpFx({k:'tr', t:MP.trQ}); MP.trQ = []; }
+  MP.trT = (MP.trT||0) + dt; if(MP.trT >= 0.05 && MP.trQ && MP.trQ.length){ MP.trT = 0; mpFx({k:'tr', t:MP.trQ, w:loadout.weapon}); MP.trQ = []; }
   MP.room.presence({x:r2(camera.position.x), y:r2(camera.position.y), z:r2(camera.position.z), yaw:r2(yaw), pitch:r2(pitch), hold:mpHoldStr(), aim:mpAiming() ? 1 : 0, vc:VC.talking ? 1 : 0, vcr:MP.role === 'host' ? (MPVC.on ? 1 : 0) : null, pz:(paused && started && !VC.cardOpen) ? 1 : 0, cs:cosmStr(), rl:reloading ? 1 : 0, fl:flyHit > 0 ? 1 : 0, name:playerName, fps:MP.fps, ping:MP.role === 'guest' && MP.ping != null ? MP.ping : 0}).catch(()=>{});
   mpAvatars(dt); mpGhostStep(dt);
   MP.fN++; const nowT = performance.now();                                        // FPS: frames counted over half a second
