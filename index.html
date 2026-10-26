@@ -91,6 +91,9 @@
   .frAdd{display:flex;gap:8px;justify-content:center;margin:8px 0}.frAdd input{font:700 18px ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase;width:9em;padding:8px;border-radius:8px;border:1px solid #3a465c;background:#10151f;color:#fff;text-align:center}
   .frList{display:flex;flex-direction:column;gap:6px;width:min(480px,92vw);margin:8px 0}.frRow{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid #3a465c;border-radius:8px;background:#10151d;text-align:left}
   .frDot{width:10px;height:10px;border-radius:50%;background:#555;flex:none}.frDot.on{background:#3df06a;box-shadow:0 0 6px #3df06a}.frInfo{flex:1;display:flex;flex-direction:column}.frInfo small{opacity:.7}.frX{padding:6px 12px!important;font-size:13px!important;opacity:.8}
+  .endWave{font-size:20px;margin:6px 0 14px;position:relative;display:inline-block}.newBest{position:absolute;right:100%;top:50%;margin:0 16px 0 0;transform:translateY(-50%);white-space:nowrap;background:#ffd24a;color:#201600;font-weight:900;font-size:12px;letter-spacing:.08em;padding:2px 8px;border-radius:999px;opacity:0;pointer-events:none}.newBest.show{opacity:1;animation:nbPop .5s ease-out,nbGlow 1s ease-in-out .5s infinite}@keyframes nbPop{0%{opacity:0;transform:translateY(-50%) scale(1.8)}100%{opacity:1;transform:translateY(-50%) scale(1)}}@keyframes nbGlow{50%{box-shadow:0 0 12px 2px rgba(255,210,74,.8)}}
+  .endBoard{display:flex;flex-direction:column;gap:4px;width:min(360px,88vw);margin:6px 0}.endRow{display:flex;justify-content:space-between;gap:12px;padding:6px 12px;border-radius:8px;background:rgba(255,255,255,.07);text-align:left}.endRow.me{background:rgba(82,255,125,.18);outline:1px solid #52ff7d}
+  #endLvl.lvUp{animation:lvUpPop .6s ease-out}@keyframes lvUpPop{0%{transform:scale(1.6);color:#ffd24a}100%{transform:scale(1)}}
   .hLevel{cursor:pointer}.hBang{position:absolute;top:-10px;right:-10px;width:26px;height:26px;border-radius:50%;background:#e8222a;color:#fff;font-weight:900;font-size:18px;line-height:26px;text-align:center;box-shadow:0 0 8px rgba(255,40,40,.8);animation:bangPulse 1.2s ease-in-out infinite;pointer-events:none}@keyframes bangPulse{50%{transform:scale(1.15)}}
   #msg .home .hLevel{position:absolute;left:3%;top:14px;width:min(300px,34vw);text-align:left}
   #msg .home .hBadge{display:inline-block;padding:4px 14px;border-radius:8px;background:linear-gradient(#e8e8e8,#bcbcbc);color:#111;font-weight:800;letter-spacing:.08em;font-size:clamp(14px,2.2vmin,20px)}
@@ -867,6 +870,7 @@ const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.08,3,8), new THREE
 pole.position.y = 1.5; flagGroup.add(pole);
 const cloth = new THREE.Mesh(new THREE.PlaneGeometry(1.2,0.7), new THREE.MeshStandardMaterial({color:0x4dafff, side:THREE.DoubleSide}));
 cloth.position.set(0.65,2.6,0); flagGroup.add(cloth);
+const FLAG_TOP_Y = 2.6, FLAG_LOW_Y = 0.5;                                    // cloth centre height: full health (just under the top of the 3 m pole) .. no health
 scene.add(flagGroup);
 
 // colliders: {minX,maxX,minZ,maxZ,h} boxes for player/enemy collision
@@ -2159,7 +2163,13 @@ const COSM = {
     {id:'h_cap', n:'Red Cap', r:'common', build:()=>{ const g = new THREE.Group(), m = cm(0xd03030); cbx(g, 0.38, 0.1, 0.38, m, 0, 0.2, 0); cbx(g, 0.3, 0.025, 0.16, m, 0, 0.16, -0.26); return g; }},
     {id:'h_beanie', n:'Blue Beanie', r:'common', build:()=>{ const g = new THREE.Group(); cbx(g, 0.38, 0.15, 0.38, cm(0x2f6fd0), 0, 0.2, 0); cbx(g, 0.4, 0.04, 0.4, cm(0x1d4a96), 0, 0.14, 0); csp(g, 0.055, cm(0xffffff), 0, 0.32, 0); return g; }},
     {id:'h_band', n:'Sweatband', r:'common', build:()=>{ const g = new THREE.Group(); cbx(g, 0.37, 0.06, 0.37, cm(0xffffff), 0, 0.08, 0); cbx(g, 0.375, 0.02, 0.375, cm(0xd03030), 0, 0.08, 0); return g; }},
-    {id:'h_shades', n:'Shades', r:'common', build:()=>{ const g = new THREE.Group(), m = cm(0x111111); cbx(g, 0.14, 0.08, 0.03, m, -0.08, 0.03, -0.18); cbx(g, 0.14, 0.08, 0.03, m, 0.08, 0.03, -0.18); cbx(g, 0.05, 0.02, 0.03, m, 0, 0.04, -0.18); return g; }},
+    {id:'h_shades', n:'Shades', r:'common', build:()=>{                                  // pixel "deal with it" shades from a 23 x 4 pixel grid
+      const g = new THREE.Group(), px = 0.0175, py = 0.0257, W = 23*px, yT = 0.085, zF = -0.2, blk = cm(0x0b0b0d), wht = cm(0xffffff, 0x777777);
+      const run = (row, c0, c1, m, d, z)=>{ const o = new THREE.Mesh(new THREE.BoxGeometry((c1 - c0 + 1)*px, py, d), m); o.position.set(W/2 - (c0 + c1 + 1)/2*px, yT - py*(row + 0.5), z); g.add(o); };   // (the face looks down -z, so the picture's left is +x)
+      for(const [row, a, b] of [[0,0,22],[1,1,10],[1,12,21],[2,2,9],[2,13,20],[3,3,8],[3,14,19]]) run(row, a, b, blk, 0.02, zF);
+      for(const [row, a, b] of [[1,2,3],[2,4,5],[1,14,15],[2,16,17]]) run(row, a, b, wht, 0.008, zF - 0.012);       // the white glints
+      for(const sx of [-1, 1]){ const o = new THREE.Mesh(new THREE.BoxGeometry(0.02, py*0.8, 0.2), blk); o.position.set(sx*(W/2 - 0.002), yT - py/2, -0.1); g.add(o); }   // arms back along the head
+      return g; }},
     {id:'h_cowboy', n:'Cowboy Hat', r:'rare', build:()=>{ const g = new THREE.Group(), m = cm(0x8a5a2b); ccy(g, 0.32, 0.32, 0.03, m, 0, 0.18, 0); ccy(g, 0.14, 0.17, 0.2, m, 0, 0.29, 0); ccy(g, 0.175, 0.175, 0.04, cm(0x3a2a1a), 0, 0.22, 0); return g; }},
     {id:'h_chef', n:'Chef Hat', r:'rare', build:()=>{ const g = new THREE.Group(), m = cm(0xffffff); ccy(g, 0.2, 0.18, 0.14, m, 0, 0.24, 0); csp(g, 0.22, m, 0, 0.4, 0); return g; }},
     {id:'h_viking', n:'Viking Helmet', r:'rare', build:()=>{ const g = new THREE.Group(), m = cm(0x8d949c); ccy(g, 0.17, 0.2, 0.17, m, 0, 0.24, 0); cbx(g, 0.05, 0.2, 0.05, m, 0, 0.1, -0.2); for(const sx of [-1, 1]) ccy(g, 0, 0.05, 0.24, cm(0xf1e6c8), sx*0.22, 0.34, 0, 0, -sx*0.6); return g; }},
@@ -2396,6 +2406,13 @@ function showAccount(){
 }
 // ---- update card: shown once, the first time a player opens the game on a new version. To add one: put a new entry FIRST in UPDATES (same v as GAME_VERSION). ----
 const UPDATES = [
+  {v:'alpha 1.0', title:'Game Over screen, scores & pixel shades', items:[
+    'CHANGED The end screen now says Game Over, and the "flag is being captured" warning goes away when it shows. Play Again replaces Restart.',
+    'NEW In rooms every player has their own score (you get the points for beans you throw through the hoop or over the wall; boss kills pay everyone). The Game Over screen shows the final wave and everyone\'s scores, first to last.',
+    'CHANGED The end screen shows +# coins, your level and an XP bar that fills up, with a NEW BEST tag when you beat your best wave. Total coins and best wave are gone from it.',
+    'NEW The Game Over numbers count up one at a time (1 second each, with a short pause between). NEW BEST pops in to the left of the wave right after it is counted. Tap the screen to skip the animation.',
+    'NEW The flag slides down the pole as it loses health, and never rises above the top of the pole.',
+    'CHANGED The Shades cosmetic is now pixel "deal with it" shades: stepped black lenses with white pixel glints.']},
   {v:'beta 0.95', title:'Bug fixes', items:[
     'FIXED You now hear other players\' guns (louder the closer they are).',
     'FIXED Some shop and level-track chests not loading fully: the chests are lighter, no longer use effects that some browsers drop, and only the ones on screen are built.']},
@@ -2510,7 +2527,7 @@ function throwCarried(){
   const e = carriedEnemy; if(!e) return;
   if(e.proxy){ mpThrow(e); return; }
   Snd.play('throw');
-  e.state = 'thrown'; e.mesh.scale.setScalar(1);
+  e.state = 'thrown'; e.thrower = 'host'; e.mesh.scale.setScalar(1);
   const fdir = new THREE.Vector3(0,0,-1).applyQuaternion(camera.quaternion);
   e.vel = fdir.multiplyScalar(15).add(new THREE.Vector3(0,7,0));
   carriedEnemy = null;
@@ -2871,11 +2888,18 @@ function updateBoss(e, dt){
   animateBossCape(e, flap);
   return capturing;
 }
+// ---- individual scores: whoever throws a bean through the hoop / over the wall gets the points; a boss kill pays everyone ----
+function mpScoreIds(){ const ids = new Set(['host']); if(MP.room) for(const p of MP.room.peers()) if(p.kind === 'viewer') ids.add(p.isMe && MP.role === 'host' ? 'host' : p.peer); return ids; }
+function addScore(who, n){
+  who = who || 'host'; MP.pscore = MP.pscore || {host:0}; MP.pscore[who] = (MP.pscore[who] || 0) + n;
+  if(who === 'host'){ score = MP.pscore.host; scoreEl.textContent = score; }
+}
+function addScoreAll(n){ for(const id of mpScoreIds()) addScore(id, n); }
 function bossDefeated(e){
   if(e.chopper){ chopperDefeated(e); return; }
   if(e.state === 'bossdead') return;
   e.state = 'bossdead'; e.bt = 0; e.hp = 0; e.fill.scale.x = 0.001;
-  score += 500; scoreEl.textContent = score;
+  addScoreAll(500);
   showToast('NACHO LIBRE IS DOWN! +500');
   Snd.play('down', e.mesh.position); Snd.play('slam', e.mesh.position); Snd.play('boom', e.mesh.position, 2);
   fxConfetti(new THREE.Vector3(e.mesh.position.x, 3, e.mesh.position.z));
@@ -3000,7 +3024,7 @@ function updateChopper(e, dt){
 function chopperDefeated(e){
   if(e.state === 'bossdead') return;
   e.state = 'bossdead'; e.bt = 0; e.hp = 0; e.fill.scale.x = 0.001; e.cvy = 0; e.crashed = false; e.puffT = 0;
-  score += 500; scoreEl.textContent = score;
+  addScoreAll(500);
   showToast('THE CHOPPER IS DOWN! +500');
   Snd.play('down', e.mesh.position); Snd.play('boom', e.mesh.position, 1.4);
   clearBossFx();
@@ -4620,14 +4644,65 @@ function resumeGame(){
 }
 document.getElementById('pauseBtn').addEventListener('click', pauseGame);
 
+let runStartXp = null;
+function endBoard(){                                                   // everyone in the room with their own score, best first
+  if(!MP.role || !MP.room) return null;
+  const ps = MP.pscore || {}, rows = [];
+  for(const p of MP.room.peers()){ if(p.kind !== 'viewer') continue; const id = p.isMe && MP.role === 'host' ? 'host' : p.peer;
+    rows.push({me:!!p.isMe, name:p.isMe ? playerName : (cleanName(p.presence && p.presence.name) || 'Player'), score:ps[id] | 0}); }
+  rows.sort((a, b)=>b.score - a.score);
+  return rows;
+}
+function animateXp(from, to){                                          // the xp bar slides from where the run started to where it ended, rolling over on level-ups
+  const fill = document.getElementById('endXpFill'), txt = document.getElementById('endXpTxt'), lv = document.getElementById('endLvl'); if(!fill) return Promise.resolve();
+  const draw = x=>{ const L = careerLevel(x), lo = 100*(L-1)*(L-1), hi = 100*L*L; fill.style.width = Math.max(0, Math.min(100, (x-lo)/(hi-lo)*100)) + '%'; txt.textContent = Math.max(0, Math.ceil(hi - x)) + ' xp till next level'; if(lv.textContent !== 'Level ' + L){ lv.textContent = 'Level ' + L; lv.classList.remove('lvUp'); void lv.offsetWidth; lv.classList.add('lvUp'); } };
+  return new Promise(res=>{
+    draw(from); if(to <= from){ res(); return; }
+    const t0 = performance.now(), dur = Math.min(2600, 900 + (to - from)*6);
+    const step = now=>{ if(!fill.isConnected){ res(); return; } const u = Math.max(0, Math.min(1, (now - t0)/dur)), e = 1 - Math.pow(1 - u, 3); draw(from + (to - from)*(endSeq && endSeq.skip ? 1 : e)); if(u < 1 && !(endSeq && endSeq.skip)) requestAnimationFrame(step); else { draw(to); res(); } };
+    requestAnimationFrame(step);
+  });
+}
+let endSeq = null;
+async function endSequence(items, xpFrom, xpTo, bestAfter){                // each number counts up for 1 s with a 0.5 s pause after it; NEW BEST pops in right after the wave is counted, while nothing is counting
+  const sq = endSeq = {skip:false}, alive = ()=>endSeq === sq && gameOver;
+  const onDown = e=>{ if(!e.target.closest('button')) sq.skip = true; }; msg.addEventListener('pointerdown', onDown);
+  const sleep = ms=>new Promise(r=>setTimeout(r, sq.skip ? 0 : ms));
+  const count = (el, to, fmt)=>new Promise(r=>{
+    if(!el || to <= 0){ if(el) el.textContent = fmt(0); r(); return; }
+    const t0 = performance.now();
+    const step = now=>{ if(!alive() || !el.isConnected){ r(); return; } const u = sq.skip ? 1 : Math.min(1, (now - t0)/1000); el.textContent = fmt(Math.round(to*(1 - Math.pow(1 - u, 2)))); if(u < 1) requestAnimationFrame(step); else r(); };
+    requestAnimationFrame(step);
+  });
+  try{
+    for(const it of items){
+      if(!alive()) return;
+      await count(it.el, it.to, it.fmt);
+      if(it.best && bestAfter){ const nb = document.getElementById('endNB'); if(nb) nb.classList.add('show'); Snd.play('pickup'); }
+      if(it.to > 0 || it.best) await sleep(500);
+    }
+    if(alive()) await animateXp(xpFrom, xpTo);
+  } finally { msg.removeEventListener('pointerdown', onDown); }
+}
 function endGame(){
   if(gameOver) return;                                           // (several beans can reach zero in the same frame)
-  const coinsEarned = Math.floor(score/10);                      // 10 points = 1 coin
+  const coinsEarned = Math.floor(score/10);                      // 10 points = 1 coin (your own points)
+  const prevBest = career.bestWave, newBest = wave > prevBest;
   career.coins += coinsEarned;
   career.bestWave=Math.max(career.bestWave,wave); career.bestScore=Math.max(career.bestScore,score); careerSave();
-  gameOver = true; bossBarEl.classList.remove('show'); captureWarningEl.classList.remove('show'); Snd.silence(); Snd.play('lose');
+  gameOver = true; flagBeingCaptured = false; MP.cap = 0; bossBarEl.classList.remove('show'); captureWarningEl.classList.remove('show'); Snd.silence(); Snd.play('lose');
   msg.classList.remove('hidden');              // show the lose screen first so nothing below can stop it
-  msg.innerHTML = `<h1>Flag Captured</h1><p>Final score: ${score} — Wave ${wave}</p><p class="coinline">${score} points = <b>+${coinsEarned} coins</b></p><p class="hint">Career Level ${career.level} · <b>${career.coins} coins</b> total · Best Wave ${career.bestWave}</p>${xpBarHtml()}<button id="retryBtn">Restart</button> <button id="homeBtn">Main Menu</button>` + (lastErr ? `<p class="hint" style="max-width:90vw;word-break:break-all">Error: ${String(lastErr).replace(/[<>&]/g,'').slice(0,300)}</p>` : '');
+  const board = endBoard(), nbHtml = newBest ? '<span class="newBest" id="endNB">NEW BEST</span>' : '';
+  const top = board ? `<p class="endWave">${nbHtml}Final wave: <b id="endW">0</b></p><div id="endBoard" class="endBoard"></div>` : `<p>Final score: <b id="endS">0</b></p><p class="endWave">${nbHtml}Wave <b id="endW">0</b></p>`;
+  msg.innerHTML = `<h1>Game Over</h1>${top}<p class="coinline"><b id="endC">+0 coins</b></p><div class="hint"><b id="endLvl">Level ${career.level}</b></div><div class="xpbar"><i id="endXpFill" style="transition:none"></i></div><div class="xptext" id="endXpTxt"></div><button id="retryBtn">Play Again</button> <button id="homeBtn">Main Menu</button>` + (lastErr ? `<p class="hint" style="max-width:90vw;word-break:break-all">Error: ${String(lastErr).replace(/[<>&]/g,'').slice(0,300)}</p>` : '');
+  const n = v=>String(v), items = [];
+  if(!board) items.push({el:document.getElementById('endS'), to:score, fmt:n});
+  items.push({el:document.getElementById('endW'), to:wave, fmt:n, best:true});
+  if(board){ const el = document.getElementById('endBoard'); board.forEach((r, i)=>{ const row = document.createElement('div'); row.className = 'endRow' + (r.me ? ' me' : ''); const a = document.createElement('span'), b = document.createElement('b'); a.textContent = (i + 1) + '. ' + r.name + (r.me ? ' (you)' : ''); b.textContent = '0'; row.append(a, b); el.appendChild(row); items.push({el:b, to:r.score, fmt:n}); }); }
+  items.push({el:document.getElementById('endC'), to:coinsEarned, fmt:v=>'+' + v + ' coins'});
+  const from = runStartXp === null ? career.xp : Math.min(runStartXp, career.xp);
+  document.getElementById('endLvl').textContent = 'Level ' + careerLevel(from); document.getElementById('endXpTxt').textContent = '';
+  endSequence(items, from, career.xp, newBest).catch(()=>{});
   document.getElementById('retryBtn').addEventListener('click', resetGame);
   document.getElementById('homeBtn').addEventListener('click', showHome);
   if(MP.role === 'host') mpSnap(true);
@@ -4653,7 +4728,7 @@ function resetGame(){
   for(const s of shells){ gunScene.remove(s); }
   shells = [];
   FLAG_MAX = 100; upgradesOwned = {}; bottomlessT = 0; MAG_SIZE = magFor(curW.mag); flagHP = FLAG_MAX; barFill.style.width = '100%';
-  score = 0; hoopMade = 0; scoreEl.textContent = '0';
+  cloth.position.y = FLAG_TOP_Y; score = 0; hoopMade = 0; scoreEl.textContent = '0'; MP.pscore = {host:0}; runStartXp = career.xp;
   wave = 1; waveEl.textContent = '1';
   waveTarget = waveEnemyCount(1); spawnedThisWave = 0; spawnTimer = 0;
   ammoInMag = MAG_SIZE; reloading = false; updateAmmoUI();
@@ -4675,7 +4750,7 @@ function resetGame(){
 
 // ---------- co-op multiplayer (room capability) ----------
 // Host-authoritative: the host runs beans, waves and the flag and broadcasts snapshots (~10/s); guests mirror them and send their hits back.
-const GAME_VERSION = 'beta 0.95';
+const GAME_VERSION = 'alpha 1.0';
 let CAPNOW = false;
 const verTag = ()=>`<div style="position:fixed;right:12px;bottom:8px;font:600 12px system-ui,sans-serif;color:#9fb3cc;opacity:.8;pointer-events:none">Version ${GAME_VERSION}</div>`;
 const MP = {seq:0, hitLog:[], acks:{}, pub:false, pubOff:null, advKey:'', advT:0, lobby:false, startCap:null, startGrp:null, guestLobby:false, role:null, code:'', room:null, ns:null, hostPeer:null, began:false, byId:new Map(), pend:{}, pendT:0, snapT:0, avatars:new Map(), ghosts:new Map(), fps:0, ping:null, fN:0, fT0:0, pgT:0, itemT:0, hadItems:false, offs:[], warned:false};
@@ -5206,7 +5281,7 @@ function mpRows(){                                                      // what 
 function mpSnap(go){
   if(MP.role !== 'host' || !MP.room) return;
   const b = mpRows();
-  const o = {v:GAME_VERSION, lb:MP.lobby ? 1 : 0, w:wave, f:Math.round(flagHP*10)/10, fm:FLAG_MAX, cp:CAPNOW ? 1 : 0, s:score, l:Math.max(0, waveTarget - spawnedThisWave), b};
+  const o = {v:GAME_VERSION, lb:MP.lobby ? 1 : 0, w:wave, f:Math.round(flagHP*10)/10, fm:FLAG_MAX, cp:CAPNOW ? 1 : 0, ps:MP.pscore || {host:score}, l:Math.max(0, waveTarget - spawnedThisWave), b};
   if(Object.keys(MP.acks).length) o.ak = MP.acks;
   if(go || gameOver) o.go = 1;
   while(JSON.stringify(o).length > 3900 && b.length) b.pop();
@@ -5224,10 +5299,14 @@ function mpOnSnap(m){
   else if(MP.guestLobby){ MP.guestLobby = false; toastEl.classList.remove('show'); startCountdown(); }
   if(!MP.began){ MP.began = true; mpPubStop(); mpBadgeUpdate(); resetGame(); }
   else if(gameOver && !d.go && started) resetGame();                                    // the host restarted
+  if(d.ps && typeof d.ps === 'object'){                                                  // everyone's own score; ours is the one on screen
+    const ps = {}; for(const k of Object.keys(d.ps).slice(0, 12)){ const v = +d.ps[k]; if(k.length < 80 && Number.isFinite(v)) ps[k] = Math.max(0, Math.min(1e7, Math.floor(v))); }
+    MP.pscore = ps; const me0 = MP.room && MP.room.peers().find(x=>x.isMe); if(me0){ score = ps[me0.peer] | 0; scoreEl.textContent = score; }
+  }
   if(d.go){ flagHP = 0; barFill.style.width = '0%'; if(!gameOver) endGame(); return; }
   if(gameOver) return;
   if(d.w !== wave){ wave = d.w; waveEl.textContent = wave; showWaveSplash(wave); }
-  score = d.s|0; scoreEl.textContent = score; FLAG_MAX = d.fm > 0 ? d.fm : FLAG_MAX; flagHP = Math.max(0, +d.f || 0);
+  FLAG_MAX = d.fm > 0 ? d.fm : FLAG_MAX; flagHP = Math.max(0, +d.f || 0);
   waveTarget = Math.max(0, d.l|0); spawnedThisWave = 0;
   const me = MP.room && MP.room.peers().find(x=>x.isMe), ack = (d.ak && me && Number.isInteger(d.ak[me.peer])) ? d.ak[me.peer] : 0;
   mpAckPrune(ack);
@@ -5344,7 +5423,7 @@ function mpOnThrow(m){                                                   // host
   const dir = new THREE.Vector3(d.d[0], d.d[1], d.d[2]); if(dir.lengthSq() < 0.01) return; dir.normalize();
   const pose = mpCarrierPose(m.peer);
   if(pose && Array.isArray(d.p) && d.p.length === 3 && d.p.every(Number.isFinite) && Math.hypot(d.p[0]-pose.x, d.p[2]-pose.z) < 6) e.mesh.position.set(d.p[0], Math.max(0.45, d.p[1]), d.p[2]);
-  e.mesh.scale.setScalar(1); e.heldBy = null; e.state = 'thrown';
+  e.mesh.scale.setScalar(1); e.heldBy = null; e.state = 'thrown'; e.thrower = m.peer;
   e.vel = dir.multiplyScalar(15).add(new THREE.Vector3(0, 7, 0));
   Snd.play('throw', e.mesh.position);
 }
@@ -6061,14 +6140,14 @@ function frame(now){
           if(Math.hypot(hdx,hdz) < HOOP_RADIUS && Math.abs(e.mesh.position.y-hoopWorldCenter.y) < 0.35 && e.vel.y < 0){
             e.scored = true;
             fxConfetti(hoopWorldCenter);
-            score += 20; hoopMade++; scoreEl.textContent = score; Snd.play('hoop');
+            addScore(e.thrower, 20); hoopMade++; Snd.play('hoop');
             toRemove.push(e);
           }
         }
         if(!toRemove.includes(e) && e.mesh.position.y <= 0.45 && e.vel.y < 0){
           e.mesh.position.y = 0.45;
           const outside = Math.max(Math.abs(e.mesh.position.x), Math.abs(e.mesh.position.z)) > wallOuter;
-          if(outside){ if(!e.scored){ e.scored = true; score += 10; Snd.play('over'); scoreEl.textContent = score; } toRemove.push(e); }   // out over the wall: +10
+          if(outside){ if(!e.scored){ e.scored = true; addScore(e.thrower, 10); Snd.play('over'); } toRemove.push(e); }   // out over the wall: +10
           else { e.state='ragdoll'; layOnBack(e, Math.random()*Math.PI*2); }
         }
       } else if(e.state==='ragdoll'){
@@ -6120,7 +6199,8 @@ function frame(now){
     { const be = enemies.find(x=>x.boss && x.state==='alive'); bossBarEl.classList.toggle('show', !!be); if(be) bossFillEl.style.width = Math.max(0, be.hp/be.maxHp*100)+'%'; }
     if(MP.role === 'guest') flagBeingCaptured = !!MP.cap && performance.now() - MP.capT < 1500;
     CAPNOW = flagBeingCaptured;
-    captureWarningEl.classList.toggle('show', flagBeingCaptured);
+    captureWarningEl.classList.toggle('show', flagBeingCaptured && !gameOver);
+    { const f = Math.max(0, Math.min(1, flagHP/FLAG_MAX)), ty = FLAG_LOW_Y + (FLAG_TOP_Y - FLAG_LOW_Y)*f; cloth.position.y += (ty - cloth.position.y)*Math.min(1, wdt*5); if(cloth.position.y > FLAG_TOP_Y) cloth.position.y = FLAG_TOP_Y; }       // the cloth slides down the pole as the flag loses health, and never above the top of it
     if(flagBeingCaptured){ alarmT -= wdt; if(alarmT <= 0){ alarmT = 0.9; Snd.play('alarm'); } } else alarmT = 0;
     if(upN('Golden Flag') && flagHP > 0 && flagHP < FLAG_MAX) flagHP = Math.min(FLAG_MAX, flagHP + 0.5*upN('Golden Flag')*wdt);     // legendary: the flag slowly heals
     if(bottomlessT > 0) bottomlessT = Math.max(0, bottomlessT - wdt);
