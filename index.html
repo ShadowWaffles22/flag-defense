@@ -108,10 +108,21 @@
   #msg .home .hHelp summary{cursor:pointer;opacity:.75;text-align:left;list-style:none}.home .hHelp summary::-webkit-details-marker{display:none}
   #msg .home .hHelp div{position:absolute;left:0;bottom:26px;width:min(420px,86vw);max-height:50vh;overflow:auto;padding:10px 12px;border-radius:10px;background:rgba(8,12,22,.96);border:1px solid #2f3b54;line-height:1.4}
   @media (max-width:700px){#msg .home .hAcct{width:110px}#msg .home .hShop{left:3%}#msg .home .hModel{width:50vw}#msg .home .hLevel{width:38vw}#msg .home .hDaily{display:none}#msg .home .hTitle{display:none}}
+  #msg .home .hPass{right:4%;top:72%;width:clamp(130px,19vw,215px);height:clamp(54px,10vh,76px);border-radius:999px;background:linear-gradient(#5cf0d0,#16b69a);color:#06241e}
+  .pBar{position:relative;width:min(520px,88vw);height:24px;border-radius:12px;background:rgba(255,255,255,.1);overflow:hidden;margin:8px 0}.pBar i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(#7ff2ff,#2ab8e0)}.pBar b{position:absolute;inset:0;line-height:24px;font-size:13px;text-shadow:0 1px 2px #000}
+  .pTrack{display:flex;gap:10px;overflow-x:auto;width:min(100vw,1100px);padding:14px 10px;box-sizing:border-box;-webkit-overflow-scrolling:touch}
+  .pCard{flex:0 0 150px;min-height:0;border-radius:12px;padding:8px;background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.14);display:flex;flex-direction:column;align-items:center;gap:5px;font-size:12px;box-sizing:border-box}
+  .pCard .pN{font-weight:900;font-size:18px}.pCard .pIt{text-align:center;line-height:1.25}.pCard .pIt span{margin-right:4px}.pCard .pCost{margin-top:auto;opacity:.8;font-size:12px}
+  .pCard.done{opacity:.55;border-color:#52ff7d}.pCard.cur{border-color:#7ff2ff;box-shadow:0 0 16px rgba(90,230,255,.6)}.pCard.big{background:linear-gradient(#2a2250,#1a1438);border-color:#b890ff}.pCard.top{background:linear-gradient(#5a3a00,#2a1a00);border-color:#ffd24a;box-shadow:0 0 18px rgba(255,200,60,.6)}.pCard.cyc{border-style:dashed}
+  .pMd{width:120px;height:92px}
+  .slotBox{width:min(380px,86vw);height:96px;border:4px solid #ffd24a;border-radius:14px;background:linear-gradient(#0b1020,#1a2240);box-shadow:inset 0 0 18px #000,0 0 18px rgba(255,210,74,.5);display:flex;align-items:center;justify-content:center;margin:8px auto;position:relative}
+  .slotBox:before,.slotBox:after{content:'▶';position:absolute;top:50%;transform:translateY(-50%);color:#ffd24a;font-size:18px}.slotBox:before{left:-26px}.slotBox:after{right:-26px;transform:translateY(-50%) scaleX(-1)}
+  .slotIn{font-size:22px;font-weight:900;text-align:center;line-height:1.1}.slotIn small{display:block;font-size:12px;opacity:.7;letter-spacing:.1em;text-transform:uppercase}.slotIn.stop{animation:slotPop .4s ease-out}@keyframes slotPop{0%{transform:scale(1.5)}100%{transform:scale(1)}}
   #msg h1{margin:0;font-size:clamp(24px,5vw,40px)}
   #vcCard{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:80;width:min(540px,94vw);max-height:88vh;overflow:auto;background:rgba(14,20,34,.96);border:2px solid rgba(255,255,255,.25);border-radius:18px;padding:18px 20px;color:#fff;text-align:center;box-shadow:0 12px 44px rgba(0,0,0,.65);display:flex;flex-direction:column;align-items:center;gap:12px;font-family:inherit}
   .vcList{width:min(480px,92vw);display:flex;flex-direction:column;gap:6px;text-align:left}.vcList .sub{text-align:center}
   .vcRow{background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden}.vcHead{display:grid;grid-template-columns:24px 1fr auto;gap:8px;align-items:center;padding:8px 12px;cursor:pointer;font-weight:700}.vcHead em{font-style:normal;font-size:12px;opacity:.7}
+  .vcDet2{grid-template-columns:1fr 1fr}
   .vcDet{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:6px 12px 12px}.vcDet input{width:100%}.vcDet button{padding:8px 16px!important;font-size:14px!important}
   #vcCard h1{margin:0;font-size:28px}#vcCard .hint{font-size:13px;opacity:.75;max-width:420px}
   #vcCard button{padding:12px 26px;font-size:16px;border:none;border-radius:14px;background:linear-gradient(#8fd2f7,#5fb4ea);color:#06101a;font-weight:800;cursor:pointer;box-shadow:0 5px 0 rgba(0,0,0,.35),0 8px 20px rgba(0,0,0,.4);transition:transform .12s,filter .12s}
@@ -265,7 +276,7 @@
   #confirm .row{display:flex;gap:10px;justify-content:center}
   #confirm button{padding:11px 24px;font-size:15px;border:none;border-radius:8px;background:var(--flag);color:#fff;cursor:pointer;font-weight:600}
   #confirm button.no{background:#3a4254}
-  .sws{display:flex;gap:10px}.sw{width:32px;height:32px;border-radius:50%;border:3px solid #445;cursor:pointer}.sw.sel{border-color:#fff}
+  .sws{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}.sw{width:32px;height:32px;border-radius:50%;border:3px solid #445;cursor:pointer}.sw.sel{border-color:#fff}
   #msg .cosm .hModel{width:min(440px,36vw)}
   #msg .cosm .cTabs{position:absolute;left:4%;top:22%;display:flex;flex-direction:column;gap:12px;width:clamp(120px,17vw,190px);z-index:2}
   #msg .cosm button.cTab{margin:0;padding:12px 10px;border-radius:12px;border:2px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08)!important;color:#fff!important;box-shadow:none!important;font-weight:800;font-size:clamp(14px,2.2vmin,19px);cursor:pointer}
@@ -273,6 +284,7 @@
   #msg .cosm button.cTab.sel.x{background:linear-gradient(#ee6cff,#c93df0);color:#12041a;border-color:#fff}
   #msg .cosm .cList{position:absolute;right:2%;top:14%;bottom:16%;width:min(340px,38vw);overflow:auto;display:flex;flex-direction:column;gap:8px;text-align:left;z-index:2;padding-right:4px}
   #msg .cosm .cItem{display:grid;grid-template-columns:1fr auto;gap:2px 8px;padding:9px 12px;border-radius:10px;background:rgba(255,255,255,.07);border-left:5px solid #666;cursor:pointer;font-size:14px}
+  #msg .cosm #flagPrev{position:sticky;top:0;z-index:3;width:100%;height:auto;background:rgba(10,14,20,.85);border-radius:10px;flex:none}
   #msg .cosm .cItem em{font-style:normal;font:800 11px system-ui;letter-spacing:.1em;text-transform:uppercase;align-self:center}.cosm .cItem span{grid-column:1/3;font-size:12px;opacity:.7}
   #msg .cosm .cItem.sel{background:rgba(255,255,255,.2);outline:2px solid #fff}.cosm .cItem.locked{opacity:.55}
   #msg .cosm .cBack{left:50%;bottom:4%;transform:translateX(-50%);width:clamp(150px,20vw,220px);height:clamp(48px,8vh,64px);border-radius:999px;background:linear-gradient(#8fd2f7,#5fb4ea)}
@@ -654,6 +666,7 @@ addItemModel('newflag', o=>{
 addItemModel('slime', o=>{
   for(let i=0;i<4;i++){ const b = new THREE.Mesh(new THREE.SphereGeometry(0.014+i*0.003,8,6), slimeSkin); b.position.set(-0.03+i*0.02,-0.06-i*0.015,-0.06); o.add(b); }   // drips
 }, slimeSkin);
+addItemModel('key', o=>{ const km = makeKeyMesh(1.1); km.rotation.z = -Math.PI/2; const m = new THREE.Group(); m.add(km); m.rotation.set(0.5, 0.6, 0); m.position.set(0, 0.02, -0.1); o.add(m); });
 
 for(const [k,g] of [['uzi',uzi],['pistol',pistol],['shotgun',shot],['awp',awp],['minigun',mini],['rocket',rk],['grenade',gr]]){ g.position.copy(baseGunPos); g.visible=false; gunScene.add(g); weaponGroups[k]=g; }
 
@@ -820,7 +833,8 @@ function updateReloadHands(){                                           // put t
 // END reload animations
 let recoilKick = 0, recoilPitch = 0, shells = [];
 const crosshairEl = document.getElementById('crosshair'); let hitMarkTimer = 0;
-function hitMarker(){ crosshairEl.classList.add('hit'); clearTimeout(hitMarkTimer); hitMarkTimer = setTimeout(()=>crosshairEl.classList.remove('hit'), 150); }
+function hap(st){ try{ const H = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Haptics; if(H && H.impact) H.impact({style:st || 'LIGHT'}); }catch(e){} }      // a tap of vibration in the iPhone app
+function hitMarker(){ hap('LIGHT'); crosshairEl.classList.add('hit'); clearTimeout(hitMarkTimer); hitMarkTimer = setTimeout(()=>crosshairEl.classList.remove('hit'), 150); }
 function fireGunEffects(){
   MP.shotT = performance.now();
   Snd.play(loadout.weapon);
@@ -857,7 +871,7 @@ function fireGunEffects(){
   shells.push(casing);
 }
 
-scene.add(new THREE.HemisphereLight(0xffffff,0x445566,1.1));
+const hemiMain = new THREE.HemisphereLight(0xffffff,0x445566,1.1); scene.add(hemiMain);
 const sun = new THREE.DirectionalLight(0xffffff,0.6); sun.position.set(20,30,10); scene.add(sun);
 
 const CITY_HALF = 38; // city interior half-size
@@ -879,7 +893,8 @@ function addBox(x,z,w,d,h,color){
   const b = new THREE.Mesh(new THREE.BoxGeometry(w,h,d), new THREE.MeshStandardMaterial({color}));
   b.position.set(x,h/2,z);
   scene.add(b); worldMeshes.push(b);
-  colliders.push({minX:x-w/2, maxX:x+w/2, minZ:z-d/2, maxZ:z+d/2, h});
+  const col = {minX:x-w/2, maxX:x+w/2, minZ:z-d/2, maxZ:z+d/2, h}; colliders.push(col);
+  return {mesh:b, col};
 }
 
 // perimeter wall (four segments forming a ring, with gaps at midpoints as gates)
@@ -896,15 +911,15 @@ const spacing = 12, blockSize = 5.8;                  // slimmer buildings = wid
 const CITY_SEED = 112;
 function mulberry32(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a>>>15, 1 | a); t = t + Math.imul(t ^ t>>>7, 61 | t) ^ t; return ((t ^ t>>>14) >>> 0) / 4294967296; }; }
 const cityRand = mulberry32(CITY_SEED*7919);
-const cityBlocks = [];
+const cityBlocks = [], cityDoors = [];                 // cityDoors: every building's door (one can be locked with a key)
 for(let gx=-W+spacing; gx<=W-spacing; gx+=spacing){
   for(let gz=-W+spacing; gz<=W-spacing; gz+=spacing){
     const jx = gx + (cityRand()-0.5)*2, jz = gz + (cityRand()-0.5)*2;
     if(Math.hypot(jx,jz) < 9) continue; // keep plaza around flag clear
     const h = 3 + cityRand()*10;
     const colors = [0x8a8f96,0x6f8a9e,0x9e8a6f,0x7d7d6f];
-    addBox(jx, jz, blockSize, blockSize, h, colors[(cityRand()*colors.length)|0]);
-    cityBlocks.push({x:jx, z:jz, w:blockSize, d:blockSize, h});
+    const bcol = colors[(cityRand()*colors.length)|0], bb = addBox(jx, jz, blockSize, blockSize, h, bcol);
+    cityBlocks.push({x:jx, z:jz, w:blockSize, d:blockSize, h, mesh:bb.mesh, col:bb.col, color:bcol});
   }
 }
 
@@ -1039,7 +1054,7 @@ function updateScoreboard(){ if(scoreboard) scoreboard.update(); career.bestScor
         if(fi === doorFace && y < 2 && off === 0) continue;                  // room for the door
         wins.push([b.x+n[0]*(half+0.03)+tx*off, y, b.z+n[1]*(half+0.03)+tz*off, ry, dr()]);
       }
-      if(fi === doorFace) doors.push([b.x+n[0]*half, b.z+n[1]*half, Math.atan2(n[0], n[1]), n]);     // door faces OUT of the wall (the old angle put the doors on two of the four sides inside the building)
+      if(fi === doorFace) doors.push([b.x+n[0]*half, b.z+n[1]*half, Math.atan2(n[0], n[1]), n, b]);     // door faces OUT of the wall (the old angle put the doors on two of the four sides inside the building)
     });
   }
   const frameM = new THREE.MeshStandardMaterial({color:0x2a2d33, roughness:0.6}), glassM = new THREE.MeshStandardMaterial({color:0xffffff, roughness:0.15, metalness:0.5, emissive:0x0b1c2c});
@@ -1051,13 +1066,24 @@ function updateScoreboard(){ if(scoreboard) scoreboard.update(); career.bestScor
   });
   fr.frustumCulled = false; gl.frustumCulled = false; scene.add(fr); scene.add(gl);
   const doorM = new THREE.MeshStandardMaterial({color:0x5a3820, roughness:0.7}), doorF = new THREE.MeshStandardMaterial({color:0x2a2d33, roughness:0.6}), stepM = new THREE.MeshStandardMaterial({color:0x7a786f, roughness:0.9}), knobM = new THREE.MeshStandardMaterial({color:0xd4b04a, metalness:0.7, roughness:0.3});
-  for(const [x, z, ry] of doors){
+  const lockM = new THREE.MeshStandardMaterial({color:0xffc830, roughness:0.3, metalness:0.7, emissive:0x6a4a00}), holeM = new THREE.MeshBasicMaterial({color:0x111111});
+  for(const [x, z, ry, n, bb] of doors){
     const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = ry;
-    const fm = new THREE.Mesh(new THREE.BoxGeometry(1.6, 2.5, 0.1), doorF); fm.position.set(0, 1.25, 0.05); g.add(fm);
-    const pn = new THREE.Mesh(new THREE.BoxGeometry(1.25, 2.3, 0.12), doorM); pn.position.set(0, 1.15, 0.07); g.add(pn);
-    const kn = new THREE.Mesh(new THREE.SphereGeometry(0.07, 8, 6), knobM); kn.position.set(0.45, 1.1, 0.15); g.add(kn);
+    const frame = new THREE.Group(); g.add(frame);                                                   // a real door frame (two posts and a top bar), so the doorway is open once the door swings away
+    for(const sx of [-1, 1]){ const post = new THREE.Mesh(new THREE.BoxGeometry(0.12, 2.42, 0.1), doorF); post.position.set(sx*0.685, 1.21, 0.05); frame.add(post); }
+    { const top = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.12, 0.1), doorF); top.position.set(0, 2.36, 0.05); frame.add(top); }
+    const hinge = new THREE.Group(); hinge.position.set(-0.625, 0, 0.07); g.add(hinge);                // the door panel swings on its left edge, right against the wall
+    const pn = new THREE.Mesh(new THREE.BoxGeometry(1.25, 2.3, 0.12), doorM); pn.position.set(0.625, 1.15, 0); hinge.add(pn);
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.025, 10, 28), knobM); ring.position.set(1.075, 1.34, 0.23); hinge.add(ring);          // the door handle: a ring on a short stem
+    const stem = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.05, 0.19), knobM); stem.position.set(1.075, 1.44, 0.155); hinge.add(stem);
     const st = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.12, 0.55), stepM); st.position.set(0, 0.06, 0.28); g.add(st);
+    const lock = new THREE.Group(); lock.position.set(0.45, 1.03, 0.3); lock.visible = false; g.add(lock);       // a padlock hanging through the handle, only shown on the locked door
+    lock.add(new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.3, 0.28), lockM));
+    { const sh = new THREE.Mesh(new THREE.TorusGeometry(0.14, 0.03, 10, 28, Math.PI), lockM); sh.rotation.y = Math.PI/2; sh.position.y = 0.15; lock.add(sh);   // the hook goes through the middle of the handle ring
+      const kh = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.02, 16), holeM); kh.rotation.x = Math.PI/2; kh.position.set(0, 0.03, 0.141); lock.add(kh);
+      const ks = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.07, 0.02), holeM); ks.position.set(0, -0.03, 0.141); lock.add(ks); }
     scene.add(g);
+    cityDoors.push({i:cityDoors.length, x, z, n, b:bb, g, hinge, pn, frame, lock, open:false, unlocking:false});
   }
 
   // ---- bushes and trees: only on open grass or sidewalks, never on the roads, the plaza, the supply-van stop or inside a building ----
@@ -1140,6 +1166,234 @@ function fxConfetti(o, n, rd, tier){                                      // hos
 }
 // END confetti
 
+
+// ---------- the Key and the hidden room ----------
+const KEY_CHANCE = 0.01;                                                      // every downed bean or boss: 1%, and only one key per game
+let keyDropped = false, keyDoor = null, secretRoom = null, roomDim = 1;
+const roomLight = new THREE.PointLight(0xffa850, 0, 6.5, 2); scene.add(roomLight);             // made once (intensity 0) so the number of lights never changes
+function makeKeyMesh(s){                                                      // a smooth gold key lying along z: round bow, round shaft, rounded teeth
+  const g = new THREE.Group(), m = new THREE.MeshStandardMaterial({color:0xffc830, roughness:0.25, metalness:0.75, emissive:0x4a3300});
+  const y = 0.035*s, at = (mesh, x, yy, z)=>{ mesh.position.set(x, yy, z); g.add(mesh); return mesh; };
+  const bow = at(new THREE.Mesh(new THREE.TorusGeometry(0.08*s, 0.024*s, 16, 40), m), 0, y, 0.2*s); bow.rotation.x = Math.PI/2;
+  const hub = at(new THREE.Mesh(new THREE.CylinderGeometry(0.03*s, 0.03*s, 0.05*s, 20), m), 0, y, 0.2*s); hub.visible = false;
+  const shaft = at(new THREE.Mesh(new THREE.CylinderGeometry(0.02*s, 0.02*s, 0.4*s, 20), m), 0, y, -0.01*s); shaft.rotation.x = Math.PI/2;
+  const collar = at(new THREE.Mesh(new THREE.CylinderGeometry(0.034*s, 0.034*s, 0.04*s, 20), m), 0, y, 0.11*s); collar.rotation.x = Math.PI/2;
+  const tip = at(new THREE.Mesh(new THREE.SphereGeometry(0.02*s, 16, 12), m), 0, y, -0.21*s);
+  for(const [z, w] of [[-0.15, 0.1], [-0.08, 0.07]]){ at(new THREE.Mesh(rbGeo(w*s, 0.04*s, 0.045*s, 0.012*s), m), (w/2 + 0.01)*s, y, z*s); }
+  return g;
+}
+function keyRoll(e){                                                          // host / solo: a bean or boss just went down
+  if(keyDropped || gameOver || MP.role === 'guest' || !e || e.proxy || !e.mesh) return;
+  if(Math.random() >= KEY_CHANCE) return;
+  keyDropped = true;
+  spawnDrop('key', 1, null, {x:e.mesh.position.x, z:e.mesh.position.z}, 0, null);
+  showToast('A key dropped!');
+}
+function setLockedDoor(i){
+  const d = cityDoors[i]; if(!d || keyDoor) return;
+  keyDoor = d; d.lock.visible = true; keyMarkMake(d);
+  showToast('A door somewhere in the city is now locked. Find it and use the key!');
+}
+let keyMark = null;
+function keyMarkMake(d){                                                      // like the beans' see-through marker: a gold triangle over the locked door, shown through walls to the player holding the key
+  if(keyMark){ scene.remove(keyMark); keyMark = null; }
+  const g = new THREE.Group();
+  const tri = new THREE.Mesh(markerGeo, new THREE.MeshBasicMaterial({color:0xffd23a, depthTest:false, depthWrite:false, fog:false}));
+  tri.rotation.x = Math.PI; tri.renderOrder = 999; tri.frustumCulled = false; g.add(tri); g.userData.tri = tri;
+  g.position.set(d.x + d.n[0]*0.8, 3.6, d.z + d.n[1]*0.8); g.visible = false; scene.add(g); keyMark = g;
+}
+function keyPicked(){ if(keyDoor || MP.role === 'guest' || !cityDoors.length) return; const i = Math.floor(Math.random()*cityDoors.length); setLockedDoor(i); if(MP.role === 'host') mpFx({k:'kl', i}); }
+function nearLockedDoor(){
+  const d = keyDoor; if(!d || d.open || d.unlocking) return null;
+  const dx = d.x - camera.position.x, dz = d.z - camera.position.z, L = Math.hypot(dx, dz);
+  if(L > 3.6) return null;
+  const fx = -Math.sin(yaw), fz = -Math.cos(yaw);
+  return (L < 1.2 || (dx*fx + dz*fz)/L > 0.3) ? d : null;
+}
+
+let unlockAnim = null;
+const ease3 = t=>{ t = Math.max(0, Math.min(1, t)); return t*t*(3 - 2*t); };
+const lerpAng = (a, b, t)=>{ let d = (b - a)%(Math.PI*2); if(d > Math.PI) d -= Math.PI*2; if(d < -Math.PI) d += Math.PI*2; return a + d*t; };
+function startUnlock(i, kd, tb, ts, byMe){                                    // the key leaves the hand, turns in the lock, the lock pops off and falls away, then the door opens
+  const d = cityDoors[i]; if(!d || d.open || d.unlocking || secretRoom) return;
+  d.unlocking = true; d.lock.visible = true; if(keyMark) keyMark.visible = false;
+  const ry = Math.atan2(d.n[0], d.n[1]), ca = Math.cos(ry), sa = Math.sin(ry);
+  const loc = (lx, ly, lz)=>new THREE.Vector3(d.x + lx*ca + lz*sa, ly, d.z - lx*sa + lz*ca);
+  const kg = new THREE.Group(), kin = new THREE.Group(); kg.rotation.order = 'YXZ'; { const km = makeKeyMesh(1.1); km.rotation.z = -Math.PI/2; kin.add(km); } kg.add(kin); scene.add(kg);
+  let from, y0 = ry, p0 = 0.5;
+  if(byMe){ camera.updateMatrixWorld(); from = new THREE.Vector3(0.3, -0.3, -0.62).applyQuaternion(camera.quaternion).add(camera.position); y0 = yaw; }
+  else { from = loc(0.2, 1.2, 1.8); p0 = 0; }
+  unlockAnim = {d, i, kd, tb, ts, ry, ca, sa, loc, kg, kin, from, y0, p0, ph:'fly', t:0, v:null, rest:0, spin:0};
+  kg.position.copy(from); kg.rotation.set(p0, y0, 0);
+  Snd.play('pickup', {x:d.x, y:1, z:d.z});
+}
+function updateUnlock(dt){
+  const A = unlockAnim; if(!A) return;
+  const d = A.d, lock = d.lock; A.t += dt;
+  const hole = A.loc(0.45, 1.03, 0.3 + 0.33), appr = A.loc(0.45, 1.03, 0.3 + 0.33 + 0.5);               // key origin: just outside the keyhole / fully inserted
+  if(A.ph === 'fly'){                                                         // out of the hand and up to the keyhole
+    const s = ease3(A.t/0.85);
+    A.kg.position.lerpVectors(A.from, appr, s); A.kg.rotation.y = lerpAng(A.y0, A.ry, s); A.kg.rotation.x = A.p0*(1 - s);
+    if(A.t >= 0.85){ A.ph = 'in'; A.t = 0; }
+  } else if(A.ph === 'in'){                                                   // slides into the keyhole
+    const s = ease3(A.t/0.3); A.kg.position.lerpVectors(appr, hole, s); A.kg.rotation.set(0, A.ry, 0);
+    if(A.t >= 0.3){ A.ph = 'turn'; A.t = 0; scene.remove(A.kg); lock.add(A.kg); A.kg.position.set(0, 0, 0.33); A.kg.rotation.set(0, 0, 0); Snd.play('click', {x:d.x, y:1, z:d.z}); }
+  } else if(A.ph === 'turn'){                                                 // the key turns
+    A.kin.rotation.z = -ease3(A.t/0.55)*Math.PI/2;
+    if(A.t >= 0.55){ A.ph = 'pop'; A.t = 0; Snd.play('hit', {x:d.x, y:1, z:d.z});
+      const p = A.loc(0.45, 1.03, 0.3);                                       // the lock (with the key in it) comes off the handle, away from the door
+      d.g.remove(lock); scene.add(lock); lock.rotation.order = 'YXZ'; lock.position.copy(p); lock.rotation.set(0, A.ry, 0);
+      A.v = new THREE.Vector3(d.n[0]*1.9, 2.4, d.n[1]*1.9); A.spin = 2.2; }
+  } else if(A.ph === 'pop'){                                                  // falls to the ground
+    A.v.y -= 9.8*dt; lock.position.addScaledVector(A.v, dt); lock.rotation.x += A.spin*dt;
+    if(lock.position.y <= 0.17){
+      lock.position.y = 0.17;
+      if(A.v.y < -1.5){ A.v.y *= -0.3; A.v.x *= 0.5; A.v.z *= 0.5; A.spin *= 0.5; Snd.play('click', lock.position); }
+      else { A.ph = 'rest'; A.t = 0; A.v.set(0, 0, 0); }
+    }
+  } else if(A.ph === 'rest'){
+    if(A.t >= 0.3){ A.ph = 'fade'; A.t = 0; }
+  } else if(A.ph === 'fade'){                                                 // and disappears
+    lock.scale.setScalar(Math.max(0.001, 1 - A.t/0.35));
+    if(A.t >= 0.35){ const a = A; endUnlockAnim(false); openSecretRoom(a.i, a.kd, a.tb, a.ts); }
+  }
+}
+function endUnlockAnim(restore){                                              // the lock and key are gone (or, on a reset, put back on the door)
+  const A = unlockAnim; unlockAnim = null; if(!A) return;
+  const d = A.d, lock = d.lock;
+  if(A.kg.parent) A.kg.parent.remove(A.kg); scene.remove(A.kg);
+  if(lock.parent) lock.parent.remove(lock);
+  lock.scale.setScalar(1); lock.rotation.set(0, 0, 0); lock.position.set(0.45, 1.03, 0.3);
+  d.g.add(lock); lock.visible = !!restore && d === keyDoor;
+  d.unlocking = false;
+}
+function unlockDoor(i, by){                                                   // host / solo decides what is behind it; by = who used the key
+  const d = cityDoors[i]; if(!d || d.open || d.unlocking || secretRoom) return;
+  const kd = Math.floor(Math.random()*4), tb = Math.random() < 0.5 ? 1 : 2, ts = Math.random() < 0.5 ? -1 : 1, who = by || (MP.role ? mpMyId() : null) || null;
+  if(MP.role === 'host') mpFx({k:'ro', i, kd, tb, ts, by:who});
+  startUnlock(i, kd, tb, ts, who === (MP.role ? mpMyId() : null));
+}
+const SECRET_KINDS = [['wood', 4], ['iron', 3], ['gold', 2], ['diamond', 1]];       // each 25%
+function openSecretRoom(i, kd, tb, ts){
+  const d = cityDoors[i]; if(!d || d.open || secretRoom) return;
+  kd = Math.max(0, Math.min(3, kd|0)); tb = tb === 2 ? 2 : 1;
+  d.open = true; d.unlocking = false; d.lock.visible = false; if(keyMark) keyMark.visible = false;
+  const b = d.b, n = d.n, ang = Math.atan2(n[0], n[1]), ca = Math.cos(ang), sa = Math.sin(ang);
+  const T = 0.5, S = b.w, h = b.h, RH = Math.min(3.4, h - 0.3), I = S - 2*T, G = 1.25;
+  const parts = [], cols = [];
+  const W2 = (lx, lz)=>({x:b.x + lx*ca + lz*sa, z:b.z - lx*sa + lz*ca});         // local (x right, z toward the door) -> world
+  const box = (lx, lz, w, dd, y0, y1, mat, solid)=>{
+    const m = new THREE.Mesh(new THREE.BoxGeometry(w, y1 - y0, dd), mat), p = W2(lx, lz);
+    m.position.set(p.x, (y0 + y1)/2, p.z); m.rotation.y = ang; scene.add(m); parts.push(m); if(solid) worldMeshes.push(m); return m;
+  };
+  const col = (lx, lz, w, dd, top, bot, topSurf)=>{
+    const p = W2(lx, lz), side = Math.abs(sa) > 0.5, sw = side ? dd : w, sd = side ? w : dd;
+    const c = {minX:p.x - sw/2, maxX:p.x + sw/2, minZ:p.z - sd/2, maxZ:p.z + sd/2, h:top}; if(bot !== undefined) c.bot = bot; if(topSurf !== undefined) c.top = topSurf;
+    colliders.push(c); cols.push(c); return c;
+  };
+  // the building is swapped for a hollow copy of itself: same colour and height, with an open doorway
+  scene.remove(b.mesh); { const wi = worldMeshes.indexOf(b.mesh); if(wi >= 0) worldMeshes.splice(wi, 1); } { const ci = colliders.indexOf(b.col); if(ci >= 0) colliders.splice(ci, 1); }
+  const wm = new THREE.MeshStandardMaterial({color:b.color}), lm = new THREE.MeshStandardMaterial({color:0x2e2218, roughness:0.9}), fl = new THREE.MeshStandardMaterial({color:0x3a2a1b, roughness:0.95, polygonOffset:true, polygonOffsetFactor:-8, polygonOffsetUnits:-8});
+  const zf = S/2 - T/2, sideW = (S - G)/2;
+  box(0, -zf, S, T, 0, h, wm, true); col(0, -zf, S, T, h);                                          // back
+  for(const sx of [-1, 1]){ box(sx*zf, 0, T, S - 2*T, 0, h, wm, true); col(sx*zf, 0, T, S - 2*T, h); }  // sides
+  for(const sx of [-1, 1]){ const cx = sx*(G/2 + sideW/2); box(cx, zf, sideW, T, 0, h, wm, true); col(cx, zf, sideW, T, h); }   // either side of the doorway
+  box(0, zf, G, T, 2.3, h, wm, true);                                                               // above the doorway
+  if(h - RH > 0.01){ box(0, 0, I, I, RH, h, wm, true); }
+  col(0, 0, I, I, h, RH);                                                                           // the roof: stand on it, walk under it
+  // inside: dark wood, no windows
+  { const f = box(0, 0, I, I, 0, 0.05, fl, false); f.renderOrder = 1; const f2 = box(0, zf, G, T, 0, 0.05, fl, false); f2.renderOrder = 1; }                              // (its depth offset keeps the grass from covering it)
+  box(0, -(S/2 - T - 0.02), I, 0.04, 0, RH, lm, false);
+  for(const sx of [-1, 1]) box(sx*(S/2 - T - 0.02), 0, 0.04, I, 0, RH, lm, false);
+  for(const sx of [-1, 1]) box(sx*(G/2 + (I/2 - G/2)/2), S/2 - T - 0.02, I/2 - G/2, 0.04, 0, RH, lm, false);
+  box(0, S/2 - T - 0.02, G, 0.04, 2.3, RH, lm, false);                                              // inside, above the door
+  box(0, 0, I, I, RH - 0.04, RH, lm, false);
+  // a lantern hanging in the middle
+  const lan = new THREE.Group(); { const p = W2(0, 0); lan.position.set(p.x, RH, p.z); scene.add(lan); parts.push(lan); }
+  const iron = new THREE.MeshStandardMaterial({color:0x1b1b1f, roughness:0.6, metalness:0.5}), glow = new THREE.MeshStandardMaterial({color:0x553311, emissive:0xffa030, emissiveIntensity:1.8});
+  { const chain = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.9, 6), iron); chain.position.y = -0.45; lan.add(chain);
+    const cap = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.06, 0.3), iron); cap.position.y = -0.92; lan.add(cap);
+    const flame = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.28, 0.2), glow); flame.position.y = -1.1; lan.add(flame);
+    const base = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.06, 0.3), iron); base.position.y = -1.28; lan.add(base);
+    for(const sx of [-1, 1]) for(const sz of [-1, 1]){ const bar = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.36, 0.02), iron); bar.position.set(sx*0.14, -1.1, sz*0.14); lan.add(bar); } }
+  // 1 or 2 tables along the sides
+  const wood = new THREE.MeshStandardMaterial({color:0x4a321c, roughness:0.85});
+  const sides = tb === 2 ? [-1, 1] : [ts];
+  for(const sx of sides){
+    const cx = sx*(I/2 - 0.6), cz = 0.5;
+    box(cx, cz, 0.9, 1.5, 0.78, 0.84, wood, false);
+    for(const lx of [-0.38, 0.38]) for(const lz of [-0.66, 0.66]) box(cx + lx, cz + lz, 0.07, 0.07, 0, 0.78, wood, false);
+    col(cx, cz, 0.9, 1.5, 1, undefined, 0.85);
+  }
+  // chests (not locked to anyone)
+  const [tier, count] = SECRET_KINDS[kd], xs = count === 4 ? [-1.8, -0.6, 0.6, 1.8] : count === 3 ? [-1.2, 0, 1.2] : count === 2 ? [-0.7, 0.7] : [0];
+  const cz = -(I/2 - 0.7), chs = [];
+  xs.forEach((x, k)=>{ const p = W2(x, cz), c = spawnChest(tier, {x:p.x, z:p.z}, {secret:true}); c.group.rotation.y = ang; c.sid = k; chs.push(c); });
+  for(const c of chs) for(const m of c.mats) m.color.multiplyScalar(0.45);                         // the room is dim: dark surfaces, lit by the lantern
+  secretRoom = {i, d, b, parts, cols, chests:chs, RH, I, bx:b.x, bz:b.z, lan, t:0, ca, sa, zf, S, T, G, col, doorDone:false, closing:false, closed:false, chk:1, hit:null};
+  const lp = W2(0, 0); roomLight.position.set(lp.x, RH - 1.1, lp.z); roomLight.intensity = 1.6;
+  Snd.play('vanDoor', {x:d.x, y:1, z:d.z}); showToast('A hidden room opened! The chests inside are for everyone.');
+}
+function resetSecretRoom(){                                                   // a new game: the building and its door are as they were
+  keyDropped = false;
+  if(keyDoor){ keyDoor.lock.visible = false; keyDoor.unlocking = false; keyDoor = null; }
+  if(keyMark){ scene.remove(keyMark); keyMark = null; }
+  if(unlockAnim) endUnlockAnim(true);
+  const S = secretRoom; secretRoom = null;
+  if(S){
+    for(const m of S.parts){ scene.remove(m); const wi = worldMeshes.indexOf(m); if(wi >= 0) worldMeshes.splice(wi, 1); }
+    for(const c of S.cols){ const ci = colliders.indexOf(c); if(ci >= 0) colliders.splice(ci, 1); }
+    scene.add(S.b.mesh); worldMeshes.push(S.b.mesh); colliders.push(S.b.col);
+    S.d.open = false; S.d.hinge.rotation.y = 0; { const wi = worldMeshes.indexOf(S.d.pn); if(wi >= 0) worldMeshes.splice(wi, 1); }
+  }
+  roomLight.intensity = 0;
+}
+function roomInside(S, x, z, extra){ const dx = x - S.bx, dz = z - S.bz, lx = dx*S.ca - dz*S.sa, lz = dx*S.sa + dz*S.ca; return Math.abs(lx) < S.I/2 + extra && lz > -S.I/2 - extra && lz < S.S/2 + extra; }
+function roomClear(S){                                                         // everyone out, every item picked up or gone, every chest opened
+  if(!S.chests.every(c=>c.opened)) return false;
+  if(roomInside(S, camera.position.x, camera.position.z, 0.2) && camera.position.y < S.RH + 0.4) return false;
+  if(MP.role && MP.room) for(const q of MP.room.peers()){ if(q.isMe || !q.presence) continue; const px = +q.presence.x, pz = +q.presence.z; if(Number.isFinite(px) && Number.isFinite(pz) && roomInside(S, px, pz, 0.2) && !(+q.presence.y > S.RH + 1)) return false; }
+  for(const d of drops) if(d.pos && roomInside(S, d.pos.x, d.pos.z, 0.2)) return false;
+  return true;
+}
+function closeRoomDoor(){
+  const S = secretRoom; if(!S || !S.doorDone || S.closing) return;
+  S.closing = true;
+  if(S.hit){ const ci = colliders.indexOf(S.hit); if(ci >= 0) colliders.splice(ci, 1); S.hit = null; }
+  { const wi = worldMeshes.indexOf(S.d.pn); if(wi >= 0) worldMeshes.splice(wi, 1); }
+  Snd.play('vanDoor', {x:S.d.x, y:1, z:S.d.z});
+}
+function roomCeilingEye(){                                                     // the highest your eyes can go while you are inside the hidden room
+  const S = secretRoom; if(!S || !roomInside(S, camera.position.x, camera.position.z, 0)) return null;
+  return S.RH - 0.35;
+}
+function updateSecretRoom(dt){
+  if(keyMark){ const hi = heldItem(), show = !!(keyDoor && !keyDoor.open && !keyDoor.unlocking && hi && hi !== 'gun' && hi.type === 'key'); keyMark.visible = show; if(show){ const dist = Math.hypot(keyMark.position.x - camera.position.x, keyMark.position.z - camera.position.z), k = Math.max(1, dist/9); keyMark.userData.tri.scale.setScalar(k); keyMark.position.y = 3.6 + k*0.3 + Math.sin(performance.now()/300)*0.12*k; keyMark.userData.tri.rotation.y += dt*2.5; } }
+  if(unlockAnim) updateUnlock(dt);
+  const S = secretRoom; if(!S) return;
+  S.t += dt;
+  const hg = S.d.hinge;
+  hg.rotation.y += ((S.closing ? 0 : -1.8) - hg.rotation.y)*Math.min(1, dt*4);
+  if(!S.closing && !S.doorDone && hg.rotation.y < -1.78){                      // the door has finished opening: now it is solid
+    S.doorDone = true; hg.rotation.y = -1.8;
+    const ry = S.d.g.rotation.y, ca = Math.cos(ry), sa = Math.sin(ry), lx0 = -0.767, lz0 = 0.679, side = Math.abs(sa) > 0.5, w = 0.4, dd = 1.245;
+    const wx = S.d.x + lx0*ca + lz0*sa, wz = S.d.z - lx0*sa + lz0*ca, sw = side ? dd : w, sd = side ? w : dd;
+    const c = {minX:wx - sw/2, maxX:wx + sw/2, minZ:wz - sd/2, maxZ:wz + sd/2, h:2.3}; colliders.push(c); S.cols.push(c); S.hit = c;
+    worldMeshes.push(S.d.pn);
+  }
+  if(S.closing && !S.closed && hg.rotation.y > -0.03){                          // shut: the doorway is blocked again
+    hg.rotation.y = 0; S.closed = true; S.col(0, S.zf, S.G, S.T, S.b.h); worldMeshes.push(S.d.pn); roomLight.intensity = 0;
+  }
+  if(S.doorDone && !S.closing){                                                 // the host (or you, alone) decides when the room is finished
+    S.chk -= dt;
+    if(S.chk <= 0){ S.chk = 0.5; if(MP.role !== 'guest' && roomClear(S)){ if(MP.role === 'host') mpFx({k:'rx'}); closeRoomDoor(); } }
+  }
+  if(!S.closed){
+    S.lan.rotation.z = Math.sin(S.t*1.3)*0.05; S.lan.rotation.x = Math.sin(S.t*0.9 + 1)*0.04;
+    roomLight.intensity = 1.55 + Math.sin(S.t*9)*0.08 + Math.sin(S.t*23)*0.05;
+  }
+}
+
 // BEGIN chests
 const chests = [];
 const chestRay = new THREE.Raycaster(); chestRay.far = 3.5;                     // must be within 3.5 m and looking at it
@@ -1217,7 +1471,7 @@ function pickChestSpot(){
 }
 function chestNameTag(name, mine){
   const cv = document.createElement('canvas'); cv.width = 256; cv.height = 64; const cx = cv.getContext('2d');
-  cx.textAlign = 'center'; cx.lineWidth = 6; cx.strokeStyle = '#000'; cx.font = '700 30px system-ui,sans-serif'; cx.fillStyle = mine ? '#ffd24a' : '#fff'; cx.strokeText(name, 128, 42); cx.fillText(name, 128, 42);
+  cx.textAlign = 'center'; cx.lineJoin = 'round'; cx.miterLimit = 2; cx.lineWidth = 6; cx.strokeStyle = '#000'; cx.font = '700 30px system-ui,sans-serif'; cx.fillStyle = mine ? '#ffd24a' : '#fff'; cx.strokeText(name, 128, 42); cx.fillText(name, 128, 42);
   const m = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 0.375), new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(cv), transparent:true, depthWrite:false, fog:false}));
   m.position.y = 1.95; m.raycast = ()=>{}; return m;
 }
@@ -1230,10 +1484,11 @@ function spawnChest(forceId, at, opt){          // opt: {owner, name} in co-op: 
   scene.add(b.g);
   const collider = {minX:spot.x-0.55, maxX:spot.x+0.55, minZ:spot.z-0.55, maxZ:spot.z+0.55, h:2, top:0.75};   // h: blocks beans; top: surface you can stand on
   colliders.push(collider);
-  const chest = {group:b.g, lid:b.lid, beam:b.beam, arrow:b.arrow, mats:b.mats, tier, opened:false, openT:0, collider, owner:(opt && opt.owner) || null, ownerName:(opt && opt.name) || ''};
+  const chest = {group:b.g, lid:b.lid, beam:b.beam, arrow:b.arrow, mats:b.mats, tier, opened:false, openT:0, collider, secret:!!(opt && opt.secret), owner:(opt && opt.owner) || null, ownerName:(opt && opt.name) || ''};
   if(opt && (opt.owner || opt.name)){ chest.label = chestNameTag(opt.name || 'Player', opt.owner === mpMyId()); b.g.add(chest.label); }
   b.g.userData.chest = chest;
   chests.push(chest);
+  if(opt && opt.secret) return chest;                                            // the hidden room's chests: no toast, and they never hold up a wave
   waitingForChest = true;
   if(!opt || !opt.owner || opt.owner === mpMyId()) showToast(tier.spawnMsg + (at ? ' Pick an upgrade at the table - wave ' + wave + ' starts when the van drives off.' : ' Open it to start wave ' + wave), tier.id, true);
   return chest;
@@ -1255,7 +1510,8 @@ function openChest(c, remote){                                                 /
   if(!c || c.opened) return;
   c.opened = true; c.openT = 0;
   if(!remote && MP.role && c.owner) mpFx({k:'o', o:c.owner});
-  const startsWave = !remote && waitingForChest && !van;
+  if(!remote && MP.role && c.secret) mpFx({k:'rc', i:c.sid});
+  const startsWave = !remote && !c.secret && waitingForChest && !van;
   if(startsWave){ waitingForChest = false; spawnTimer = 0; }   // (no van: opening the chest starts the next wave; with a van it starts once the van drives off)
   c.collider.top = 0.5;                                  // lid is up now: you stand on the box itself
   if(c.arrow) c.arrow.visible = false;
@@ -1296,12 +1552,14 @@ function updateChests(dt){
     }
   }
 }
-function clearChests(){
-  for(const c of chests){
+function clearChests(all){                                                    // a new wave clears the chests, but not the hidden room's (all = true: a new game)
+  for(let i = chests.length-1; i >= 0; i--){
+    const c = chests[i]; if(c.secret && !all) continue;
     scene.remove(c.group);
     const ci = colliders.indexOf(c.collider); if(ci >= 0) colliders.splice(ci, 1);
+    chests.splice(i, 1);
   }
-  chests.length = 0; waitingForChest = false;
+  waitingForChest = false;
 }
 // END chests
 
@@ -1347,7 +1605,7 @@ const WEAPONS = {
   rocket:{name:'Rocket Launcher', blurb:'One rocket, one big boom. The blast shoves you back - jump and fire at the ground to launch yourself skyward.', mag:1, interval:0.4, spread:0, dmg:0, pellets:1, canAuto:false, rocket:true, autoReload:true, reload:1000,
     recoil:0.06, kick:4, fallStart:Infinity, fallEnd:Infinity, muzzle:new THREE.Vector3(0.32,-0.34,-1.6), shell:null, st:[1,5,5,1]},
 };
-const finishes = [{n:'Stock',c:null},{n:'Olive',c:0x6b7d3a},{n:'Desert',c:0xc2a56e},{n:'Navy',c:0x2d5a9c},{n:'Crimson',c:0xb02a2a}];
+const finishes = [{n:'Stock',c:null},{n:'Olive',c:0x6b7d3a},{n:'Desert',c:0xc2a56e},{n:'Navy',c:0x2d5a9c},{n:'Crimson',c:0xb02a2a},{n:'Midnight',c:0x1b1b2a},{n:'Snow',c:0xe8eef2},{n:'Gold',c:0xd4a017},{n:'Rose',c:0xe0709a},{n:'Violet',c:0x7a3ad0},{n:'Teal',c:0x1fb5a8},{n:'Orange',c:0xe8801f},{n:'Lime',c:0x7bd02a},{n:'Sky',c:0x4aa8e8},{n:'Rust',c:0x8a4a22},{n:'Graphite',c:0x55585f},{n:'Magenta',c:0xd02a9a}];
 let loadout = {weapon:'pistol', finish:0}, curW = WEAPONS.pistol;
 const GUN_ORDER = ['pistol','uzi','shotgun','minigun','rifle','awp','rocket'];             // the order of the Guns screen
 const GUN_PARTS = 2;                                                                                 // parts needed to unlock a gun; the pistol is free from the start
@@ -1357,6 +1615,7 @@ let settings = {sens:1, fov:75, input:'kbm', autoReload:false, autoSprint:false,
 const isTouch = ()=> settings.input === 'touch';
 try{ const ss = JSON.parse(localStorage.getItem('ffps_settings')||'null'); if(ss){ settings.sens = Math.min(3,Math.max(0.2,+ss.sens||1)); settings.fov = Math.min(110,Math.max(60,+ss.fov||75)); if(ss.input==='touch') settings.input = 'touch'; settings.autoReload = !!ss.autoReload; settings.autoSprint = !!ss.autoSprint; } }catch(e){}
 try{ const s2 = JSON.parse(localStorage.getItem('ffps_settings')||'null'); if(s2 && s2.costume === 'outlaw') settings.costume = 'outlaw'; if(s2){ if(typeof s2.volume === 'number') settings.volume = Math.min(1, Math.max(0, s2.volume)); settings.muted = !!s2.muted; settings.autoShoot = !!s2.autoShoot; } }catch(e){}
+if(!localStorage.getItem('ffps_settings')){ try{ if(navigator.maxTouchPoints > 1 && !matchMedia('(any-pointer:fine)').matches) settings.input = 'touch'; }catch(e){} }      // a phone or tablet with no mouse starts in touch mode
 function saveSettings(){ try{ localStorage.setItem('ffps_settings', JSON.stringify(settings)); }catch(e){} }
 
 // ---------- sound: everything is synthesised with Web Audio (no files) ----------
@@ -1378,7 +1637,7 @@ const Snd = (()=>{
       if(ctx.state === 'suspended' && ctx.resume) ctx.resume();
     }catch(e){ ctx = null; }
   }
-  function applyVol(){ if(master) master.gain.value = level()*MAKEUP; if(level() === 0) silence(); }
+  function applyVol(){ if(master) master.gain.value = hushed ? 0 : level()*MAKEUP; if(level() === 0) silence(); }
   // routing: an optional world position gives distance falloff and left/right panning
   function out(pos, g){
     let gain = g, pan = 0;
@@ -1489,6 +1748,7 @@ const Snd = (()=>{
     lose(){ arp([392,330,262,196], 0.28, {t:0.4, extra:{type:'sawtooth', lp:900, g:0.2}}); tone({f:70, f2:30, t:1.0, g:0.5, at:0.9}); }
   };
   function play(name, pos, arg){
+    if(hushed) return;
     if(!ctx || level() === 0 || !S[name]) return;
     const gap = MIN_GAP[name], now = performance.now();
     if(gap && lastAt[name] && now - lastAt[name] < gap) return;
@@ -1519,8 +1779,10 @@ const Snd = (()=>{
       whirOsc.frequency.setTargetAtTime(35 + spin*120, t, 0.06);
     }catch(e){}
   }
+  let hushed = false;
+  function hush(on){ hushed = !!on; if(master) master.gain.value = hushed ? 0 : level()*MAKEUP; if(on) silence(); }       // game over: every game sound stops until the next game or the menu
   function silence(){ cancelReload(); if(ctx && whirGain){ try{ whirGain.gain.setTargetAtTime(0, ctx.currentTime, 0.03); }catch(e){} } }
-  return {init, play, reload, cancelReload, whir, silence, applyVol, _ctx:()=>ctx, _reset(){ cancelReload(); ctx = null; master = null; whirOsc = null; whirGain = null; for(const k in lastAt) delete lastAt[k]; }};
+  return {init, play, reload, cancelReload, whir, silence, hush, applyVol, _ctx:()=>ctx, _reset(){ cancelReload(); ctx = null; master = null; whirOsc = null; whirGain = null; for(const k in lastAt) delete lastAt[k]; }};
 })();
 ['pointerdown','keydown','touchstart','mousedown'].forEach(ev=>addEventListener(ev, ()=>Snd.init(), true));
 document.addEventListener('click', e=>{ if(e.target.closest && e.target.closest('#msg button, #msg .card, #msg .sw, #confirm button, #pauseBtn')) Snd.play('click'); }, true);
@@ -1690,6 +1952,7 @@ const TERM_CMDS = {
     '/exit                      back to settings',
     '/coins <n>                 add coins',
     '/give <item> [n]           mine turret cloth taco slime grenade energy newflag',
+    '/chest <n> [tier]          open n chests for you: wood iron gold diamond',
     '/heal                      fill the flag HP',
     '/god on|off                the flag takes no damage',
     '/freeze  /unfreeze         stop / resume the world (beans, spawns, van); you can still move',
@@ -1721,6 +1984,23 @@ const TERM_CMDS = {
     const times = ITEM_DEFS[key].stack ? 1 : n, amt = ITEM_DEFS[key].stack ? n : 1; let ok = true;
     for(let i=0;i<times && ok;i++) ok = addItem(key, amt, extra ? Object.assign({}, extra) : null);
     termPrint(ok ? 'gave ' + ITEM_DEFS[key].name + (n > 1 ? ' x' + n : '') : 'hotbar full', ok ? 'ok' : 'err');
+  },
+  chest(a){                                                                  // /chest <n> [wood|iron|gold|diamond]: open n chests for you right now
+    const n = parseInt(a[0], 10), tier = (a[1] || 'wood').toLowerCase();
+    if(!(n >= 1) || !CHEST_ODDS[tier]) return termPrint('usage: /chest <n> [wood|iron|gold|diamond]', 'err');
+    const cnt = Math.min(1000, n), sum = {newc:[], dup:0, coins:0, wild:{}, parts:{}};
+    for(let i = 0; i < cnt; i++){
+      const res = rollParts(null, tier);
+      if(res.kind === 'cos'){ const it = cosmFind(res.cat, res.item); if(career.cos.owned[it.id]){ career.coins += COSM_DUP[it.r]; sum.dup++; sum.coins += COSM_DUP[it.r]; } else { career.cos.owned[it.id] = true; sum.newc.push(it.n); } }
+      else if(res.kind === 'wild'){ career.wild[res.rar] += res.n; sum.wild[res.rar] = (sum.wild[res.rar] || 0) + res.n; }
+      else { career.parts[res.gun] = (career.parts[res.gun] || 0) + res.n; sum.parts[res.gun] = (sum.parts[res.gun] || 0) + res.n; }
+    }
+    careerSave();
+    termPrint('opened ' + cnt + ' ' + tier + ' chest' + (cnt === 1 ? '' : 's'), 'ok');
+    if(sum.newc.length) termPrint('new cosmetics: ' + sum.newc.join(', '));
+    if(sum.dup) termPrint('duplicate cosmetics: ' + sum.dup + ' (+' + sum.coins + ' coins)');
+    const w = Object.keys(sum.wild).map(r=>r + ' x' + sum.wild[r]).join(', '); if(w) termPrint('wild parts: ' + w);
+    const g = Object.keys(sum.parts).map(k=>k + ' x' + sum.parts[k]).join(', '); if(g) termPrint('gun parts: ' + g);
   },
   heal(){ if(!gameLive()) return termPrint('start a game first', 'err'); flagHP = FLAG_MAX; termPrint('flag restored', 'ok'); },
   god(a){ debugGod = (a[0]||'').toLowerCase() === 'on' ? true : (a[0]||'').toLowerCase() === 'off' ? false : !debugGod; termPrint('god mode ' + (debugGod ? 'on' : 'off'), 'ok'); },
@@ -1839,10 +2119,11 @@ const todayKey = new Date().toISOString().slice(0,10);
 let career = {xp:0, coins:0, level:1, bestWave:0, bestScore:0, runs:0, dailyDate:'', dailyWave:0, dailyClaimed:false};
 try { const saved = JSON.parse(localStorage.getItem(CAREER_KEY)||'null'); if(saved && typeof saved==='object') career={...career,...saved}; } catch(e){}
 function careerSave(){ try{ localStorage.setItem(CAREER_KEY, JSON.stringify(career)); }catch(e){} }
-career.cos = {owned:Object.assign({}, career.cos && career.cos.owned), eq:Object.assign({head:'',top:'',bottom:'',cape:''}, career.cos && career.cos.eq)};   // cosmetics won from chests / what is worn
+career.cos = {owned:Object.assign({}, career.cos && career.cos.owned), eq:Object.assign({head:'',top:'',bottom:'',cape:'',flag:''}, career.cos && career.cos.eq)};   // cosmetics won from chests / what is worn
 if(!/^[A-Z2-9]{8}$/.test(String(career.fid || ''))){ career.fid = Array.from({length:8}, ()=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random()*32)]).join(''); careerSave(); }   // friend code
 career.friends = Array.isArray(career.friends) ? career.friends.filter(f=>f && /^[A-Z2-9]{8}$/.test(String(f.id))).slice(0, 30).map(f=>({id:String(f.id), name:String(f.name || 'Friend').slice(0, 16)})) : [];
 if(career.fshow === undefined) career.fshow = true;
+career.pass = {d:Math.max(0, Math.floor(+(career.pass && career.pass.d) || 0)), lv:Math.max(0, Math.floor(+(career.pass && career.pass.lv) || 0))};   // free pass: diamonds towards the next level, levels unlocked
 career.lvc = Object.assign({}, career.lvc);                                 // level-track chests already claimed
 career.wild = Object.assign({common:0, rare:0, epic:0, legendary:0}, career.wild);   // wild parts: one rarity, works for any gun of it
 career.parts = Object.assign({}, career.parts);                                // gun parts won from shop chests
@@ -2134,7 +2415,7 @@ function showShop(){
 }
 // ---------- cosmetics: 10 items per slot (4 common, 3 rare, 2 epic, 1 legendary), won from shop chests ----------
 const RAR_COL = {common:'#e8eaed', rare:'#4aa8ff', epic:'#b06cff', legendary:'#ffb02e'}, RAR_NAME = {common:'Common', rare:'Rare', epic:'Epic', legendary:'Legendary'};
-const COSM_CATS = [['head','Head'],['top','Top'],['bottom','Bottom'],['cape','Cape']];
+const COSM_CATS = [['head','Head'],['top','Top'],['bottom','Bottom'],['cape','Cape'],['flag','Flag']], COSM_AV = COSM_CATS.filter(c=>c[0] !== 'flag');          // flags are not worn: they replace the flag on the pole
 const COSM_DUP = {common:25, rare:60, epic:150, legendary:400};                    // coins for a duplicate
 const cm = (c, e)=>new THREE.MeshStandardMaterial({color:c, emissive:e || 0x000000, roughness:0.55, metalness:0.08});
 function rbGeo(w, h, d, r){                                              // a box with smoothly rounded edges and corners (clean silhouettes, no hard blocky edges)
@@ -2202,27 +2483,217 @@ const COSM = {
     {id:'b_lava', n:'Magma Trousers', r:'legendary', build:()=>{ const g = new THREE.Group(); cLow(g, cm(0x2a1208, 0x551a00)); cbx(g, 0.04, 0.4, 0.4, cm(0xffc933, 0xff9a00), -0.12, 0.71, 0, 0, 0, 0.3); cbx(g, 0.04, 0.34, 0.4, cm(0xffc933, 0xff9a00), 0.14, 0.7, 0, 0, 0, -0.35); cbx(g, 0.6, 0.06, 0.4, cm(0xff9a00, 0xff6600), 0, 0.92, 0); for(let i = 0; i < 8; i++){ const a = i/8*Math.PI*2; ccy(g, 0.04, 0, 0.22, cm(i%2 ? 0xff5a1a : 0xff9a1a, 0xff3300), Math.cos(a)*0.28, 0.37, Math.sin(a)*0.18, Math.PI); } return g; }},
   ],
   cape:[
-    {id:'c_red', n:'Red Cape', r:'common', build:()=>cCape(cm(0xc42a2a), 0.52, 0.95, g=>{ for(const sx of [-1, 1]) csp(g, 0.04, cm(0xffc933), sx*0.22, 0, -0.02); })},
-    {id:'c_blue', n:'Blue Cape', r:'common', build:()=>cCape(cm(0x2a5ac4), 0.52, 0.95, g=>{ for(const sx of [-1, 1]) csp(g, 0.04, cm(0xffc933), sx*0.22, 0, -0.02); })},
+    {id:'c_red', n:'Red Cape', r:'common', build:()=>cCape(cm(0xc42a2a), 0.52, 0.95, g=>{ for(const sx of [-1, 1]) csp(g, 0.04, cm(0xffc933), sx*0.22, 0, 0.03); })},
+    {id:'c_blue', n:'Blue Cape', r:'common', build:()=>cCape(cm(0x2a5ac4), 0.52, 0.95, g=>{ for(const sx of [-1, 1]) csp(g, 0.04, cm(0xffc933), sx*0.22, 0, 0.03); })},
     {id:'c_green', n:'Green Cape', r:'common', build:()=>cCape(cm(0x2a9a4a), 0.52, 0.9)},
     {id:'c_black', n:'Shadow Cape', r:'common', build:()=>cCape(cm(0x15151a), 0.52, 1.0, g=>cbx(g, 0.52, 0.05, 0.05, cm(0x5a1a7a), 0, -0.98, 0))},
-    {id:'c_royal', n:'Royal Cape', r:'rare', build:()=>cCape(cm(0x6a2a9a), 0.56, 1.05, g=>{ const gd = cm(0xffc933); cbx(g, 0.58, 0.06, 0.05, gd, 0, -1.03, 0); for(const sx of [-1, 1]) cbx(g, 0.04, 1.05, 0.05, gd, sx*0.28, -0.52, 0); for(let i = 0; i < 5; i++) csp(g, 0.025, gd, 0, -0.1 - i*0.18, -0.03); })},
+    {id:'c_royal', n:'Royal Cape', r:'rare', build:()=>cCape(cm(0x6a2a9a), 0.56, 1.05, g=>{ const gd = cm(0xffc933); cbx(g, 0.58, 0.06, 0.05, gd, 0, -1.03, 0); for(const sx of [-1, 1]) cbx(g, 0.04, 1.05, 0.05, gd, sx*0.28, -0.52, 0); for(let i = 0; i < 5; i++) csp(g, 0.025, gd, 0, -0.1 - i*0.18, 0.04); })},
     {id:'c_camo', n:'Camo Cape', r:'rare', build:()=>cCape(cm(0x4e6b3a), 0.54, 0.95, g=>{ [[-0.12,-0.2],[0.12,-0.45],[-0.1,-0.7],[0.14,-0.85]].forEach(([x, y], i)=>cbx(g, 0.16, 0.16, 0.05, cm(i%2 ? 0x2c3d20 : 0x7a8a4a), x, y, 0)); })},
     {id:'c_rainbow', n:'Rainbow Cape', r:'rare', build:()=>cCape(cm(0xffffff), 0.54, 0.96, g=>{ [0xff3b3b, 0xff9a1a, 0xffe14a, 0x4aff7a, 0x3bb0ff, 0xa04aff].forEach((c, i)=>cbx(g, 0.545, 0.16, 0.05, cm(c, c), 0, -0.08 - i*0.16, 0)); })},
-    {id:'c_flame', n:'Flame Cape', r:'epic', build:()=>cCape(cm(0xff4a14, 0x881800), 0.54, 0.85, g=>{ cbx(g, 0.4, 0.55, 0.05, cm(0xff9a1a, 0xff5a00), 0, -0.45, -0.01); cbx(g, 0.22, 0.4, 0.05, cm(0xffe14a, 0xffaa00), 0, -0.4, -0.02); for(let i = 0; i < 5; i++) ccy(g, 0.05, 0, 0.3, cm(i%2 ? 0xff4a14 : 0xff9a1a, 0xff3300), -0.2 + i*0.1, -1.0, 0, Math.PI); })},
+    {id:'c_flame', n:'Flame Cape', r:'epic', build:()=>cCape(cm(0xff4a14, 0x881800), 0.54, 0.85, g=>{ cbx(g, 0.4, 0.55, 0.05, cm(0xff9a1a, 0xff5a00), 0, -0.45, 0.03); cbx(g, 0.22, 0.4, 0.05, cm(0xffe14a, 0xffaa00), 0, -0.4, 0.04); for(let i = 0; i < 5; i++) ccy(g, 0.05, 0, 0.3, cm(i%2 ? 0xff4a14 : 0xff9a1a, 0xff3300), -0.2 + i*0.1, -1.0, 0, Math.PI); })},
     {id:'c_ice', n:'Frost Cape', r:'epic', build:()=>cCape(cm(0x6fd8ff, 0x1a7aa8), 0.56, 1.0, g=>{ for(let i = 0; i < 6; i++){ const c = cbx(g, 0.08, 0.2, 0.07, cm(0xe8fbff, 0x4fc8ff), -0.22 + i*0.088, -1.0 - (i%2)*0.05, 0); c.rotation.z = (i%2 ? 0.2 : -0.2); } cbx(g, 0.58, 0.07, 0.07, cm(0xffffff, 0x8adfff), 0, -0.03, 0); })},
     {id:'c_wings', n:'Angel Wings', r:'legendary', build:()=>{ const g = new THREE.Group(); g.position.set(0, 1.3, 0.2); const w = cm(0xffffff, 0x8890aa), gd = cm(0xffd24a, 0xaa7a00); cbx(g, 0.12, 0.12, 0.08, gd, 0, 0, -0.01); for(const sx of [-1, 1]){ const wg = new THREE.Group(); wg.position.set(sx*0.08, 0, 0); wg.rotation.y = sx*0.45; for(let i = 0; i < 6; i++){ const L = 0.95 - i*0.09; const f = cbx(wg, L, 0.11, 0.03, w, sx*(L/2 + 0.05), 0.22 - i*0.13, 0, 0, 0, sx*(0.38 - i*0.1)); } cbx(wg, 0.5, 0.05, 0.05, gd, sx*0.3, 0.28, 0, 0, 0, sx*0.38); g.add(wg); } return g; }},
   ]
 };
+
+// ---- flags: 4 common, 3 rare, 2 epic, 1 legendary. Painted on a canvas and wrapped on the flag cloth; in a room everyone sees the host's flag ----
+const FLAG_DRAW = {
+  f_crim:(c,W,H)=>{ c.fillStyle = '#c42a2a'; c.fillRect(0, 0, W, H); c.strokeStyle = '#ffc933'; c.lineWidth = H*0.07; c.strokeRect(H*0.08, H*0.08, W - H*0.16, H*0.84); c.fillStyle = '#ffc933'; c.beginPath(); c.arc(W/2, H/2, H*0.17, 0, 7); c.fill(); },
+  f_check:(c,W,H)=>{ const nx = 8, ny = 5; for(let y = 0; y < ny; y++) for(let x = 0; x < nx; x++){ c.fillStyle = (x + y)%2 ? '#111' : '#fff'; c.fillRect(x*W/nx, y*H/ny, W/nx + 1, H/ny + 1); } },
+  f_navy:(c,W,H)=>{ c.fillStyle = '#1a2f5e'; c.fillRect(0, 0, W, H); c.fillStyle = '#fff'; for(const y of [0.2, 0.46, 0.72]) c.fillRect(0, H*y, W, H*0.09); c.fillStyle = '#ffc933'; c.fillRect(0, H*0.91, W, H*0.09); },
+  f_green:(c,W,H)=>{ c.fillStyle = '#23883f'; c.fillRect(0, 0, W, H); c.fillStyle = '#fff'; c.beginPath(); c.moveTo(0, H*0.62); c.lineTo(0, H*0.95); c.lineTo(W, H*0.38); c.lineTo(W, 0.05*H); c.closePath(); c.fill(); c.fillStyle = '#ffd24a'; c.beginPath(); c.moveTo(0, H*0.78); c.lineTo(0, H*0.86); c.lineTo(W, H*0.22); c.lineTo(W, H*0.14); c.closePath(); c.fill(); },
+  f_pirate:(c,W,H)=>{ c.fillStyle = '#0d0d10'; c.fillRect(0, 0, W, H); c.strokeStyle = '#f2f2f2'; c.lineCap = 'round'; c.lineWidth = H*0.07;
+    for(const sx of [-1, 1]){ c.beginPath(); c.moveTo(W/2 - sx*W*0.2, H*0.2); c.lineTo(W/2 + sx*W*0.2, H*0.86); c.stroke(); for(const e of [[-1, 0.2], [1, 0.86]]) for(const o of [-1, 1]){ c.beginPath(); c.arc(W/2 + e[0]*sx*W*0.2 + o*H*0.04, H*e[1] - e[0]*H*0.02, H*0.045, 0, 7); c.fillStyle = '#f2f2f2'; c.fill(); } }
+    c.fillStyle = '#f2f2f2'; c.beginPath(); c.arc(W/2, H*0.42, H*0.24, 0, 7); c.fill(); c.fillRect(W/2 - H*0.14, H*0.55, H*0.28, H*0.17);
+    c.fillStyle = '#0d0d10'; for(const sx of [-1, 1]){ c.beginPath(); c.arc(W/2 + sx*H*0.09, H*0.42, H*0.06, 0, 7); c.fill(); } c.beginPath(); c.moveTo(W/2, H*0.5); c.lineTo(W/2 - H*0.03, H*0.58); c.lineTo(W/2 + H*0.03, H*0.58); c.fill(); for(let i = -1; i <= 1; i++) c.fillRect(W/2 + i*H*0.075 - H*0.012, H*0.63, H*0.024, H*0.09); },
+  f_sun:(c,W,H)=>{ c.fillStyle = '#ff8a1a'; c.fillRect(0, 0, W, H); const n = 16, R = W; for(let i = 0; i < n; i++){ const a0 = i/n*Math.PI*2, a1 = (i + 0.5)/n*Math.PI*2; c.fillStyle = '#ffd23a'; c.beginPath(); c.moveTo(W/2, H/2); c.lineTo(W/2 + Math.cos(a0)*R, H/2 + Math.sin(a0)*R); c.lineTo(W/2 + Math.cos(a1)*R, H/2 + Math.sin(a1)*R); c.closePath(); c.fill(); }
+    c.fillStyle = '#ffe97a'; c.beginPath(); c.arc(W/2, H/2, H*0.22, 0, 7); c.fill(); c.strokeStyle = '#d96a00'; c.lineWidth = H*0.035; c.stroke(); },
+  f_bean:(c,W,H)=>{ c.fillStyle = '#1f6f6a'; c.fillRect(0, 0, W, H); c.fillStyle = '#d9a066'; c.beginPath(); c.ellipse(W/2, H*0.56, H*0.2, H*0.3, 0, 0, 7); c.fill(); c.fillStyle = '#fff'; for(const sx of [-1, 1]){ c.beginPath(); c.arc(W/2 + sx*H*0.08, H*0.5, H*0.055, 0, 7); c.fill(); } c.fillStyle = '#111'; for(const sx of [-1, 1]){ c.beginPath(); c.arc(W/2 + sx*H*0.08, H*0.51, H*0.025, 0, 7); c.fill(); }
+    c.fillStyle = '#111'; c.fillRect(W/2 - H*0.15, H*0.62, H*0.1, H*0.025); c.fillRect(W/2 + H*0.05, H*0.62, H*0.1, H*0.025);
+    c.fillStyle = '#d8b55a'; c.beginPath(); c.ellipse(W/2, H*0.3, H*0.3, H*0.065, 0, 0, 7); c.fill(); c.fillRect(W/2 - H*0.1, H*0.18, H*0.2, H*0.12); c.fillStyle = '#c0282d'; c.fillRect(W/2 - H*0.1, H*0.27, H*0.2, H*0.03); },
+  f_flame:(c,W,H)=>{ const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#2a0600'); g.addColorStop(0.55, '#c41a00'); g.addColorStop(1, '#ff8a14'); c.fillStyle = g; c.fillRect(0, 0, W, H);
+    const tongue = (x, w, h, col)=>{ c.fillStyle = col; c.beginPath(); c.moveTo(x - w, H); c.quadraticCurveTo(x - w*0.9, H - h*0.5, x, H - h); c.quadraticCurveTo(x + w*0.9, H - h*0.5, x + w, H); c.closePath(); c.fill(); };
+    [[0.08, 0.1, 0.5], [0.24, 0.12, 0.75], [0.42, 0.13, 0.62], [0.58, 0.12, 0.85], [0.76, 0.12, 0.6], [0.92, 0.1, 0.48]].forEach(([x, w, h])=>tongue(W*x, W*w, H*h, '#ff5a14'));
+    [[0.24, 0.07, 0.45], [0.58, 0.07, 0.55], [0.42, 0.07, 0.35], [0.76, 0.07, 0.35]].forEach(([x, w, h])=>tongue(W*x, W*w, H*h, '#ffd23a')); },
+  f_frost:(c,W,H)=>{ const g = c.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#e8fbff'); g.addColorStop(0.5, '#7fd0ff'); g.addColorStop(1, '#2a6fd0'); c.fillStyle = g; c.fillRect(0, 0, W, H);
+    c.strokeStyle = '#fff'; c.lineCap = 'round'; c.lineWidth = H*0.035; c.save(); c.translate(W/2, H/2); for(let i = 0; i < 6; i++){ c.rotate(Math.PI/3); c.beginPath(); c.moveTo(0, 0); c.lineTo(0, H*0.36); c.moveTo(0, H*0.2); c.lineTo(H*0.09, H*0.29); c.moveTo(0, H*0.2); c.lineTo(-H*0.09, H*0.29); c.stroke(); } c.restore();
+    c.fillStyle = '#fff'; [[0.1, 0.2, 0.025], [0.88, 0.75, 0.03], [0.18, 0.8, 0.02], [0.84, 0.18, 0.02]].forEach(([x, y, r])=>{ c.beginPath(); c.arc(W*x, H*y, H*r, 0, 7); c.fill(); }); },
+  f_gold:(c,W,H)=>{ const g = c.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#ffe680'); g.addColorStop(0.5, '#ffc21a'); g.addColorStop(1, '#d98f00'); c.fillStyle = g; c.fillRect(0, 0, W, H);
+    c.strokeStyle = '#7a4a00'; c.lineWidth = H*0.05; c.strokeRect(H*0.07, H*0.07, W - H*0.14, H*0.86); c.strokeStyle = '#fff3b0'; c.lineWidth = H*0.015; c.strokeRect(H*0.13, H*0.13, W - H*0.26, H*0.74);
+    const cx0 = W/2, b = H*0.7, t = H*0.3, w = H*0.3; c.fillStyle = '#b3262e'; c.strokeStyle = '#7a4a00'; c.lineWidth = H*0.025; c.beginPath(); c.moveTo(cx0 - w, b); c.lineTo(cx0 - w*1.05, t); c.lineTo(cx0 - w*0.5, t + H*0.13); c.lineTo(cx0, t - H*0.04); c.lineTo(cx0 + w*0.5, t + H*0.13); c.lineTo(cx0 + w*1.05, t); c.lineTo(cx0 + w, b); c.closePath(); c.fill(); c.stroke();
+    c.fillStyle = '#fff'; for(const x of [-1.05, 0, 1.05]){ c.beginPath(); c.arc(cx0 + x*w, x ? t : t - H*0.04, H*0.04, 0, 7); c.fill(); c.stroke(); } c.fillStyle = '#7a4a00'; c.fillRect(cx0 - w, b - H*0.07, w*2, H*0.07); }
+};
+COSM.flag = [
+  {id:'f_crim', n:'Crimson Banner', r:'common'}, {id:'f_check', n:'Checkered Flag', r:'common'}, {id:'f_navy', n:'Navy Stripes', r:'common'}, {id:'f_green', n:'Green Sash', r:'common'},
+  {id:'f_pirate', n:'Jolly Roger', r:'rare'}, {id:'f_sun', n:'Sunburst', r:'rare'}, {id:'f_bean', n:'Bean Banner', r:'rare'},
+  {id:'f_flame', n:'Inferno', r:'epic'}, {id:'f_frost', n:'Frostbite', r:'epic'},
+  {id:'f_gold', n:'Golden Standard', r:'legendary', glow:0x4a3300}
+];
+
+// ---- the free Pass: 90 levels of rewards, unlocked with diamonds earned by clearing waves; after level 90 it cycles wooden chests ----
+Object.assign(FLAG_DRAW, {
+  f_van:(c,W,H)=>{ c.fillStyle = '#0f3d4a'; c.fillRect(0, 0, W, H); c.fillStyle = '#e8fbff'; for(let i = 0; i < 3; i++){ const x = W*(0.22 + i*0.2); c.beginPath(); c.moveTo(x, H*0.2); c.lineTo(x + W*0.16, H/2); c.lineTo(x, H*0.8); c.lineTo(x - W*0.06, H*0.8); c.lineTo(x + W*0.1, H/2); c.lineTo(x - W*0.06, H*0.2); c.closePath(); c.globalAlpha = 1 - i*0.25; c.fill(); } c.globalAlpha = 1; c.fillStyle = '#ffc933'; c.fillRect(0, 0, W, H*0.06); c.fillRect(0, H*0.94, W, H*0.06); },
+  f_circ:(c,W,H)=>{ c.fillStyle = '#06121a'; c.fillRect(0, 0, W, H); c.strokeStyle = '#2affc8'; c.fillStyle = '#2affc8'; c.lineWidth = H*0.022; c.lineCap = 'round'; c.lineJoin = 'round';
+    [[[0.05,0.25],[0.3,0.25],[0.38,0.4],[0.62,0.4]], [[0.05,0.5],[0.22,0.5],[0.3,0.62],[0.7,0.62],[0.78,0.5],[0.95,0.5]], [[0.95,0.75],[0.7,0.75],[0.62,0.85],[0.3,0.85]], [[0.62,0.4],[0.72,0.28],[0.95,0.28]]].forEach(p=>{ c.beginPath(); p.forEach(([x, y], i)=>i ? c.lineTo(W*x, H*y) : c.moveTo(W*x, H*y)); c.stroke(); p.forEach(([x, y], i)=>{ if(i === 0 || i === p.length - 1){ c.beginPath(); c.arc(W*x, H*y, H*0.04, 0, 7); c.fill(); } }); });
+    c.strokeStyle = '#ff3ad0'; c.lineWidth = H*0.03; c.strokeRect(W*0.36, H*0.44, W*0.28, H*0.12); },
+  f_comet:(c,W,H)=>{ const g = c.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#12062e'); g.addColorStop(1, '#5a1a9a'); c.fillStyle = g; c.fillRect(0, 0, W, H);
+    c.fillStyle = '#fff'; [[0.1,0.2,0.012],[0.3,0.75,0.016],[0.55,0.15,0.01],[0.9,0.85,0.014],[0.7,0.5,0.01],[0.2,0.5,0.01]].forEach(([x, y, r])=>{ c.beginPath(); c.arc(W*x, H*y, H*r*2, 0, 7); c.fill(); });
+    const t = c.createLinearGradient(W*0.1, H*0.9, W*0.72, H*0.3); t.addColorStop(0, 'rgba(255,255,255,0)'); t.addColorStop(1, 'rgba(160,230,255,.95)'); c.fillStyle = t; c.beginPath(); c.moveTo(W*0.1, H*0.9); c.lineTo(W*0.66, H*0.2); c.lineTo(W*0.78, H*0.36); c.closePath(); c.fill();
+    c.fillStyle = '#fff'; c.beginPath(); c.arc(W*0.73, H*0.31, H*0.1, 0, 7); c.fill(); c.fillStyle = '#9fe8ff'; c.beginPath(); c.arc(W*0.73, H*0.31, H*0.065, 0, 7); c.fill(); },
+  f_champ:(c,W,H)=>{ const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#1a0f3a'); g.addColorStop(1, '#3a1a6a'); c.fillStyle = g; c.fillRect(0, 0, W, H);
+    c.strokeStyle = '#ffd24a'; c.lineWidth = H*0.05; c.strokeRect(H*0.06, H*0.06, W - H*0.12, H*0.88); c.lineWidth = H*0.012; c.strokeStyle = '#fff3b0'; c.strokeRect(H*0.12, H*0.12, W - H*0.24, H*0.76);
+    const cx0 = W/2, cy0 = H*0.5, R = H*0.3; c.fillStyle = '#ffd24a'; c.strokeStyle = '#7a4a00'; c.lineWidth = H*0.02; c.beginPath(); for(let i = 0; i < 10; i++){ const a = -Math.PI/2 + i*Math.PI/5, rr = i%2 ? R*0.42 : R; c[i ? 'lineTo' : 'moveTo'](cx0 + Math.cos(a)*rr, cy0 + Math.sin(a)*rr); } c.closePath(); c.fill(); c.stroke();
+    c.fillStyle = '#ff3b6a'; c.beginPath(); c.arc(cx0, cy0, R*0.2, 0, 7); c.fill(); }
+});
+const PASS_MAX = 90;
+const passCost = n=>n <= 70 ? 10 : n <= 90 ? 15 : 20;                       // diamonds to unlock level n
+const passGems = w=>Math.ceil(Math.max(1, w)/10);                           // diamonds for clearing wave w: 1 on waves 1-10, 2 on 11-20, ...
+COSM.head.push(
+  {id:'h_visor', n:'Neon Visor', r:'rare', pass:25, build:()=>{ const g = new THREE.Group(), b = cm(0x1a1a24), n = cm(0x2affc8, 0x12c8a0); cbx(g, 0.4, 0.07, 0.4, b, 0, 0.08, 0); cbx(g, 0.34, 0.07, 0.03, n, 0, 0.05, -0.215); for(const sx of [-1, 1]) cbx(g, 0.03, 0.05, 0.22, n, sx*0.2, 0.06, -0.1); return g; }},
+  {id:'h_aviator', n:'Aviator Goggles', r:'epic', pass:40, build:()=>{ const g = new THREE.Group(), lea = cm(0x6a4220), gl = cm(0x9ad8ff, 0x2a6a9a), br = cm(0xc9a24a); cbx(g, 0.4, 0.14, 0.4, lea, 0, 0.17, 0); cbx(g, 0.42, 0.03, 0.42, br, 0, 0.1, 0); for(const sx of [-1, 1]){ ccy(g, 0.075, 0.075, 0.05, br, sx*0.1, 0.07, -0.2, Math.PI/2); ccy(g, 0.062, 0.062, 0.055, gl, sx*0.1, 0.07, -0.205, Math.PI/2); } cbx(g, 0.05, 0.03, 0.03, br, 0, 0.07, -0.205); return g; }},
+  {id:'h_champ', n:"Champion's Crown", r:'legendary', pass:90, build:()=>{ const g = new THREE.Group(), gd = cm(0xffd24a, 0x886000), pu = cm(0x5a1a9a, 0x2a0a50); ccy(g, 0.2, 0.2, 0.09, gd, 0, 0.22, 0); ccy(g, 0.185, 0.185, 0.09, pu, 0, 0.22, 0); for(let i = 0; i < 5; i++){ const a = i/5*Math.PI*2; ccy(g, 0, 0.05, 0.2, gd, Math.cos(a)*0.17, 0.37, Math.sin(a)*0.17); csp(g, 0.03, cm([0xff2a6a, 0x2affc8, 0x9ad8ff, 0xffe14a, 0xff2a6a][i], 0xffffff), Math.cos(a)*0.17, 0.5, Math.sin(a)*0.17); } csp(g, 0.06, cm(0x2affc8, 0x12c8a0), 0, 0.3, -0.2); return g; }}
+);
+COSM.top.push(
+  {id:'t_bomber', n:'Bomber Jacket', r:'rare', pass:30, sleeve:0x2f4a2a, build:()=>{ const g = new THREE.Group(); cUp(g, cm(0x2f4a2a)); cbx(g, 0.6, 0.06, 0.4, cm(0x1d2f1a), 0, 0.97, 0); cbx(g, 0.2, 0.06, 0.4, cm(0x1d2f1a), 0, 1.43, 0); cbx(g, 0.03, 0.46, 0.02, cm(0xc7ccd4), 0, 1.19, -0.2); cbx(g, 0.12, 0.1, 0.02, cm(0xff8a1a), 0.17, 1.3, -0.2); return g; }},
+  {id:'t_neon', n:'Neon Hoodie', r:'epic', pass:70, sleeve:0x1a1030, build:()=>{ const g = new THREE.Group(), nn = cm(0xff3ad0, 0xc01a90), cy = cm(0x2affc8, 0x12c8a0); cUp(g, cm(0x1a1030)); cbx(g, 0.34, 0.14, 0.14, cm(0x2a1a4a), 0, 1.4, 0.22); for(const sx of [-1, 1]) cbx(g, 0.03, 0.4, 0.02, nn, sx*0.14, 1.17, -0.2); cbx(g, 0.5, 0.03, 0.02, cy, 0, 1.0, -0.2); cbx(g, 0.5, 0.03, 0.02, cy, 0, 1.32, -0.2); cbx(g, 0.592, 0.03, 0.392, nn, 0, 0.96, 0); return g; }}
+);
+COSM.bottom.push(
+  {id:'b_cosmic', n:'Cosmic Trousers', r:'epic', pass:50, build:()=>{ const g = new THREE.Group(); cLow(g, cm(0x1a0f3a)); [[-0.18,0.82],[0.12,0.62],[-0.04,0.74],[0.2,0.84],[-0.2,0.58]].forEach(([x, y], i)=>{ csp(g, 0.022, cm(0xffffff, 0xffffff), x, y, -0.2); csp(g, 0.02, cm(i%2 ? 0x9ad8ff : 0xff9ad8, 0x8888ff), -x, y - 0.05, 0.2); }); cbx(g, 0.6, 0.05, 0.4, cm(0x7a3ad0, 0x3a1a8a), 0, 0.92, 0); cbx(g, 0.02, 0.49, 0.02, cm(0x9ad8ff, 0x4a8aff), 0.3, 0.71, -0.2); return g; }},
+  {id:'b_goldgr', n:'Golden Greaves', r:'legendary', pass:65, build:()=>{ const g = new THREE.Group(), gd = cm(0xffd24a, 0x664400); cLow(g, cm(0xe0a61a, 0x442a00)); cbx(g, 0.6, 0.07, 0.4, cm(0x5a1a9a), 0, 0.92, 0); for(const sx of [-1, 1]){ cbx(g, 0.24, 0.12, 0.3, gd, sx*0.15, 0.62, 0); cbx(g, 0.2, 0.06, 0.04, cm(0xfff3b0, 0x886000), sx*0.15, 0.78, -0.2); csp(g, 0.035, cm(0xff2a6a, 0x880020), sx*0.15, 0.7, -0.21); } return g; }}
+);
+COSM.cape.push(
+  {id:'c_aurora', n:'Aurora Cape', r:'epic', pass:20, build:()=>cCape(cm(0x0e2a3a, 0x061a26), 0.56, 1.05, g=>{ [[0x2affc8,-0.2],[0x4a9aff,-0.4],[0xb04aff,-0.6],[0x2affc8,-0.8]].forEach(([c, y])=>cbx(g, 0.5, 0.1, 0.05, cm(c, c), 0, y, 0.03)); })},
+  {id:'c_star', n:'Starfall Cape', r:'legendary', pass:80, build:()=>cCape(cm(0x10062e, 0x080318), 0.58, 1.1, g=>{ for(let i = 0; i < 9; i++) csp(g, 0.022 + (i%3)*0.008, cm(0xffffff, 0xffffff), -0.2 + (i*0.17)%0.4, -0.12 - i*0.11, 0.03); cbx(g, 0.6, 0.06, 0.06, cm(0xffd24a, 0x886000), 0, -1.08, 0); ccy(g, 0, 0.07, 0.22, cm(0x9ad8ff, 0x4a9aff), 0.1, -1.2, 0, Math.PI); })},
+  {id:'c_champ', n:"Champion's Cloak", r:'legendary', pass:90, build:()=>cCape(cm(0x5a1a9a, 0x2a0a50), 0.62, 1.15, g=>{ const gd = cm(0xffd24a, 0x886000); cbx(g, 0.64, 0.07, 0.06, gd, 0, -1.13, 0); for(const sx of [-1, 1]) cbx(g, 0.05, 1.15, 0.06, gd, sx*0.3, -0.58, 0); const st = cbx(g, 0.18, 0.18, 0.06, gd, 0, -0.4, 0.04); st.rotation.z = Math.PI/4; csp(g, 0.045, cm(0x2affc8, 0x12c8a0), 0, -0.4, -0.06); })}
+);
+COSM.flag.push(
+  {id:'f_van', n:'Vanguard Banner', r:'rare', pass:10}, {id:'f_circ', n:'Circuit Flag', r:'epic', pass:45}, {id:'f_comet', n:'Comet Flag', r:'epic', pass:60},
+  {id:'f_champ', n:"Champion's Standard", r:'legendary', pass:90, glow:0x4a3300}
+);
+// every category lists common > rare > epic > legendary (stable, so same-rarity items keep their order)
+{ const RK = {common:0, rare:1, epic:2, legendary:3}; for(const [c] of COSM_CATS) COSM[c].sort((a, b)=>RK[a.r] - RK[b.r]); }
+function passRewards(n){                                                      // what level n gives: {coins, ch:{tier:n}, wd:{rarity:n}, cos:[ids]}
+  const R = {coins:0, ch:{}, wd:{}, cos:[]}, t = Math.floor((n - 1)/30), r = n%10;
+  if(n > PASS_MAX){ R.ch.wood = 1; return R; }
+  const ch = (k, c)=>{ R.ch[k] = (R.ch[k] || 0) + (c || 1); }, wd = (k, c)=>{ R.wd[k] = (R.wd[k] || 0) + c; };
+  const ex = {10:'f_van', 20:'c_aurora', 25:'h_visor', 30:'t_bomber', 40:'h_aviator', 45:'f_circ', 50:'b_cosmic', 60:'f_comet', 65:'b_goldgr', 70:'t_neon', 80:'c_star'};
+  if(n === 90){ R.cos = ['h_champ', 'c_champ', 'f_champ']; R.coins = 2500; ch('diamond', 3); wd('legendary', 5); return R; }
+  if(ex[n]) R.cos.push(ex[n]);
+  if(r === 0){ R.coins = 300*(n/10); ch(n >= 50 ? 'diamond' : 'gold', n >= 80 ? 2 : 1); if(n >= 30) wd(n >= 70 ? 'legendary' : 'epic', n >= 60 ? 2 : 1); if(n === 10) { delete R.ch.gold; ch('iron'); } }
+  else if(ex[n]){ R.coins = 400; ch('gold'); }
+  else if(r === 1) R.coins = 100 + t*100;
+  else if(r === 2) ch('wood', 1 + t);
+  else if(r === 3) wd('common', 2 + t);
+  else if(r === 4) R.coins = 150 + t*150;
+  else if(r === 5) ch(n >= 55 ? 'gold' : 'iron');
+  else if(r === 6) ch('wood', 2 + t);
+  else if(r === 7) wd('rare', 1 + t);
+  else if(r === 8) R.coins = 250 + t*250;
+  else if(r === 9) ch(n >= 40 ? 'gold' : 'iron');
+  return R;
+}
+const PASS_CHN = {wood:'Wooden chest', iron:'Iron chest', gold:'Golden chest', diamond:'Diamond chest'}, PASS_RAR = {common:'Common', rare:'Rare', epic:'Epic', legendary:'Legendary'};
+function passItems(R){                                                         // the reward as short text pieces
+  const o = [];
+  if(R.coins) o.push({i:'🪙', t:R.coins + ' coins'});
+  for(const k in R.ch) o.push({i:'📦', t:(R.ch[k] > 1 ? R.ch[k] + '× ' : '') + PASS_CHN[k]});
+  for(const k in R.wd) o.push({i:'✨', t:R.wd[k] + '× wild ' + PASS_RAR[k].toLowerCase() + ' part' + (R.wd[k] > 1 ? 's' : '')});
+  for(const id of R.cos){ let it = null, cat = ''; for(const [c] of COSM_CATS){ const f = cosmFind(c, id); if(f){ it = f; cat = c; } } if(it) o.push({i:'🎨', t:it.n, cos:it, cat}); }
+  return o;
+}
+function passGrant(n){                                                         // hand over level n's reward
+  const R = passRewards(n);
+  career.coins += R.coins;
+  if(!career.chests) career.chests = {wood:0, iron:0, gold:0, diamond:0};
+  for(const k in R.ch) career.chests[k] = (career.chests[k] || 0) + R.ch[k];
+  for(const k in R.wd) career.wild[k] = (career.wild[k] || 0) + R.wd[k];
+  for(const id of R.cos){ if(career.cos.owned[id]) career.coins += COSM_DUP.legendary; else career.cos.owned[id] = true; }
+  return R;
+}
+function passAdd(n){                                                           // diamonds go straight into the pass; returns the levels unlocked
+  const p = career.pass, got = [];
+  p.d += n;
+  while(p.d >= passCost(p.lv + 1) && got.length < 500){ p.d -= passCost(p.lv + 1); p.lv++; got.push(p.lv); passGrant(p.lv); }
+  careerSave(); return got;
+}
+let runGems = 0, runPassLv = 0;
+function passWave(w){                                                          // called once for every completed wave
+  const g = passGems(w), got = passAdd(g); runGems += g;
+  const top = got.length ? passItems(passRewards(got[got.length - 1])).map(x=>x.t).join(' + ') : '';
+  showToast(got.length ? `PASS LEVEL ${got[got.length - 1]}! ${top}` : `+${g} 💎 Pass (${career.pass.d}/${passCost(career.pass.lv + 1)})`, got.length ? 'diamond' : undefined);
+}
+let pssR = null;
+function passMain(R){                                                          // the main item of a level: its cosmetic, else its best chest, else wild parts, else coins
+  for(const id of R.cos) for(const [c] of COSM_CATS){ const it = cosmFind(c, id); if(it) return {kind:'cos', cat:c, it}; }
+  for(const k of ['diamond', 'gold', 'iron', 'wood']) if(R.ch[k]) return {kind:'chest', k};
+  for(const k of ['legendary', 'epic', 'rare', 'common']) if(R.wd[k]) return {kind:'wild', r:k};
+  return {kind:'coin'};
+}
+function passModel(R, cv){                                                     // draws the main item as a little 3D picture (one shared renderer, snapshot copied onto the card)
+  if(!cv.isConnected) return;
+  const M = passMain(R); let obj = null, turn = -0.5;                          // turned a little to the left
+  try{
+    if(M.kind === 'cos'){
+      if(M.cat === 'flag'){ obj = new THREE.Group(); const t = flagTex(M.it.id), pl = new THREE.Mesh(new THREE.PlaneGeometry(1.7, 1), new THREE.MeshBasicMaterial({map:t, side:THREE.DoubleSide})); pl.position.set(0.88, 0.5, 0); obj.add(pl); obj.add(new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 1.5, 12), new THREE.MeshStandardMaterial({color:0x8a8f96, metalness:0.6, roughness:0.4}))); obj.children[1].position.set(0, 0.45, 0); }
+      else { obj = M.it.build(); if(M.cat !== 'cape') turn = Math.PI - 0.5; }     // worn items face -z: swing them round to face the viewer
+    } else if(M.kind === 'chest'){ const b = buildChest(CHEST_TIERS.find(t=>t.id === M.k)); for(const k of ['arrow', 'beam']) if(b[k] && b[k].parent) b[k].parent.remove(b[k]); obj = b.g; }
+    else if(M.kind === 'wild'){ obj = new THREE.Group(); const col = parseInt(String(RAR_COL[M.r]).replace('#', ''), 16) || 0xffffff; obj.add(new THREE.Mesh(new THREE.OctahedronGeometry(0.5, 0), new THREE.MeshStandardMaterial({color:col, emissive:col, emissiveIntensity:0.45, roughness:0.25, metalness:0.3}))); obj.children[0].scale.y = 1.4; }
+    else { obj = new THREE.Group(); const gd = new THREE.MeshStandardMaterial({color:0xffc933, emissive:0x664400, metalness:0.8, roughness:0.3}); for(let i = 0; i < 4; i++){ const c = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.42, 0.1, 28), gd); c.position.set(i%2 ? 0.05 : -0.04, i*0.11, i%2 ? 0.03 : -0.02); obj.add(c); } }
+    if(!pssR){ pssR = new THREE.WebGLRenderer({antialias:true, alpha:true, preserveDrawingBuffer:true}); pssR.setSize(260, 200); }
+    const sc = new THREE.Scene(); sc.add(new THREE.HemisphereLight(0xffffff, 0x555566, 1.3)); const dl = new THREE.DirectionalLight(0xffffff, 0.9); dl.position.set(2, 4, 3); sc.add(dl);
+    const w = new THREE.Group(); w.add(obj); w.rotation.y = turn; sc.add(w); w.updateMatrixWorld(true);
+    const bb = new THREE.Box3().setFromObject(w), ctr = bb.getCenter(new THREE.Vector3()), sz = bb.getSize(new THREE.Vector3());
+    const cam = new THREE.PerspectiveCamera(30, 260/200, 0.05, 60), th = Math.tan(15*Math.PI/180), d = Math.max(sz.y/(2*th), sz.x/(2*th*1.3))*1.2 + sz.z/2 + 0.2;
+    cam.position.set(ctr.x, ctr.y + sz.y*0.06, ctr.z + d); cam.lookAt(ctr.x, ctr.y, ctr.z);
+    pssR.render(sc, cam); const c2 = cv.getContext('2d'); c2.clearRect(0, 0, 260, 200); c2.drawImage(pssR.domElement, 0, 0);
+    obj.traverse(o=>{ if(o.geometry) o.geometry.dispose(); });
+  }catch(e){ const c2 = cv.getContext('2d'); if(c2){ c2.font = '90px sans-serif'; c2.textAlign = 'center'; c2.fillText(M.kind === 'chest' ? '📦' : M.kind === 'coin' ? '🪙' : '🎁', 130, 130); } }
+}
+function showPass(){
+  msg.classList.remove('hidden'); document.body.classList.remove('playing'); captureWarningEl.classList.remove('show');
+  const p = career.pass, nxt = p.lv + 1, cost = passCost(nxt), shown = Math.max(PASS_MAX, p.lv + 3);
+  let cards = '';
+  for(let n = 1; n <= shown; n++){
+    const R = passRewards(n), its = passItems(R), done = n <= p.lv, cur = n === nxt, big = n%10 === 0 || R.cos.length, cyc = n > PASS_MAX;
+    cards += `<div class="pCard${done ? ' done' : ''}${cur ? ' cur' : ''}${big ? ' big' : ''}${n === 90 ? ' top' : ''}${cyc ? ' cyc' : ''}" data-n="${n}"><div class="pN">${done ? '✔ ' : ''}${n}</div>` +
+      `<canvas class="pMd" data-n="${n}" width="260" height="200"></canvas>` + its.map(x=>`<div class="pIt"${x.cos ? ` style="color:${RAR_COL[x.cos.r]}"` : ''}><span>${x.i}</span>${x.t}</div>`).join('') +
+      `<div class="pCost">${done ? 'Unlocked' : cur ? `${p.d}/${cost} 💎` : `${passCost(n)} 💎`}</div></div>`;
+  }
+  const nextBig = [10, 20, 25, 30, 40, 45, 50, 60, 65, 70, 80, 90].find(x=>x > p.lv);
+  msg.innerHTML = `<h1>Free Pass</h1><div class="hint">Level ${p.lv}${p.lv >= PASS_MAX ? ' · cycle: wooden chests' : ' / ' + PASS_MAX} · clear waves to earn 💎 (${passGems(1)} per wave on waves 1-10, 2 on 11-20, …)</div>
+    <div class="pBar"><i style="width:${Math.min(100, p.d/cost*100)}%"></i><b>💎 ${p.d} / ${cost} for level ${nxt}</b></div>
+    <div class="pTrack" id="pTrack">${cards}</div>${nextBig ? `<div class="hint">Next big reward: level ${nextBig}</div>` : ''}<button id="pBack">Back</button>`;
+  const tr = document.getElementById('pTrack'), cu = tr.querySelector('.cur');
+  const mdl = cv=>{ if(cv.dataset.done) return; cv.dataset.done = '1'; passModel(passRewards(+cv.dataset.n), cv); };
+  try{ const io = new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ io.unobserve(e.target); mdl(e.target); } }), {root:tr, rootMargin:'0px 300px'}); tr.querySelectorAll('.pMd').forEach(c=>io.observe(c)); }catch(e){ tr.querySelectorAll('.pMd').forEach(mdl); }
+  if(cu) tr.scrollLeft = Math.max(0, cu.offsetLeft - tr.clientWidth/2 + cu.offsetWidth/2);
+  document.getElementById('pBack').onclick = ()=>{ Snd.play('click'); if(pssR){ try{ pssR.dispose(); }catch(e){} pssR = null; } showHome(); };
+}
+const flagTexCache = {};
+function flagTex(id){ if(flagTexCache[id]) return flagTexCache[id]; try{ const cv = document.createElement('canvas'); cv.width = 240; cv.height = 140; FLAG_DRAW[id](cv.getContext('2d'), 240, 140); const t = new THREE.CanvasTexture(cv); return flagTexCache[id] = t; }catch(e){ return null; } }
+let flagSkinId = null;
+function applyFlagSkin(id){                                              // the flag on the pole; '' (or anything unknown) is the plain blue one
+  const it = typeof id === 'string' ? cosmFind('flag', id) : null; id = it ? it.id : '';
+  if(id === flagSkinId) return; flagSkinId = id;
+  const m = cloth.material, t = it ? flagTex(id) : null;
+  m.map = t; m.color.setHex(t ? 0xffffff : 0x4dafff); m.emissive.setHex(t && it.glow ? it.glow : 0); m.needsUpdate = true;
+}
+function flagPreview(cv, id){                                            // a flag on a pole, drawn flat (cosmetics page and thumbnails)
+  const c = cv.getContext('2d'), W = cv.width, H = cv.height; c.clearRect(0, 0, W, H);
+  const fw = Math.min(W*0.92, H*1.7), fh = fw/1.714, x0 = W*0.06;
+  c.fillStyle = '#8a8f96'; c.fillRect(x0 - fw*0.03, 0, fw*0.03, H);
+  c.save(); c.translate(x0, H*0.04); if(id && FLAG_DRAW[id]) FLAG_DRAW[id](c, fw, fh); else { c.fillStyle = '#4dafff'; c.fillRect(0, 0, fw, fh); } c.restore();
+}
+let flagTry = null;
 function cosmFind(cat, id){ return (COSM[cat] || []).find(x=>x.id === id) || null; }
-function cosmStr(){ const e = career.cos.eq; return COSM_CATS.map(([c])=>e[c] || '').join(','); }
+function cosmStr(){ const e = career.cos.eq; return COSM_AV.map(([c])=>e[c] || '').join(','); }
 function applyCosmetics(a, str){                                         // dress an avatar; untrusted ids are only looked up in the table above
   const key = typeof str === 'string' ? str.slice(0, 90) : '';
   if(a.csKey === key) return; a.csKey = key;
   for(const o of (a.csObjs || [])) if(o.parent) o.parent.remove(o);
   a.csObjs = []; if(!a.shirtMat) a.shirtMat = a.arms[0].up.material;
   let sleeve = a.shirtMat; const ids = key.split(',');
-  COSM_CATS.forEach(([cat], i)=>{
+  COSM_AV.forEach(([cat], i)=>{
     const it = cosmFind(cat, ids[i]); if(!it) return;
     const o = it.build(); if(cat === 'head') o.position.y += 0.19; (cat === 'head' ? a.head : a.g).add(o); a.csObjs.push(o);
     if(cat === 'top' && it.sleeve) sleeve = cm(it.sleeve);
@@ -2239,22 +2710,25 @@ function showCosmetics(tab){
     list = `<div class="sub">Finish for your equipped gun</div><div class="sws" style="flex-wrap:wrap">` + finishes.map((f, k)=>`<div class="sw${k === loadout.finish ? ' sel' : ''}" data-f="${k}" title="${f.n}" style="background:${f.c === null ? '#2a2a2e' : '#' + f.c.toString(16).padStart(6, '0')}"></div>`).join('') + `</div>`;
   } else {
     const eq = career.cos.eq[cosTab] || '';
-    list = `<div class="cItem${eq ? '' : ' sel'}" data-i=""><b>None</b><span>${eq ? '' : 'Equipped'}</span></div>` + COSM[cosTab].map(it=>{
+    if(cosTab === 'flag') list = `<canvas id="flagPrev" width="360" height="220"></canvas>`;
+    list += `<div class="cItem${eq ? '' : ' sel'}" data-i=""><b>${cosTab === 'flag' ? 'Plain blue' : 'None'}</b><span>${eq ? '' : 'Equipped'}</span></div>` + COSM[cosTab].map(it=>{
       const own = !!career.cos.owned[it.id];
-      return `<div class="cItem${eq === it.id ? ' sel' : ''}${own ? '' : ' locked'}" data-i="${it.id}" style="border-left-color:${RAR_COL[it.r]}"><b>${own ? '' : '🔒 '}${it.n}</b><em style="color:${RAR_COL[it.r]}">${RAR_NAME[it.r]}</em><span>${eq === it.id ? 'Equipped' : own ? 'Tap to equip' : 'Find in chests'}</span></div>`;
+      return `<div class="cItem${eq === it.id ? ' sel' : ''}${own ? '' : ' locked'}" data-i="${it.id}" style="border-left-color:${RAR_COL[it.r]}"><b>${own ? '' : '🔒 '}${it.n}</b><em style="color:${RAR_COL[it.r]}">${RAR_NAME[it.r]}</em><span>${eq === it.id ? 'Equipped' : own ? 'Tap to equip' : (it.pass ? 'Pass level ' + it.pass : 'Find in chests')}</span></div>`;
     }).join('');
   }
   msg.innerHTML = `<div class="home cosm"><h1 class="hTitle">Cosmetics</h1><div class="cTabs">${tabs}</div><div class="hModel"></div><div class="cList">${list}</div><button class="hb cBack" id="cosBack">Back</button></div>` + verTag();
   setupHomeModel(true);
-  msg.querySelectorAll('.cTab').forEach(b=>b.onclick = ()=>{ cosPrev = null; Snd.play('click'); showCosmetics(b.dataset.t); });
+  const fpv = document.getElementById('flagPrev'); if(fpv) flagPreview(fpv, flagTry !== null ? flagTry : (career.cos.eq.flag || ''));
+  msg.querySelectorAll('.cTab').forEach(b=>b.onclick = ()=>{ cosPrev = null; flagTry = null; Snd.play('click'); showCosmetics(b.dataset.t); });
   msg.querySelectorAll('.sw').forEach(el=>el.onclick = ()=>{ loadout.finish = +el.dataset.f; saveLoadout(); applyFinish(); showCosmetics('gun'); });
   msg.querySelectorAll('.cItem').forEach(el=>el.onclick = ()=>{
     const id = el.dataset.i, it = cosmFind(cosTab, id);
-    if(!id || (it && career.cos.owned[id])){ career.cos.eq[cosTab] = (id && career.cos.eq[cosTab] === id) ? '' : id; careerSave(); cosPrev = null; Snd.play('click'); showCosmetics(cosTab); return; }
-    const e = {...career.cos.eq, [cosTab]:id}; cosPrev = COSM_CATS.map(([c])=>e[c] || '').join(',');          // locked: just try it on
-    if(hmAv) applyCosmetics(hmAv, cosPrev); showToast('Locked: try-on only. Find it in shop chests!');
+    if(!id || (it && career.cos.owned[id])){ career.cos.eq[cosTab] = (id && career.cos.eq[cosTab] === id) ? '' : id; careerSave(); cosPrev = null; flagTry = null; Snd.play('click'); showCosmetics(cosTab); return; }
+    if(cosTab === 'flag'){ flagTry = id; const fp = document.getElementById('flagPrev'); if(fp) flagPreview(fp, id); showToast(it && it.pass ? 'Locked: try-on only. Earn it on the Pass (level ' + it.pass + ')!' : 'Locked: try-on only. Find it in shop chests!'); return; }
+    const e = {...career.cos.eq, [cosTab]:id}; cosPrev = COSM_AV.map(([c])=>e[c] || '').join(',');          // locked: just try it on
+    if(hmAv) applyCosmetics(hmAv, cosPrev); showToast(it && it.pass ? 'Locked: try-on only. Earn it on the Pass (level ' + it.pass + ')!' : 'Locked: try-on only. Find it in shop chests!');
   });
-  document.getElementById('cosBack').onclick = ()=>{ cosPrev = null; showHome(); };
+  document.getElementById('cosBack').onclick = ()=>{ cosPrev = null; flagTry = null; showHome(); };
 }
 // ---- chest opening page: the chest drops from the top of the screen to the middle; click it to open and get gun parts ----
 const CHEST_ODDS = {wood:[0.65, 0.90, 0.99], iron:[0.59, 0.87, 0.98], gold:[0.40, 0.75, 0.95], diamond:[0.20, 0.55, 0.88]};          // cumulative: common, rare, epic (the rest is legendary)
@@ -2262,8 +2736,8 @@ const WILD_CHANCE = 0.2;
 function rollParts(rnd, tierId){
   rnd = rnd || Math.random; const od = CHEST_ODDS[tierId] || CHEST_ODDS.wood;
   const r = rnd(), rar = r < od[0] ? 'common' : r < od[1] ? 'rare' : r < od[2] ? 'epic' : 'legendary';
-  if(rnd() < 0.5){                                                                   // half the time a cosmetic of that rarity
-    const all = []; for(const [cat] of COSM_CATS) for(const it of COSM[cat]) if(it.r === rar) all.push({cat, it});
+  if(rnd() < 0.33){                                                                  // a third of the time a cosmetic of that rarity
+    const all = []; for(const [cat] of COSM_CATS) for(const it of COSM[cat]) if(it.r === rar && !it.pass) all.push({cat, it});
     const p = all[Math.floor(rnd()*all.length)]; return {kind:'cos', rar, cat:p.cat, item:p.it.id};
   }
   const pool = RAR_GUNS[rar].filter(g=>!gunMaxed(g));                                // a maxed-out gun gets no more parts
@@ -2310,6 +2784,7 @@ function showChestOpen(id){
     const res = rollParts(null, id);
     Snd.play('chestOpen', null, CHEST_TIERS.indexOf(tier)); hint.textContent = '';
     let card;
+    const finish = ()=>{
     if(res.kind === 'cos'){
       const it = cosmFind(res.cat, res.item), dup = !!career.cos.owned[it.id], col = RAR_COL[it.r];
       if(dup) career.coins += COSM_DUP[it.r]; else career.cos.owned[it.id] = true; careerSave();
@@ -2323,8 +2798,22 @@ function showChestOpen(id){
       const prog = owned ? (res.gun === 'pistol' ? 'Starter weapon: you already have it' : 'Already unlocked · ' + have + ' parts') : (have >= GUN_PARTS ? 'Enough parts to unlock it on the Guns screen!' : have + ' / ' + GUN_PARTS + ' parts to unlock');
       card = `<div class="partCard" style="--c:${rk[1]}"><div class="partRar">${rk[0]}</div><div class="partGun">${w.name} parts</div><div class="partN">+${res.n}</div><div class="partProg">${prog}</div></div>`;
     }
-    document.getElementById('coParts').innerHTML = card;
+    const pe = document.getElementById('coParts'); if(!pe) return; pe.innerHTML = card;
     const d = document.getElementById('coDone'); d.style.display = ''; d.textContent = (chestBack === showShop ? 'Back to shop' : 'Back to level track') + (career.chests.wood > 0 || career.chests.iron > 0 ? ' (more chests waiting)' : ''); d.onclick = chestBack;
+    };
+    if(res.kind !== 'cos') return finish();
+    const pe = document.getElementById('coParts'), real = cosmFind(res.cat, res.item), pool = [];          // a cosmetic: a one-slot machine spins through items, slows down and stops on the prize
+    for(const [c, cn] of COSM_CATS) for(const it of COSM[c]) pool.push({it, cn});
+    pe.innerHTML = '<div class="slotBox"><div class="slotIn" id="slotIn">?</div></div>';
+    let delay = 45, k = 0, last = -1;
+    const spin = ()=>{
+      const el = document.getElementById('slotIn'); if(!el) return;
+      if(delay > 480){ el.innerHTML = `<small>${COSM_CATS.find(c=>c[0] === res.cat)[1]}</small>${real.n}`; el.style.color = RAR_COL[real.r]; el.classList.add('stop'); Snd.play('chestOpen', null, 2); setTimeout(finish, 650); return; }
+      let p; do{ p = pool[Math.floor(Math.random()*pool.length)]; }while(p.it === real || pool.indexOf(p) === last);
+      last = pool.indexOf(p); el.innerHTML = `<small>${p.cn}</small>${p.it.n}`; el.style.color = RAR_COL[p.it.r]; Snd.play('click');
+      delay *= 1.1 + 0.02*(k++); setTimeout(spin, delay);
+    };
+    spin();
   };
 }
 function deliverShopChests(){                                            // owned chests appear near you; each stays put until opened and doesn't hold up the waves
@@ -2339,7 +2828,7 @@ function deliverShopChests(){                                            // owne
 function fnv8(str){ let h = 0x811c9dc5; for(let i = 0; i < str.length; i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return h.toString(16).padStart(8, '0'); }
 function saveCodeMake(){
   const c = career, d = {v:1, n:playerName, l:{w:loadout.weapon, f:loadout.finish},
-    c:{xp:c.xp, co:c.coins, bw:c.bestWave, bs:c.bestScore, ru:c.runs, dd:c.dailyDate, dw:c.dailyWave, dc:c.dailyClaimed ? 1 : 0, g:c.guns, p:c.parts, up:c.up, lc:Object.keys(c.lvc || {}).map(Number), wp:c.wild, fi:c.fid, fr:(c.friends || []).map(f=>[f.id, f.name]), fs:c.fshow === false ? 0 : 1, co2:c.cos, ch:c.chests, sh:(()=>{ const t = shopState(); return {wf:t.woodFree ? 1 : 0, wb:t.woodBought, wt:t.woodT, ib:t.ironBought, it:t.ironT}; })()}};
+    c:{xp:c.xp, co:c.coins, bw:c.bestWave, bs:c.bestScore, ru:c.runs, dd:c.dailyDate, dw:c.dailyWave, dc:c.dailyClaimed ? 1 : 0, g:c.guns, p:c.parts, up:c.up, lc:Object.keys(c.lvc || {}).map(Number), wp:c.wild, fi:c.fid, pa:[c.pass.d, c.pass.lv], fr:(c.friends || []).map(f=>[f.id, f.name]), fs:c.fshow === false ? 0 : 1, co2:c.cos, ch:c.chests, sh:(()=>{ const t = shopState(); return {wf:t.woodFree ? 1 : 0, wb:t.woodBought, wt:t.woodT, ib:t.ironBought, it:t.ironT}; })()}};
   const b = btoa(unescape(encodeURIComponent(JSON.stringify(d)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   return 'FFPS1-' + b + '-' + fnv8(b);
 }
@@ -2357,10 +2846,11 @@ function saveCodeParse(code){                                            // retu
   o.guns = {pistol:true}; o.parts = {}; for(const id in WEAPONS){ if(c.g && c.g[id] === true) o.guns[id] = true; if(c.p) o.parts[id] = I(c.p[id], 9999); }
   o.fid = (typeof c.fi === 'string' && /^[A-Z2-9]{8}$/.test(c.fi)) ? c.fi : career.fid; o.fshow = c.fs !== 0;
   o.friends = Array.isArray(c.fr) ? c.fr.slice(0, 30).filter(x=>Array.isArray(x) && /^[A-Z2-9]{8}$/.test(String(x[0]))).map(x=>({id:String(x[0]), name:(typeof x[1] === 'string' ? x[1] : 'Friend').replace(/[^\p{L}\p{N} _.\-]/gu, '').slice(0, 16) || 'Friend'})) : [];
+  o.pass = {d:I(c.pa && c.pa[0], 1e6), lv:I(c.pa && c.pa[1], 1e5)};
   o.wild = {}; for(const r of ['common','rare','epic','legendary']) o.wild[r] = I(c.wp && c.wp[r], 9999);
   o.lvc = {}; if(Array.isArray(c.lc)) for(const L of c.lc.slice(0, 200)){ const n = I(L, LV_MAX); if(n >= 1) o.lvc[n] = true; }
   o.up = {}; for(const id in GUN_UPG_TABLE){ o.up[id] = {}; for(const k of UPG_KEYS) o.up[id][k] = (k === 'f' && !GUN_UPG_TABLE[id].f) ? 0 : Math.min(5, I(c.up && c.up[id] && c.up[id][k], 5)); }
-  o.cos = {owned:{}, eq:{head:'', top:'', bottom:'', cape:''}};
+  o.cos = {owned:{}, eq:{head:'', top:'', bottom:'', cape:'', flag:''}};
   for(const [cat] of COSM_CATS){ for(const it of COSM[cat]) if(c.co2 && c.co2.owned && c.co2.owned[it.id] === true) o.cos.owned[it.id] = true; const e = c.co2 && c.co2.eq && c.co2.eq[cat]; if(typeof e === 'string' && o.cos.owned[e] && cosmFind(cat, e)) o.cos.eq[cat] = e; }
   o.chests = {wood:I(c.ch && c.ch.wood, 999), iron:I(c.ch && c.ch.iron, 999), gold:I(c.ch && c.ch.gold, 999), diamond:I(c.ch && c.ch.diamond, 999)};
   const sh = c.sh; o.shop = sh ? {woodFree:!!(sh.wf || sh.woodFree), woodBought:I(sh.wb !== undefined ? sh.wb : sh.woodBought, 99), woodT:I(sh.wt, 4e12), ironBought:I(sh.ib !== undefined ? sh.ib : sh.ironBought, 9), ironT:I(sh.it, 4e12)} : null;      // (older codes had a date instead of timers: shopState() starts the clock)
@@ -2388,7 +2878,12 @@ function showAccount(){
     <textarea id="saveIn" rows="3" style="width:min(520px,90vw);font:12px monospace" placeholder="Paste a code that starts with FFPS1-"></textarea>
     <div><button id="saveLoad" class="buy">Load code</button></div>
     <div id="saveNote" class="hint" style="min-height:20px">${acctNote}</div>
+    <div class="hint" id="acctBlk"></div><div class="hint" id="acctLinks"></div>
     <button id="acctBack">Back</button>`;
+  { const bl = document.getElementById('acctBlk'), n = BLOCK.names.size;
+    if(n){ bl.textContent = 'Blocked players: ' + n + ' '; const b = document.createElement('button'); b.textContent = 'Unblock all'; b.onclick = ()=>{ BLOCK.names.clear(); BLOCK.ids.clear(); blockSave(); showAccount(); }; bl.appendChild(b); }
+    const lk = document.getElementById('acctLinks');
+    for(const [t, u] of [['Privacy policy', APP_CONFIG.privacyUrl], ['Support', APP_CONFIG.supportUrl || (APP_CONFIG.supportEmail ? 'mailto:' + APP_CONFIG.supportEmail : '')]]) if(u){ const a = document.createElement('a'); a.textContent = t; a.href = u; a.target = '_blank'; a.rel = 'noopener'; a.style.cssText = 'color:#8ec5ff;margin:0 10px'; lk.appendChild(a); } }
   acctNote = ''; document.getElementById('acctName').textContent = playerName;
   const out = document.getElementById('saveOut'), note = document.getElementById('saveNote');
   document.getElementById('saveGet').onclick = ()=>{ out.value = saveCodeMake(); out.select(); note.textContent = 'Keep this code somewhere safe.'; };
@@ -2406,6 +2901,28 @@ function showAccount(){
 }
 // ---- update card: shown once, the first time a player opens the game on a new version. To add one: put a new entry FIRST in UPDATES (same v as GAME_VERSION). ----
 const UPDATES = [
+  {v:'alpha 1.2', title:'Free Pass, slot-machine chests & safety tools', items:[
+    'NEW Free Pass (🎟 on the main menu): 90 reward levels, no payment. Clear waves to earn 💎 (1 per wave on waves 1-10, 2 on 11-20, and so on); they go into the Pass automatically. Every 10th level is a big reward, level 90 is the best, and after that it cycles wooden chests.',
+    'FIXED Capes with designs on the inside (Royal, Flame, Aurora, Starfall, Champion\'s, red and blue clasps) now show them on the outside. Cosmetic lists are ordered Common, Rare, Epic, Legendary.',
+    'CHANGED Chests give a cosmetic 33% of the time (was 50%). When it is a cosmetic, a one-slot machine spins through items, slows down and stops on your prize.',
+    'NEW Terminal command /chest <n> [wood|iron|gold|diamond] opens n chests for you. NEW 12 more gun colors.',
+    'NEW Every Pass level shows its main reward as a little 3D model, turned slightly to the left.',
+    'NEW 14 Pass-only cosmetics (flags, capes, heads, tops, trousers) that cannot drop from chests.',
+    'NEW Block and Report for other players: tap a player in the voice list. Blocked players are muted, tagged, and you stop hearing their guns. Manage blocks on your Profile.',
+    'NEW Inappropriate names are blocked: a red message tells you that you cannot use multiplayer with that name until you change it.',
+    'FIXED Flag Cloth and New Flag now heal the flag when a guest uses them in a room (before, only the host\'s flag health changed).',
+    'NEW Flag cosmetics (below Cape): 4 common, 3 rare, 2 epic and 1 legendary flag, found in shop chests. In a room everyone sees the host\'s flag.',
+    'NEW The Key: every bean and boss has a 1% chance to drop one (only one key per game). Picking it up locks one door in the city. Use the key on that door to open a hidden room with a shared set of chests: 4 wooden, 3 iron, 2 golden or 1 diamond (each 25%).',
+    'NEW Hold the key and a gold marker shows over the locked door (only you see it, and only while you hold the key), like the markers over beans: through walls and from anywhere in the city. The key is also smoother and rounder.',
+    'NEW Unlocking: the key slides out of your hand into the lock, turns, the lock pops off the door handle and falls away, then the door swings open and becomes solid. The hidden room\'s chests no longer vanish when a new wave starts.',
+    'FIXED The door now hinges right against the wall, the hidden room\'s floor no longer vanishes from a distance or shows grass in the doorway, the room is dim (dark surfaces lit by the lantern) while the outside stays clear, and the ceiling stops a blast jump instead of pushing you out.',
+    'NEW The hidden room\'s door closes by itself once everyone is out, every item is picked up or gone, and every chest is opened.',
+    'CHANGED The Game Over numbers count one right after the other with no pause, and all game sound stops when the game is over.',
+    'CHANGED The Gamemodes button is hidden for now.',
+    'FIXED Name tags no longer show long black spikes poking out of the letters.',
+    'CHANGED If you have not picked a name you are now called Player and a random 6-digit number.',
+    'CHANGED Touch controls turn on by default on phones and tablets, and hits give a small vibration in the app.',
+    'NEW Profile shows Privacy policy and Support links once they are set up.']},
   {v:'alpha 1.0', title:'Game Over screen, scores & pixel shades', items:[
     'CHANGED The end screen now says Game Over, and the "flag is being captured" warning goes away when it shows. Play Again replaces Restart.',
     'NEW In rooms every player has their own score (you get the points for beans you throw through the hoop or over the wall; boss kills pay everyone). The Game Over screen shows the final wave and everyone\'s scores, first to last.',
@@ -2459,6 +2976,7 @@ function showGamemodes(){
   document.getElementById('gmBack').onclick = ()=>{ Snd.play('click'); showHome(); };
 }
 function showHome(){
+  Snd.hush(false);
   mpPubStop(); mpLeave();
   msg.classList.remove('hidden'); document.body.classList.remove('playing'); captureWarningEl.classList.remove('show');
   const wname = (WEAPONS[loadout.weapon]||WEAPONS.rifle).name;
@@ -2471,9 +2989,10 @@ function showHome(){
     <button class="hb hLoad" id="gunsBtn">🔫 Load out<small>${wname}</small></button>
     <button class="hb hCosm" id="cosmBtn">🎨 Cosmetics</button>
     <button class="hb hMp" id="mpBtn">🌐 Multiplayer</button>
+    <button class="hb hPass" id="passBtn">🎟 Free Pass<small>Level ${career.pass.lv}</small></button>
     <div class="hModel"></div>
     <button class="hb hDeploy" id="startBtn">Deploy</button>
-    <button class="hb hModes" id="modesBtn">Gamemodes</button>
+    <button class="hb hModes" id="modesBtn" style="display:none">Gamemodes</button>
     <details class="hHelp"><summary>How to play</summary><div>${isTouch() ? 'Left stick move · drag anywhere else to look · right-side buttons: fire, jump, sprint, reload, use (grab / throw / open chest), fire mode · tap a hotbar slot to switch' : 'WASD move · Space jump · Shift sprint (no firing) · 1-5 hotbar (gun is slot 1) · Mouse look · Click/hold fire · Q auto/semi · R reload'}<br>E grabs a downed bean, E again throws it out: over the wall for +10, or through the hoop for +20. Shooting a bean down scores nothing, and downed beans get back up after 30s. Your gun is stowed while you carry one.${HANDS_ENABLED ? ' Empty hotbar slots are your fists: four punches drop a bean.' : ''} After every wave a supply van delivers a chest — look at it and press E to open it; it holds a loot item that pops out onto the ground (E to pick it up within 30 s; it goes into your selected slot if that one is empty, otherwise the next free one): land mines, grenades, a turret (E to pick it back up), flag cloth, a big taco that distracts beans, or a slime hand that drags downed beans to you; the next wave starts when the van drives off (iron, golden and diamond chests are rarer and can hold two items).</div></details>
     <button id="gearBtn" title="Settings" aria-label="Settings">⚙</button></div>` + verTag();
   setupHomeModel();
@@ -2482,6 +3001,7 @@ function showHome(){
   document.getElementById('startBtn').onclick = resetGame;
   document.getElementById('modesBtn').onclick = ()=>{ Snd.play('click'); showGamemodes(); };
   document.getElementById('shopBtn').onclick = showShop;
+  document.getElementById('passBtn').onclick = ()=>{ Snd.play('click'); showPass(); };
   document.querySelector('.hLevel').onclick = e=>{ if(!e.target.closest('summary')){ Snd.play('click'); showLevels(); } };
   document.getElementById('acctBtn').onclick = showAccount;
   document.getElementById('cosmBtn').onclick = ()=>{ cosPrev = null; showCosmetics('head'); };
@@ -2631,6 +3151,7 @@ function popHat(e, d){
   e.hatLoose = true;
 }
 function ragdollify(e){
+  keyRoll(e);
   if(e.boss){ bossDefeated(e); return; }
   Snd.play('down', e.mesh.position);
   e.state = 'dying'; e.deathTimer = 0; e.dyT = 0; e.dyGround = false;
@@ -3683,6 +4204,7 @@ function resolveCollision(pos, radius, isPlayer){
     if(isPlayer){   // feet above the top surface (with a little step-up leeway) -> free to move over it
       if(pos.y - EYE_HEIGHT > (b.top !== undefined ? b.top : b.h) - 0.12) continue;
     } else if(pos.y > b.h) continue;
+    if(b.bot !== undefined && pos.y + 0.3 < b.bot) continue;                     // the ceiling of the hidden room: you walk under it
     const cx = Math.max(b.minX, Math.min(pos.x, b.maxX));
     const cz = Math.max(b.minZ, Math.min(pos.z, b.maxZ));
     const dx = pos.x - cx, dz = pos.z - cz;
@@ -4195,14 +4717,15 @@ const ITEM_DEFS = {
   slime: {name:'Slime Hand', stack:true,  verb:'PULL'},
   grenade:{name:'Grenade',   stack:true,  verb:'THROW'},
   energy:{name:'Energy Drink', stack:true, verb:'DRINK'},
-  newflag:{name:'New Flag',  stack:true,  verb:'USE'}
+  newflag:{name:'New Flag',  stack:true,  verb:'USE'},
+  key:   {name:'Key',       stack:false, verb:'USE'}
 };
 const TURRET_LIFE = 45, TURRET_DMG = 4, TURRET_RANGE = 28, TURRET_INTERVAL = 0.33;   // 4 x 5 hits = a bean's 20 hp
 const TACO_MAX_HP = 100/3, TACO_AGGRO = 24;                                              // a third of the flag's health
 const MINE_TRIGGER = 1.9, MINE_ARM = 0.8, MINE_R = 4.5, NADE_FUSE = 2.5, NADE_R = 5*1.3, NADE_G = 16;
 const mines = [], turrets = [], tacos = [], nades = [], beams = [], drops = [];
 const DROP_LIFE = 30, DROP_FADE = 1.5;
-const ITEM_GLOW = {mine:0xff4040, grenade:0x86c440, turret:0xf0c020, taco:0xf2c24a, cloth:0x4dafff, slime:0x6bff6b, energy:0x2ad4ff, newflag:0xffd23a};   // each item's main colour
+const ITEM_GLOW = {mine:0xff4040, grenade:0x86c440, turret:0xf0c020, taco:0xf2c24a, cloth:0x4dafff, slime:0x6bff6b, energy:0x2ad4ff, newflag:0xffd23a, key:0xffd23a};   // each item's main colour
 let itemCd = 0, itemUseT = 1, itemView = null;
 const itemRay = new THREE.Raycaster();
 function makeBar(w, color){
@@ -4224,6 +4747,7 @@ function placeSpot(radius){
     let ok = y <= feet + 0.5;
     for(const b of colliders){
       const top = b.top !== undefined ? b.top : b.h;
+      if(b.bot !== undefined && y + 1.5 < b.bot) continue;
       if(top > y + 0.3 && x > b.minX-radius && x < b.maxX+radius && z > b.minZ-radius && z < b.maxZ+radius){ ok = false; break; }
     }
     if(ok) return new THREE.Vector3(x, y, z);
@@ -4232,6 +4756,7 @@ function placeSpot(radius){
 }
 function addItem(type, n, extra){
   const def = ITEM_DEFS[type];
+  if(type === 'key') setTimeout(keyPicked, 0);                               // however you got it (a drop, the terminal), the key locks a door
   if(def.stack) for(let i=1;i<HOTBAR_SIZE;i++){ const it = hotbar[i]; if(it && it !== 'gun' && it.type === type){ it.n += n; updateHotbarUI(); return true; } }   // you already have one: it joins that stack, even if you stand on an empty slot
   if(hotbarSlot > 0 && !hotbar[hotbarSlot]){ hotbar[hotbarSlot] = Object.assign({type, n}, extra || {}); updateHotbarUI(); return true; }   // otherwise an empty slot you stand on gets it
   for(let i=1;i<HOTBAR_SIZE;i++) if(!hotbar[i]){ hotbar[i] = Object.assign({type, n}, extra || {}); updateHotbarUI(); return true; }
@@ -4262,6 +4787,7 @@ function makeDropMesh(type){
   } else if(type === 'energy'){
     const c = makeEnergyCan(0.22); c.rotation.z = Math.PI/2; c.position.y = 0.09; g.add(c);                 // lying on its side
   } else if(type === 'newflag'){ g.add(makeGoldFlag(1));
+  } else if(type === 'key'){ g.add(makeKeyMesh(1.7));
   } else {                                                                                   // slime hand: a green blob with fingers
     const palm = new THREE.Mesh(new THREE.SphereGeometry(0.17,12,8), slimeSkin); palm.scale.y = 0.7; palm.position.y = 0.12; g.add(palm);
     for(let i=0;i<4;i++){ const f = new THREE.Mesh(new THREE.SphereGeometry(0.06,8,6), slimeSkin); f.position.set(-0.12+i*0.08, 0.12, -0.2 - (i===1||i===2 ? 0.04 : 0)); f.scale.z = 1.5; g.add(f); }
@@ -4269,7 +4795,7 @@ function makeDropMesh(type){
   }
   return g;
 }
-const DROP_LIFT = {grenade:0.15, slime:0, mine:0, turret:0.03, taco:0, cloth:0, energy:0, newflag:0};
+const DROP_LIFT = {grenade:0.15, slime:0, mine:0, turret:0.03, taco:0, cloth:0, energy:0, newflag:0, key:0};
 let dropSeq = 0;
 const DROP_RESERVE = 10, DROP_COUNT = 5;                                      // a chest's items are only for its owner for 10 s (the last 5 s show a countdown)
 function spawnDrop(type, n, extra, from, side, opt){                           // opt: {owner, ownerName} for a chest's items; {id, ang, sp, yaw, ...} when copying someone else's drop
@@ -4308,7 +4834,7 @@ function updateDrops(dt){
       const n = Math.ceil(DROP_RESERVE - d.age);
       if(!d.cd){ const cv = document.createElement('canvas'); cv.width = 128; cv.height = 128; const mesh = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.8), new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(cv), transparent:true, depthWrite:false, fog:false})); mesh.position.y = 1.5; mesh.raycast = ()=>{}; d.root.add(mesh); d.cd = {mesh, cx:cv.getContext('2d')}; }
       if(d.cdN !== n){
-        d.cdN = n; const cx = d.cd.cx; cx.clearRect(0, 0, 128, 128); cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.lineWidth = 10; cx.strokeStyle = '#000'; cx.font = '800 96px system-ui,sans-serif'; cx.fillStyle = n <= 2 ? '#ff6a4d' : '#ffd24a';
+        d.cdN = n; const cx = d.cd.cx; cx.clearRect(0, 0, 128, 128); cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.lineJoin = 'round'; cx.miterLimit = 2; cx.lineWidth = 10; cx.strokeStyle = '#000'; cx.font = '800 96px system-ui,sans-serif'; cx.fillStyle = n <= 2 ? '#ff6a4d' : '#ffd24a';
         cx.strokeText(String(n), 64, 68); cx.fillText(String(n), 64, 68); d.cd.mesh.material.map.needsUpdate = true;
       }
       d.cd.mesh.rotation.y = Math.atan2(camera.position.x - d.pos.x, camera.position.z - d.pos.z) - d.root.rotation.y;
@@ -4324,7 +4850,7 @@ function updateDrops(dt){
       }
       d.root.position.copy(d.pos);
     }
-    const left = DROP_LIFE + 15*upN('Sticky Fingers') - d.age;
+    const left = DROP_LIFE + 15*upN('Sticky Fingers') - d.age + (d.type === 'key' ? 1e6 : 0);          // the key never despawns
     if(left <= 0){ removeDrop(d); continue; }
     const k = left < DROP_FADE ? left/DROP_FADE : 1;                                  // smooth despawn over the last 1.5 s
     d.root.scale.setScalar(Math.max(0.001, k));
@@ -4341,7 +4867,7 @@ function canAddItem(type){
 function dropReservedFor(d, who){ return !!(d.owner && d.age < DROP_RESERVE && d.owner !== who); }
 function dropTake(d){                                                         // this player gets the item
   if(!addItem(d.type, d.n, d.extra)){ showToast('Hotbar full'); return false; }
-  const lab = itemLabel(d.type, d.n); removeDrop(d); Snd.play('pickup'); showToast('Picked up ' + lab); return true;
+  const lab = itemLabel(d.type, d.n); removeDrop(d); Snd.play('pickup'); showToast('Picked up ' + lab); if(d.type === 'key' && !MP.role) keyPicked(); return true;
 }
 function pickUpDrop(d){
   if(!MP.role){ dropTake(d); return; }
@@ -4357,6 +4883,7 @@ function mpDropGrant(id, by){                                                // 
 }
 function mpDropGot(id, by){                                                  // everyone: that drop is gone; the one who got it gets the item
   const d = drops.find(x=>x.id === id); if(!d) return;
+  if(d.type === 'key' && MP.role === 'host') keyPicked();
   if(by === mpMyId()){ if(!dropTake(d)){ const q = d.pos; removeDrop(d); spawnDrop(d.type, d.n, d.extra, {x:q.x, z:q.z}, 0, null); } }
   else { Snd.play('pickup', d.pos); removeDrop(d); }
 }
@@ -4435,18 +4962,25 @@ function useHeldItem(){
   else if(it.type === 'taco'){ p = placeSpot(1.0); if(p){ { const tc = makeTaco(p, it.boosted ? it.hp : it.hp*(1+0.1*upN('Tough Taco')+0.25*upN('Hardened Taco'))); if(it.maxHp) tc.maxHp = it.maxHp; tc.nid = ++itemSeq; tacos.push(tc); } ok = true; } }
   else if(it.type === 'cloth'){
     if(flagHP >= FLAG_MAX) showToast('The flag is already at full health');
-    else { const heal = 25 + 5*upN('Sturdy Cloth'); flagHP = Math.min(FLAG_MAX, flagHP + heal); showToast('Flag +' + heal + ' HP'); ok = true; }
+    else { const heal = 25 + 5*upN('Sturdy Cloth'); flagHP = Math.min(FLAG_MAX, flagHP + heal); showToast('Flag +' + heal + ' HP'); ok = true; if(MP.role === 'guest' && MP.room) MP.room.emit('heal', {n:heal}).catch(()=>{}); }
   }
   else if(it.type === 'newflag'){
     if(flagHP >= FLAG_MAX) showToast('The flag is already at full health');
-    else { flagHP = FLAG_MAX; showToast('New Flag! The flag is fully restored'); ok = true; }
+    else { flagHP = FLAG_MAX; showToast('New Flag! The flag is fully restored'); ok = true; if(MP.role === 'guest' && MP.room) MP.room.emit('heal', {n:0}).catch(()=>{}); }
+  }
+  else if(it.type === 'key'){
+    const dr = nearLockedDoor();
+    if(!dr){ showToast(keyDoor && !keyDoor.open ? 'Walk up to the locked door and face it' : 'Nothing here to unlock'); return; }
+    hotbar[hotbarSlot] = null; itemView = null; itemUseT = 1; itemCd = 0.45; updateHotbarUI();       // the key is taken out of your hand before anything else happens
+    if(MP.role === 'guest') mpFx({k:'ru', i:dr.i}); else unlockDoor(dr.i);
+    Snd.play('pickup'); return;
   }
   else if(it.type === 'energy'){ if(drink) return; drink = {it, t:0.5}; itemCd = 0.5; itemUseT = 0; itemView = 'energy'; Snd.play('gulp'); return; }
   else if(it.type === 'slime') ok = slimePull();
   else if(it.type === 'grenade'){ throwGrenade(); ok = true; }
   if(!ok){ if(it.type === 'mine' || it.type === 'turret' || it.type === 'taco') if(!p) showToast('No room to place that here'); return; }
   itemCd = 0.45; itemUseT = 0; itemView = it.type;
-  Snd.play({mine:'minePlace', turret:'turretPlace', taco:'tacoPlace', cloth:'cloth', newflag:'cloth', slime:'slime'}[it.type]);
+  Snd.play({mine:'minePlace', turret:'turretPlace', taco:'tacoPlace', cloth:'cloth', newflag:'cloth', slime:'slime', key:'pickup'}[it.type]);
   if(ITEM_DEFS[it.type].stack && --it.n > 0){} else hotbar[hotbarSlot] = null;
   updateHotbarUI();
 }
@@ -4664,7 +5198,7 @@ function animateXp(from, to){                                          // the xp
   });
 }
 let endSeq = null;
-async function endSequence(items, xpFrom, xpTo, bestAfter){                // each number counts up for 1 s with a 0.5 s pause after it; NEW BEST pops in right after the wave is counted, while nothing is counting
+async function endSequence(items, xpFrom, xpTo, bestAfter){                // each number counts up for 1 s with no pause after it; NEW BEST pops in right after the wave is counted, while nothing is counting
   const sq = endSeq = {skip:false}, alive = ()=>endSeq === sq && gameOver;
   const onDown = e=>{ if(!e.target.closest('button')) sq.skip = true; }; msg.addEventListener('pointerdown', onDown);
   const sleep = ms=>new Promise(r=>setTimeout(r, sq.skip ? 0 : ms));
@@ -4679,7 +5213,6 @@ async function endSequence(items, xpFrom, xpTo, bestAfter){                // ea
       if(!alive()) return;
       await count(it.el, it.to, it.fmt);
       if(it.best && bestAfter){ const nb = document.getElementById('endNB'); if(nb) nb.classList.add('show'); Snd.play('pickup'); }
-      if(it.to > 0 || it.best) await sleep(500);
     }
     if(alive()) await animateXp(xpFrom, xpTo);
   } finally { msg.removeEventListener('pointerdown', onDown); }
@@ -4690,11 +5223,11 @@ function endGame(){
   const prevBest = career.bestWave, newBest = wave > prevBest;
   career.coins += coinsEarned;
   career.bestWave=Math.max(career.bestWave,wave); career.bestScore=Math.max(career.bestScore,score); careerSave();
-  gameOver = true; flagBeingCaptured = false; MP.cap = 0; bossBarEl.classList.remove('show'); captureWarningEl.classList.remove('show'); Snd.silence(); Snd.play('lose');
+  gameOver = true; flagBeingCaptured = false; MP.cap = 0; bossBarEl.classList.remove('show'); captureWarningEl.classList.remove('show'); Snd.hush(true);
   msg.classList.remove('hidden');              // show the lose screen first so nothing below can stop it
   const board = endBoard(), nbHtml = newBest ? '<span class="newBest" id="endNB">NEW BEST</span>' : '';
   const top = board ? `<p class="endWave">${nbHtml}Final wave: <b id="endW">0</b></p><div id="endBoard" class="endBoard"></div>` : `<p>Final score: <b id="endS">0</b></p><p class="endWave">${nbHtml}Wave <b id="endW">0</b></p>`;
-  msg.innerHTML = `<h1>Game Over</h1>${top}<p class="coinline"><b id="endC">+0 coins</b></p><div class="hint"><b id="endLvl">Level ${career.level}</b></div><div class="xpbar"><i id="endXpFill" style="transition:none"></i></div><div class="xptext" id="endXpTxt"></div><button id="retryBtn">Play Again</button> <button id="homeBtn">Main Menu</button>` + (lastErr ? `<p class="hint" style="max-width:90vw;word-break:break-all">Error: ${String(lastErr).replace(/[<>&]/g,'').slice(0,300)}</p>` : '');
+  msg.innerHTML = `<h1>Game Over</h1>${top}<p class="coinline"><b id="endC">+0 coins</b></p>${runGems ? `<div class="hint">💎 +${runGems} Pass diamonds · Pass level ${career.pass.lv}</div>` : ''}<div class="hint"><b id="endLvl">Level ${career.level}</b></div><div class="xpbar"><i id="endXpFill" style="transition:none"></i></div><div class="xptext" id="endXpTxt"></div><button id="retryBtn">Play Again</button> <button id="homeBtn">Main Menu</button>` + (lastErr ? `<p class="hint" style="max-width:90vw;word-break:break-all">Error: ${String(lastErr).replace(/[<>&]/g,'').slice(0,300)}</p>` : '');
   const n = v=>String(v), items = [];
   if(!board) items.push({el:document.getElementById('endS'), to:score, fmt:n});
   items.push({el:document.getElementById('endW'), to:wave, fmt:n, best:true});
@@ -4711,6 +5244,7 @@ function endGame(){
 }
 
 function resetGame(){
+  runGems = 0;
   setTimeout(deliverShopChests, 900);
   career.runs++; careerSave(); MP.byId.clear(); dummiesClear(); mpGhostsClear();
   applyLoadout();
@@ -4723,12 +5257,12 @@ function resetGame(){
   for(const t of tracers){ scene.remove(t.obj); }
   for(const c of confetti) scene.remove(c);
   confetti.length = 0;
-  clearChests(); clearVan();
+  clearChests(true); clearVan(); resetSecretRoom(); Snd.hush(false);
   tracers = [];
   for(const s of shells){ gunScene.remove(s); }
   shells = [];
   FLAG_MAX = 100; upgradesOwned = {}; bottomlessT = 0; MAG_SIZE = magFor(curW.mag); flagHP = FLAG_MAX; barFill.style.width = '100%';
-  cloth.position.y = FLAG_TOP_Y; score = 0; hoopMade = 0; scoreEl.textContent = '0'; MP.pscore = {host:0}; runStartXp = career.xp;
+  applyFlagSkin(MP.role === 'guest' ? '' : (career.cos.eq.flag || '')); cloth.position.y = FLAG_TOP_Y; score = 0; hoopMade = 0; scoreEl.textContent = '0'; MP.pscore = {host:0}; runStartXp = career.xp;
   wave = 1; waveEl.textContent = '1';
   waveTarget = waveEnemyCount(1); spawnedThisWave = 0; spawnTimer = 0;
   ammoInMag = MAG_SIZE; reloading = false; updateAmmoUI();
@@ -4750,7 +5284,7 @@ function resetGame(){
 
 // ---------- co-op multiplayer (room capability) ----------
 // Host-authoritative: the host runs beans, waves and the flag and broadcasts snapshots (~10/s); guests mirror them and send their hits back.
-const GAME_VERSION = 'alpha 1.0';
+const GAME_VERSION = 'alpha 1.2';
 let CAPNOW = false;
 const verTag = ()=>`<div style="position:fixed;right:12px;bottom:8px;font:600 12px system-ui,sans-serif;color:#9fb3cc;opacity:.8;pointer-events:none">Version ${GAME_VERSION}</div>`;
 const MP = {seq:0, hitLog:[], acks:{}, pub:false, pubOff:null, advKey:'', advT:0, lobby:false, startCap:null, startGrp:null, guestLobby:false, role:null, code:'', room:null, ns:null, hostPeer:null, began:false, byId:new Map(), pend:{}, pendT:0, snapT:0, avatars:new Map(), ghosts:new Map(), fps:0, ping:null, fN:0, fT0:0, pgT:0, itemT:0, hadItems:false, offs:[], warned:false};
@@ -4933,7 +5467,7 @@ function vcTick(){
   if(VC.selfMute) want = false;                                                          // you muted yourself                // voice activation: the mic opens while you are speaking
   if(want !== VC.talking){ VC.talking = want; if(VC.gate) VC.gate.gain.setTargetAtTime(want ? 1 : 0, VC.ctx.currentTime, 0.015); }
   for(const [id, a] of VC.auds){                                                    // each friend's loudness: your volume, mutes, and (optionally) distance
-    const lg = vcLogical(id); let v = (VC.deaf || VC.muted[lg]) ? 0 : VC.vol * (VC.pvol[lg] === undefined ? 1 : VC.pvol[lg]);
+    const lg = vcLogical(id); let v = (VC.deaf || VC.muted[lg] || isBlocked(lg, peerNameOf(lg))) ? 0 : VC.vol * (VC.pvol[lg] === undefined ? 1 : VC.pvol[lg]);
     if(v > 0 && VC.prox){ const av = MP.avatars.get(lg); if(av){ const d = camera.position.distanceTo(av.g.position); v *= Math.max(0, Math.min(1, 1 - (d - 6)/40)); } }
     v = Math.max(0, Math.min(2, v));
     if(a._g){ a.volume = 0; a._g.gain.setTargetAtTime(v, VC.ctx.currentTime, 0.03); } else a.volume = Math.min(1, v);
@@ -4955,7 +5489,7 @@ function voiceInner(backLabel){
   return `<h1>Voice chat</h1>
     <div class="hint">${VC.room ? 'Connected to your room.' : 'Not in a room.'} ${micTxt}.</div>
     <div style="height:10px;background:rgba(255,255,255,.12);border-radius:6px;overflow:hidden;margin:6px auto;width:min(420px,90vw)"><div class="vcMeter" style="height:100%;width:0;background:#52ff7d"></div></div>
-    ${all.length ? '<div class="vcList"><div class="sub">Players (click one for its own volume)</div>' + all.map(p=>p.isMe ? `<div class="vcRow"><div class="vcHead"><span class="vcSp" data-p="me"></span><span>You</span></div></div>` : `<div class="vcRow"><div class="vcHead" data-p="${p.peer}"><span class="vcSp" data-p="${p.peer}"></span><span class="vcN" data-p="${p.peer}"></span><em>${VC.muted[p.peer] ? 'Muted' : Math.round(100*(VC.pvol[p.peer] === undefined ? 1 : VC.pvol[p.peer])) + '%'}</em></div>${VC.open === p.peer ? `<div class="vcDet"><input class="vcPV" data-p="${p.peer}" type="range" min="0" max="2" step="0.05" value="${VC.pvol[p.peer] === undefined ? 1 : VC.pvol[p.peer]}"><button class="vcPM" data-p="${p.peer}">${VC.muted[p.peer] ? 'Unmute' : 'Mute'}</button></div>` : ''}</div>`).join('') + '</div>' : ''}
+    ${all.length ? '<div class="vcList"><div class="sub">Players (click one for its own volume)</div>' + all.map(p=>p.isMe ? `<div class="vcRow"><div class="vcHead"><span class="vcSp" data-p="me"></span><span>You</span></div></div>` : `<div class="vcRow"><div class="vcHead" data-p="${p.peer}"><span class="vcSp" data-p="${p.peer}"></span><span class="vcN" data-p="${p.peer}"></span><em>${VC.muted[p.peer] ? 'Muted' : Math.round(100*(VC.pvol[p.peer] === undefined ? 1 : VC.pvol[p.peer])) + '%'}</em></div>${VC.open === p.peer ? `<div class="vcDet"><input class="vcPV" data-p="${p.peer}" type="range" min="0" max="2" step="0.05" value="${VC.pvol[p.peer] === undefined ? 1 : VC.pvol[p.peer]}"><button class="vcPM" data-p="${p.peer}">${VC.muted[p.peer] ? 'Unmute' : 'Mute'}</button></div><div class="vcDet vcDet2"><button class="vcBlk" data-p="${p.peer}">${isBlocked(p.peer, peerNameOf(p.peer)) ? 'Unblock' : 'Block'}</button><button class="vcRep" data-p="${p.peer}">Report</button></div>` : ''}</div>`).join('') + '</div>' : ''}
     <label class="setrow">Global volume<input class="vcVol" type="range" min="0" max="2" step="0.05" value="${VC.vol}"><output class="vcVolO">${Math.round(VC.vol*100)}%</output></label>
     <div class="setrow"><span>Proximity</span><button class="vcProx" style="grid-column:2/4">${VC.prox ? 'On' : 'Off'}</button></div>
     <div class="setrow"><span>Mute myself</span><button class="vcSelf" style="grid-column:2/4">${VC.selfMute ? 'On' : 'Off'}</button></div>
@@ -4968,6 +5502,8 @@ function vcBind(root, back){
   const q = c=>root.querySelector(c), others = VC.room ? VC.room.peers().filter(p=>!p.isMe && p.kind === 'viewer') : [];
   root.querySelectorAll('.vcHead[data-p]').forEach(h=>h.onclick = ()=>{ VC.open = VC.open === h.dataset.p ? null : h.dataset.p; vcPanelRefresh(); });
   root.querySelectorAll('.vcPV').forEach(r=>r.oninput = ()=>{ VC.pvol[r.dataset.p] = +r.value; vcSave(); const em = root.querySelector('.vcHead[data-p="' + r.dataset.p + '"] em'); if(em && !VC.muted[r.dataset.p]) em.textContent = Math.round(+r.value*100) + '%'; });
+  root.querySelectorAll('.vcBlk').forEach(b=>b.onclick = ()=>{ blockToggle(b.dataset.p); vcPanelRefresh(); });
+  root.querySelectorAll('.vcRep').forEach(b=>b.onclick = ()=>{ const t = reportPlayer(b.dataset.p); b.textContent = 'Reported'; showToast(t); vcPanelRefresh(); });
   root.querySelectorAll('.vcPM').forEach(b=>b.onclick = ()=>{ const id = b.dataset.p; if(VC.muted[id]) delete VC.muted[id]; else VC.muted[id] = true; vcSave(); vcPanelRefresh(); });
   root.querySelectorAll('.vcN').forEach(el=>{ const p = others.find(x=>x.peer === el.dataset.p); el.textContent = (p && p.presence && cleanName(p.presence.name)) || 'Player'; });
   q('.vcSelf').onclick = ()=>{ VC.selfMute = !VC.selfMute; vcSave(); vcPanelRefresh(); };
@@ -5018,7 +5554,7 @@ async function mpOpen(code, role){
   if(!MP.ns) throw new Error('The connection library did not load (check your internet connection).');
   MP.room = await MP.ns.join(code, role);
   MP.role = role; VIEW = role === 'guest' ? 'client' : 'host'; MP.code = code; MP.hostPeer = null; MP.began = (role === 'host'); MP.warned = false;
-  MP.offs.push(MP.room.on('snap', mpOnSnap), MP.room.on('hit', mpOnHit), MP.room.on('van', mpOnVan), MP.room.on('fx', mpOnFx), MP.room.on('grab', mpOnGrab), MP.room.on('throw', mpOnThrow), MP.room.on('carry', mpOnCarry), MP.room.onPeers(mpBadgeUpdate));
+  MP.offs.push(MP.room.on('snap', mpOnSnap), MP.room.on('hit', mpOnHit), MP.room.on('van', mpOnVan), MP.room.on('fx', mpOnFx), MP.room.on('grab', mpOnGrab), MP.room.on('heal', mpOnHeal), MP.room.on('throw', mpOnThrow), MP.room.on('carry', mpOnCarry), MP.room.onPeers(mpBadgeUpdate));
   { const r = MP.room; r.onClosed(()=>{ if(MP.room !== r) return; mpLeave(); paused = false; gameOver = true; mouseDown = false; toastEl.classList.remove('show'); showHome(); showToast('The host closed the room.'); }); }
   mpBadgeUpdate(); vcStart(MP.room);
 }
@@ -5050,8 +5586,9 @@ async function mpHost(pub){
   showToast('Room ' + code + ' — share the code. Press the green button under the hoop to start.', null, true);
 }
 function mpMenuUI(){
-  msg.innerHTML = '<h1>Multiplayer</h1><p class="hint">Co-op against the beans. Everyone must be on the same game version.</p><p class="hint">Your name tag: <input id="mpName" maxlength="16" autocomplete="off" spellcheck="false" placeholder="Player" value="' + playerName.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;') + '" style="font-size:16px;width:9em;padding:6px 8px;border-radius:8px;border:1px solid #3a465c;background:#10151f;color:#fff"></p><button id="hostBtn">Host a room</button> <button id="joinBtn">Join with a code</button> <button id="pubBtn">Public rooms</button> <button id="frBtn">Friends</button><p class="hint" id="mpHomeStat"></p><button id="mpBack">Back</button>' + verTag();
-  const nm = document.getElementById('mpName'); nm.oninput = ()=>setPlayerName(nm.value); nm.onkeydown = e=>e.stopPropagation(); nm.onkeyup = e=>e.stopPropagation();
+  nameBlocked = false;
+  msg.innerHTML = '<h1>Multiplayer</h1><p class="hint">Co-op against the beans. Everyone must be on the same game version.</p><p class="hint">Your name tag: <input id="mpName" maxlength="16" autocomplete="off" spellcheck="false" placeholder="' + autoName + '" value="' + (playerName === autoName ? '' : playerName).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;') + '" style="font-size:16px;width:9em;padding:6px 8px;border-radius:8px;border:1px solid #3a465c;background:#10151f;color:#fff"></p><p class="hint" id="mpNameErr" style="color:#ff4040;font-weight:bold;display:none">You are not allowed to use multiplayer with the name you have chosen.</p><button id="hostBtn">Host a room</button> <button id="joinBtn">Join with a code</button> <button id="pubBtn">Public rooms</button> <button id="frBtn">Friends</button><p class="hint" id="mpHomeStat"></p><button id="mpBack">Back</button>' + verTag();
+  const nm = document.getElementById('mpName'); const gate = ()=>{ setPlayerName(nm.value); document.getElementById('mpNameErr').style.display = nameBlocked ? '' : 'none'; ['hostBtn','joinBtn','pubBtn','frBtn'].forEach(id=>{ const b = document.getElementById(id); if(b){ b.disabled = nameBlocked; b.style.opacity = nameBlocked ? '.4' : ''; } }); }; nm.oninput = gate; nm.onkeydown = e=>e.stopPropagation(); nm.onkeyup = e=>e.stopPropagation();
   document.getElementById('hostBtn').onclick = mpOptionsUI;
   document.getElementById('joinBtn').onclick = mpJoinUI;
   document.getElementById('pubBtn').onclick = mpPublicUI;
@@ -5066,7 +5603,7 @@ function mpStartButton(){                                               // a ped
     const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.12, 20), new THREE.MeshBasicMaterial({color:0x33d65a}));
     cap.position.y = 1.06;
     const cv = document.createElement('canvas'); cv.width = 256; cv.height = 64; const cx = cv.getContext('2d');
-    cx.font = '700 40px system-ui,sans-serif'; cx.textAlign = 'center'; cx.fillStyle = '#fff'; cx.strokeStyle = '#000'; cx.lineWidth = 6;
+    cx.font = '700 40px system-ui,sans-serif'; cx.textAlign = 'center'; cx.fillStyle = '#fff'; cx.strokeStyle = '#000'; cx.lineWidth = 6; cx.lineJoin = 'round'; cx.miterLimit = 2;
     cx.strokeText('START', 128, 46); cx.fillText('START', 128, 46);
     const lbl = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 0.3), new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(cv), transparent:true, depthWrite:false}));
     lbl.position.y = 1.55;
@@ -5281,7 +5818,7 @@ function mpRows(){                                                      // what 
 function mpSnap(go){
   if(MP.role !== 'host' || !MP.room) return;
   const b = mpRows();
-  const o = {v:GAME_VERSION, lb:MP.lobby ? 1 : 0, w:wave, f:Math.round(flagHP*10)/10, fm:FLAG_MAX, cp:CAPNOW ? 1 : 0, ps:MP.pscore || {host:score}, l:Math.max(0, waveTarget - spawnedThisWave), b};
+  const o = {v:GAME_VERSION, lb:MP.lobby ? 1 : 0, fk:career.cos.eq.flag || '', w:wave, f:Math.round(flagHP*10)/10, fm:FLAG_MAX, cp:CAPNOW ? 1 : 0, ps:MP.pscore || {host:score}, l:Math.max(0, waveTarget - spawnedThisWave), b};
   if(Object.keys(MP.acks).length) o.ak = MP.acks;
   if(go || gameOver) o.go = 1;
   while(JSON.stringify(o).length > 3900 && b.length) b.pop();
@@ -5305,8 +5842,8 @@ function mpOnSnap(m){
   }
   if(d.go){ flagHP = 0; barFill.style.width = '0%'; if(!gameOver) endGame(); return; }
   if(gameOver) return;
-  if(d.w !== wave){ wave = d.w; waveEl.textContent = wave; showWaveSplash(wave); }
-  FLAG_MAX = d.fm > 0 ? d.fm : FLAG_MAX; flagHP = Math.max(0, +d.f || 0);
+  if(d.w !== wave){ if(d.w === wave + 1 && wave >= 1) passWave(wave); wave = d.w; waveEl.textContent = wave; showWaveSplash(wave); }
+  FLAG_MAX = d.fm > 0 ? d.fm : FLAG_MAX; flagHP = Math.max(0, +d.f || 0); applyFlagSkin(typeof d.fk === 'string' ? d.fk.slice(0, 20) : '');
   waveTarget = Math.max(0, d.l|0); spawnedThisWave = 0;
   const me = MP.room && MP.room.peers().find(x=>x.isMe), ack = (d.ak && me && Number.isInteger(d.ak[me.peer])) ? d.ak[me.peer] : 0;
   mpAckPrune(ack);
@@ -5408,6 +5945,12 @@ function mpCarrierPose(peerId){
   const pr = MP.room.peers().find(x=>x.peer === peerId), d = pr && pr.presence;
   return (d && [d.x, d.y, d.z, d.yaw].every(Number.isFinite)) ? d : null;
 }
+function mpOnHeal(m){                                                    // host: a guest used a Flag Cloth (n HP) or a New Flag (n = 0, full)
+  if(MP.role !== 'host' || m.isMe || gameOver || flagHP <= 0) return;
+  const n = m.data && +m.data.n;
+  if(!(n >= 0) || n > 100) return;
+  flagHP = n === 0 ? FLAG_MAX : Math.min(FLAG_MAX, flagHP + n);
+}
 function mpOnGrab(m){                                                    // host: a guest wants to pick up a downed bean
   if(MP.role !== 'host' || m.isMe) return;
   const d = m.data, e = d && enemies.find(en=>en.id === d.id), pose = mpCarrierPose(m.peer);
@@ -5459,6 +6002,11 @@ function mpOnFx(m){                                                      // effe
     if(fromHost && me && d.to === me.peer && Number.isFinite(d.t)){ const rtt = Math.round(performance.now() - d.t); if(rtt >= 0 && rtt < 10000) MP.ping = MP.ping == null ? rtt : Math.round(MP.ping*0.6 + rtt*0.4); }
     return;
   }
+  if(d.k === 'kl'){ if(fromHost && Number.isInteger(d.i)) setLockedDoor(d.i); return; }                                        // the host: this door is locked now
+  if(d.k === 'ru'){ if(MP.role === 'host' && Number.isInteger(d.i) && keyDoor && keyDoor.i === d.i && !keyDoor.open) unlockDoor(d.i, m.peer); return; }     // a guest used the key
+  if(d.k === 'ro'){ if(fromHost && Number.isInteger(d.i) && Number.isInteger(d.kd) && Number.isInteger(d.tb) && (d.ts === 1 || d.ts === -1)) startUnlock(d.i, d.kd, d.tb, d.ts, typeof d.by === 'string' && d.by === mpMyId()); return; }
+  if(d.k === 'rx'){ if(fromHost) closeRoomDoor(); return; }                                                                 // the host: the room is finished, close the door
+  if(d.k === 'rc'){ if(Number.isInteger(d.i)){ if(MP.role === 'host') mpFx({k:'rc', i:d.i, by:m.peer}); const c = chests.find(x=>x.secret && x.sid === d.i && !x.opened); if(c) openChest(c, true); } return; }     // someone opened one of the hidden room's chests
   if(d.k === 'td'){                                                      // the host: beans ate some of our taco
     if(fromHost && me && d.to === me.peer && Number.isInteger(d.id) && Number.isFinite(d.d)){ const t = tacos.find(x=>x.nid === d.id); if(t) t.hp -= Math.max(0, Math.min(200, d.d)); }
     return;
@@ -5532,7 +6080,7 @@ function mpOnFx(m){                                                      // effe
     for(const r of d.t.slice(0, 24)){ if(!Array.isArray(r) || r.length !== 6) continue; const a = fxVec(r.slice(0, 3)), b = fxVec(r.slice(3)); if(a && b) rows.push([a, b, r]); }
     const wn = (typeof d.w === 'string' && WEAPONS[d.w] && d.w !== 'rocket' && d.w !== 'grenade') ? d.w : 'rifle';
     if(MP.role === 'host' && rows.length) mpFx({k:'tr', t:rows.map(x=>x[2]), w:wn, by:m.peer});
-    { let n = 0; const lim = wn === 'shotgun' ? 1 : 4; for(const [a] of rows){ if(n++ >= lim) break; Snd.play(wn, a); } }          // you hear their gun from where they stand (louder when close)
+    if(!isBlocked(m.peer, peerNameOf(m.peer))){ let n = 0; const lim = wn === 'shotgun' ? 1 : 4; for(const [a] of rows){ if(n++ >= lim) break; Snd.play(wn, a); } }          // you hear their gun from where they stand (louder when close)
     for(const [a, b] of rows){
       if(tracers.length > 120) break;
       const tr = new THREE.Line(new THREE.BufferGeometry().setFromPoints([a, b]), new THREE.LineBasicMaterial({color:0xfff2a0, transparent:true, opacity:0.9}));
@@ -5663,7 +6211,7 @@ function mpHoldInfo(h){                                                 // untru
 }
 function mpLabelDraw(a, name, talk){
   const c = a.cx; c.clearRect(0, 0, 256, 64); if(talk === undefined) talk = a.tk;
-  if(name){ c.textAlign = 'center'; c.lineWidth = 6; c.strokeStyle = '#000'; c.font = '700 30px system-ui,sans-serif'; c.fillStyle = '#fff'; c.strokeText(name, 128, 42); c.fillText(name, 128, 42);
+  if(name){ c.textAlign = 'center'; c.lineJoin = 'round'; c.miterLimit = 2; c.lineWidth = 6; c.strokeStyle = '#000'; c.font = '700 30px system-ui,sans-serif'; c.fillStyle = '#fff'; c.strokeText(name, 128, 42); c.fillText(name, 128, 42);
     if(talk){                                                                    // a little speaker next to the name while they talk
       const x = 128 - c.measureText(name).width/2 - 30, y = 28; c.lineJoin = 'round';
       c.beginPath(); c.moveTo(x, y - 6); c.lineTo(x + 6, y - 6); c.lineTo(x + 15, y - 14); c.lineTo(x + 15, y + 14); c.lineTo(x + 6, y + 6); c.lineTo(x, y + 6); c.closePath();
@@ -5769,8 +6317,8 @@ function mpAvatars(dt){
       if(a.g.rotation.x || a.g.rotation.z){ try{ const P = new THREE.Vector3(0, 0.95, 0), R = P.clone().applyEuler(a.g.rotation); ox = P.x - R.x; oy = P.y - R.y; oz = P.z - R.z; if(![ox, oy, oz].every(Number.isFinite)) ox = oy = oz = 0; }catch(e){ ox = oy = oz = 0; } }
       a.ox = ox; a.oy = oy; a.oz = oz; a.g.position.x += ox; a.g.position.y += oy; a.g.position.z += oz; }
     a.head.rotation.x += (pt - a.head.rotation.x)*k; avPose(a, pt, d.aim === 1, d.rl === 1); applyCosmetics(a, d.cs); a.pz.visible = d.pz === 1;
-    { const tk = (d.vc === 1 && !VC.muted[p.peer]) ? 1 : 0; if(a.tk !== tk){ a.tk = tk; mpLabelDraw(a, a.nm, tk); } }       // head and arm follow where they look
-    avatarLook(a, cleanName(d.name) || 'Player', typeof d.hold === 'string' ? d.hold.slice(0, 24) : '');
+    { const tk = (d.vc === 1 && !VC.muted[p.peer] && !isBlocked(p.peer, cleanName(d.name))) ? 1 : 0; if(a.tk !== tk){ a.tk = tk; mpLabelDraw(a, a.nm, tk); } }       // head and arm follow where they look
+    avatarLook(a, isBlocked(p.peer, cleanName(d.name)) ? 'Blocked' : (cleanName(d.name) || 'Player'), typeof d.hold === 'string' ? d.hold.slice(0, 24) : '');
     a.label.rotation.y = yaw - a.g.rotation.y;                                                               // the name tag faces you
   }
   for(const [id, a] of MP.avatars){ if(!seen.has(id)){ scene.remove(a.g); MP.avatars.delete(id); } }
@@ -5790,10 +6338,33 @@ function dummySpawn(hold, n){                                            // /spa
 }
 let beanSeq = 0;
 const DUMMIES = [];
-function cleanName(t){ try{ return String(t || '').replace(/[^\p{L}\p{N} _.\-]/gu, '').replace(/\s+/g, ' ').trim().slice(0, 16); }catch(e){ return ''; } }
-let playerName = 'Player';
-try{ playerName = cleanName(localStorage.getItem('ffps_name')) || 'Player'; }catch(e){}
-function setPlayerName(t){ playerName = cleanName(t) || 'Player'; try{ localStorage.setItem('ffps_name', playerName); }catch(e){} }
+// ---- store settings: fill these in before submitting to the App Store (the app shows the links only when they are set) ----
+const APP_CONFIG = {supportEmail:'', privacyUrl:'', supportUrl:''};
+const BAD_NAME = /fuck|shit|bitch|cunt|pussy|whore|slut|nigg|fagg|retard|hitler/;                  // names with these are replaced by "Player"
+const nameBad = t=>{ try{ return BAD_NAME.test(String(t).toLowerCase().replace(/[0@]/g, 'o').replace(/[1!|]/g, 'i').replace(/3/g, 'e').replace(/[4]/g, 'a').replace(/[5$]/g, 's').replace(/[^a-z]/g, '')); }catch(e){ return false; } };
+function cleanName(t){ try{ const n = String(t || '').replace(/[^\p{L}\p{N} _.\-]/gu, '').replace(/\s+/g, ' ').trim().slice(0, 16); return nameBad(n) ? '' : n; }catch(e){ return ''; } }
+// ---- blocking and reporting other players (blocked names are remembered; blocked players are muted, shown as "Blocked" and their guns are not heard) ----
+const BLOCK = {names:new Set(), ids:new Set()};
+try{ for(const n of (JSON.parse(localStorage.getItem('ffps_blocked') || '[]') || []).slice(0, 50)) if(typeof n === 'string') BLOCK.names.add(n.toLowerCase().slice(0, 16)); }catch(e){}
+function blockSave(){ try{ localStorage.setItem('ffps_blocked', JSON.stringify([...BLOCK.names].slice(0, 50))); }catch(e){} }
+const isBlocked = (id, name)=>BLOCK.ids.has(id) || (!!name && BLOCK.names.has(String(name).toLowerCase()));
+function peerNameOf(id){ const p = MP.room && MP.room.peers().find(x=>x.peer === id); return (p && p.presence && cleanName(p.presence.name)) || 'Player'; }
+function blockToggle(id){ const nm = peerNameOf(id); if(isBlocked(id, nm)){ BLOCK.ids.delete(id); BLOCK.names.delete(nm.toLowerCase()); } else { BLOCK.ids.add(id); if(nm !== 'Player') BLOCK.names.add(nm.toLowerCase()); } blockSave(); }
+function reportPlayer(id){
+  const nm = peerNameOf(id), body = 'Player report\nPlayer: ' + nm + '\nRoom: ' + (MP.code || '?') + '\nGame version: ' + GAME_VERSION + '\nWhat happened: ';
+  if(!BLOCK.ids.has(id)) blockToggle(id);                                      // reporting also blocks them
+  if(APP_CONFIG.supportEmail){ try{ location.href = 'mailto:' + APP_CONFIG.supportEmail + '?subject=' + encodeURIComponent('Report: ' + nm) + '&body=' + encodeURIComponent(body); return 'Report opened in your email app. The player is blocked.'; }catch(e){} }
+  try{ navigator.clipboard.writeText(body); }catch(e){}
+  return 'Report text copied. The player is blocked.';
+}
+let nameBlocked = false;
+let autoName = 'Player 000000';
+try{ autoName = localStorage.getItem('ffps_autoname') || ''; if(!/^Player \d{6}$/.test(autoName)){ autoName = 'Player ' + String(100000 + Math.floor(Math.random() * 900000)); localStorage.setItem('ffps_autoname', autoName); } }catch(e){ autoName = 'Player ' + String(100000 + Math.floor(Math.random() * 900000)); }
+let playerName = autoName;
+try{ playerName = cleanName(localStorage.getItem('ffps_name')) || autoName; }catch(e){}
+function setPlayerName(t){ const raw = String(t || '').trim(); nameBlocked = !!raw && nameBad(raw.replace(/[^\p{L}\p{N} _.\-]/gu, ''));
+  if(nameBlocked) return;
+  const c = cleanName(raw); playerName = c || autoName; try{ localStorage.setItem('ffps_name', c); }catch(e){} }
 
 // ---------- /view: see the game as the host or as a guest sees it (for testing) ----------
 let VIEW = 'host';
@@ -5958,6 +6529,7 @@ function frame(now){
     if(eyeY <= floorEye){ const vLand = playerVy; eyeY = floorEye; playerVy = 0; if(!playerGrounded && vLand < -4) Snd.play('land', null, -vLand); playerGrounded = true; }
     else playerGrounded = false;                                   // walked off an edge -> falling
     }
+    { const ce = roomCeilingEye(); if(ce !== null && eyeY > ce && eyeY - EYE_HEIGHT < ce){ eyeY = ce; if(playerVy > 0) playerVy = 0; } }          // the hidden room's ceiling stops a jump instead of pushing you out
     camera.position.y = eyeY;
     { const mdx = camera.position.x - stepPX, mdz = camera.position.z - stepPZ; stepPX = camera.position.x; stepPZ = camera.position.z;   // footsteps by distance walked
       if(playerGrounded){ stepDist += Math.hypot(mdx, mdz); const stride = sprinting ? 2.4 : 1.9; if(stepDist >= stride){ stepDist = 0; Snd.play('step', null, sprinting); } } else stepDist = 0; }
@@ -5998,7 +6570,7 @@ function frame(now){
     }
     if(MP.role !== 'guest' && !MP.lobby && spawnedThisWave >= waveTarget && enemies.length===0){
       career.bestWave=Math.max(career.bestWave,wave); career.bestScore=Math.max(career.bestScore,score); if(career.dailyDate!==todayKey){career.dailyDate=todayKey;career.dailyWave=0;career.dailyClaimed=false;} career.dailyWave=Math.max(career.dailyWave||0,wave);
-      careerAward(25+wave*5, 10+wave*2, 'wave clear');
+      careerAward(25+wave*5, 10+wave*2, 'wave clear'); passWave(wave);
       if(wave-1===BOSS_WAVE || wave-1===CHOPPER_WAVE) careerAward(200,100,'boss defeated');
       wave++; waveEl.textContent=wave; startVan((wave-1 === BOSS_WAVE || wave-1 === CHOPPER_WAVE) ? 'diamond' : undefined);   // a supply van delivers the chest (beating the boss pays out a diamond one)
       Snd.play('waveClear');
@@ -6266,7 +6838,7 @@ function frame(now){
     }
 
     updateConfetti(dt);
-    updateChests(frozen ? 0 : dt); updateVan(frozen ? 0 : dt);
+    updateChests(frozen ? 0 : dt); updateVan(frozen ? 0 : dt); updateSecretRoom(frozen ? 0 : dt);
     updateSinkingHats(frozen ? 0 : dt);
 
     // tracer lines: quick fade then remove
