@@ -110,11 +110,12 @@
   @media (max-width:700px){#msg .home .hAcct{width:110px}#msg .home .hShop{left:3%}#msg .home .hModel{width:50vw}#msg .home .hLevel{width:38vw}#msg .home .hDaily{display:none}#msg .home .hTitle{display:none}}
   #msg .home .hPass{right:4%;top:72%;width:clamp(130px,19vw,215px);height:clamp(54px,10vh,76px);border-radius:999px;background:linear-gradient(#5cf0d0,#16b69a);color:#06241e}
   .pBar{position:relative;width:min(520px,88vw);height:24px;border-radius:12px;background:rgba(255,255,255,.1);overflow:hidden;margin:8px 0}.pBar i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(#7ff2ff,#2ab8e0)}.pBar b{position:absolute;inset:0;line-height:24px;font-size:13px;text-shadow:0 1px 2px #000}
-  .pTrack{display:flex;gap:10px;overflow-x:auto;width:min(100vw,1100px);padding:14px 10px;box-sizing:border-box;-webkit-overflow-scrolling:touch}
+  .pTrack{display:flex;gap:10px;overflow-x:auto;width:min(100vw,1100px);padding:22px 14px;box-sizing:border-box;-webkit-overflow-scrolling:touch}
   .pCard{flex:0 0 150px;min-height:0;border-radius:12px;padding:8px;background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.14);display:flex;flex-direction:column;align-items:center;gap:5px;font-size:12px;box-sizing:border-box}
   .pCard .pN{font-weight:900;font-size:18px}.pCard .pIt{text-align:center;line-height:1.25}.pCard .pIt span{margin-right:4px}.pCard .pCost{margin-top:auto;opacity:.8;font-size:12px}
   .pCard.done{opacity:.55;border-color:#52ff7d}.pCard.cur{border-color:#7ff2ff;box-shadow:0 0 16px rgba(90,230,255,.6)}.pCard.big{background:linear-gradient(#2a2250,#1a1438);border-color:#b890ff}.pCard.top{background:linear-gradient(#5a3a00,#2a1a00);border-color:#ffd24a;box-shadow:0 0 18px rgba(255,200,60,.6)}.pCard.cyc{border-style:dashed}
   .pMd{width:120px;height:92px}
+  .pCard.can{cursor:pointer;border-color:#ffd24a;box-shadow:0 0 14px rgba(255,210,74,.7);animation:bangPulse 1.2s ease-in-out infinite}
   .slotBox{width:min(380px,86vw);height:96px;border:4px solid #ffd24a;border-radius:14px;background:linear-gradient(#0b1020,#1a2240);box-shadow:inset 0 0 18px #000,0 0 18px rgba(255,210,74,.5);display:flex;align-items:center;justify-content:center;margin:8px auto;position:relative}
   .slotBox:before,.slotBox:after{content:'▶';position:absolute;top:50%;transform:translateY(-50%);color:#ffd24a;font-size:18px}.slotBox:before{left:-26px}.slotBox:after{right:-26px;transform:translateY(-50%) scaleX(-1)}
   .slotIn{font-size:22px;font-weight:900;text-align:center;line-height:1.1}.slotIn small{display:block;font-size:12px;opacity:.7;letter-spacing:.1em;text-transform:uppercase}.slotIn.stop{animation:slotPop .4s ease-out}@keyframes slotPop{0%{transform:scale(1.5)}100%{transform:scale(1)}}
@@ -1577,11 +1578,11 @@ const ammoEl=document.getElementById('ammo'), fireModeEl=document.getElementById
       reloadTip=document.getElementById('reloadTip'), interactEl=document.getElementById('interact');
 let tracers = [];
 let mouseDown=false, fireCd=0, scoping=false;
-let awpMode = 'hold';                                                   // AWP: 'none' = no scope, 'toggle' = right click toggles the scope, 'hold' = hold the button to scope and let go to fire
+let awpMode = 'toggle';                                                 // AWP: 'none' = no scope (33% less accurate), 'hold' = SCOPE: always looking through the scope, click to fire, 'toggle' = right click toggles the scope
 try{ const m = localStorage.getItem('ffps_awpmode'); if(m === 'none' || m === 'toggle' || m === 'hold') awpMode = m; }catch(e){}
 const AWP_LABEL = {none:'NO SCOPE', toggle:'TOGGLE SCOPE', hold:'SCOPE'};
 const scopeEl = document.getElementById('scopeEl'), SCOPE_FOV = 22;
-const scopeOn = ()=> awpMode !== 'none' && scoping && started && !paused && !gameOver && loadout.weapon === 'awp' && holdingGun() && !carriedEnemy && !reloading;
+const scopeOn = ()=> awpMode !== 'none' && (scoping || awpMode === 'hold') && started && !paused && !gameOver && loadout.weapon === 'awp' && holdingGun() && !carriedEnemy && !reloading;
 let FIRE_INTERVAL=0.085;
 let MAG_SIZE = 30;
 let ammoInMag = MAG_SIZE, reloading = false, fireMode = 'auto';
@@ -1594,7 +1595,7 @@ const WEAPONS = {
     recoil:0.02, kick:1, fallStart:Infinity, fallEnd:Infinity, muzzle:new THREE.Vector3(0.39,-0.37,-1.15), shell:{color:0xc9a227,r:0.012,len:0.03}, st:[3,4,3,3]},
   uzi:{name:'Uzi', blurb:'Blistering fire rate, sloppy aim.', mag:33, interval:0.05, spread:0.05, dmg:6.7, pellets:1, canAuto:true, burst:3, reload:1100,
     recoil:0.012, kick:0.7, fallStart:Infinity, fallEnd:Infinity, muzzle:new THREE.Vector3(0.43,-0.43,-1.15), shell:{color:0xc9a227,r:0.009,len:0.022}, st:[5,2,2,4]},
-  pistol:{name:'Pistol', blurb:'Reliable sidearm, one shot per click. No delay between shots, you can fire while sprinting, and sprints last 15% longer.', mag:24, interval:0, spread:0.007, dmg:8, pellets:1, canAuto:false, semiOnly:true, reload:2000,
+  pistol:{name:'Pistol', blurb:'Reliable sidearm, one shot per click. No delay between shots when you click (Auto shoot fires it every 0.16 s), you can fire while sprinting, and sprints last 15% longer.', mag:24, interval:0, spread:0.007, dmg:8, pellets:1, canAuto:false, semiOnly:true, reload:2000,
     recoil:0.028, kick:1.2, fallStart:Infinity, fallEnd:Infinity, muzzle:new THREE.Vector3(0.40,-0.40,-0.62), shell:{color:0xc9a227,r:0.01,len:0.024}, st:[3,4,2,4]},
   shotgun:{name:'Shotgun', blurb:'Pump action, awful spread. 7 pellets per shot: brutal up close, useless at range.', mag:7, interval:0.9, spread:0.16, dmg:3, pellets:7, canAuto:false, reload:2200,
     recoil:0.07, kick:2.4, fallStart:8, fallEnd:18, muzzle:new THREE.Vector3(0.39,-0.37,-1.15), shell:{color:0xb3261e,r:0.02,len:0.06}, st:[1,1,5,1]},
@@ -2123,7 +2124,13 @@ career.cos = {owned:Object.assign({}, career.cos && career.cos.owned), eq:Object
 if(!/^[A-Z2-9]{8}$/.test(String(career.fid || ''))){ career.fid = Array.from({length:8}, ()=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random()*32)]).join(''); careerSave(); }   // friend code
 career.friends = Array.isArray(career.friends) ? career.friends.filter(f=>f && /^[A-Z2-9]{8}$/.test(String(f.id))).slice(0, 30).map(f=>({id:String(f.id), name:String(f.name || 'Friend').slice(0, 16)})) : [];
 if(career.fshow === undefined) career.fshow = true;
-career.pass = {d:Math.max(0, Math.floor(+(career.pass && career.pass.d) || 0)), lv:Math.max(0, Math.floor(+(career.pass && career.pass.lv) || 0))};   // free pass: diamonds towards the next level, levels unlocked
+career.pass = (()=>{                                                        // d = diamonds towards the next level, lv = levels unlocked, cl = collected levels (1-90), cx = collected cycle levels (after 90)
+  const o = career.pass || {}, d = Math.max(0, Math.floor(+o.d || 0)), lv = Math.max(0, Math.floor(+o.lv || 0)), cl = {};
+  if(o.cl && typeof o.cl === 'object') for(let n = 1; n <= 90; n++) if(o.cl[n] === true && n <= lv) cl[n] = true;
+  else if(!o.cl && n <= lv) cl[n] = true;                                  // (the first version of the pass handed rewards out by itself: those are already collected)
+  const cx = o.cl ? Math.min(Math.max(0, lv - 90), Math.max(0, Math.floor(+o.cx || 0))) : Math.max(0, lv - 90);
+  return {d, lv, cl, cx};
+})();   // free pass: diamonds towards the next level, levels unlocked
 career.lvc = Object.assign({}, career.lvc);                                 // level-track chests already claimed
 career.wild = Object.assign({common:0, rare:0, epic:0, legendary:0}, career.wild);   // wild parts: one rarity, works for any gun of it
 career.parts = Object.assign({}, career.parts);                                // gun parts won from shop chests
@@ -2610,17 +2617,25 @@ function passGrant(n){                                                         /
   for(const id of R.cos){ if(career.cos.owned[id]) career.coins += COSM_DUP.legendary; else career.cos.owned[id] = true; }
   return R;
 }
-function passAdd(n){                                                           // diamonds go straight into the pass; returns the levels unlocked
+function passAdd(n){                                                           // diamonds go straight into the pass and unlock levels (the rewards are collected by hand on the Pass page)
   const p = career.pass, got = [];
   p.d += n;
-  while(p.d >= passCost(p.lv + 1) && got.length < 500){ p.d -= passCost(p.lv + 1); p.lv++; got.push(p.lv); passGrant(p.lv); }
+  while(p.d >= passCost(p.lv + 1) && got.length < 500){ p.d -= passCost(p.lv + 1); p.lv++; got.push(p.lv); }
   careerSave(); return got;
 }
 let runGems = 0, runPassLv = 0;
+const passClaimed = n=>n <= PASS_MAX ? !!career.pass.cl[n] : (n - PASS_MAX) <= career.pass.cx;
+function passPending(){ let c = 0; const p = career.pass; for(let n = 1; n <= Math.min(p.lv, PASS_MAX); n++) if(!p.cl[n]) c++; return c + Math.max(0, p.lv - PASS_MAX - p.cx); }
+function passCollect(n){                                                       // collect level n (a cycle level collects every cycle level up to it); returns the rewards text or ''
+  const p = career.pass; if(n < 1 || n > p.lv || passClaimed(n)) return '';
+  const txt = [];
+  if(n <= PASS_MAX){ p.cl[n] = true; txt.push(passItems(passGrant(n)).map(x=>x.t).join(' + ')); }
+  else { let k = 0; while(p.cx < n - PASS_MAX){ p.cx++; passGrant(PASS_MAX + p.cx); k++; } txt.push(k + '× Wooden chest'); }
+  careerSave(); return txt.join('');
+}
 function passWave(w){                                                          // called once for every completed wave
   const g = passGems(w), got = passAdd(g); runGems += g;
-  const top = got.length ? passItems(passRewards(got[got.length - 1])).map(x=>x.t).join(' + ') : '';
-  showToast(got.length ? `PASS LEVEL ${got[got.length - 1]}! ${top}` : `+${g} 💎 Pass (${career.pass.d}/${passCost(career.pass.lv + 1)})`, got.length ? 'diamond' : undefined);
+  showToast(got.length ? `PASS LEVEL ${got[got.length - 1]} UNLOCKED! Collect it in the Pass` : `+${g} 💎 Pass (${career.pass.d}/${passCost(career.pass.lv + 1)})`, got.length ? 'diamond' : undefined);
 }
 let pssR = null;
 function passMain(R){                                                          // the main item of a level: its cosmetic, else its best chest, else wild parts, else coins
@@ -2649,24 +2664,28 @@ function passModel(R, cv){                                                     /
     obj.traverse(o=>{ if(o.geometry) o.geometry.dispose(); });
   }catch(e){ const c2 = cv.getContext('2d'); if(c2){ c2.font = '90px sans-serif'; c2.textAlign = 'center'; c2.fillText(M.kind === 'chest' ? '📦' : M.kind === 'coin' ? '🪙' : '🎁', 130, 130); } }
 }
-function showPass(){
+function showPass(keepScroll){
   msg.classList.remove('hidden'); document.body.classList.remove('playing'); captureWarningEl.classList.remove('show');
   const p = career.pass, nxt = p.lv + 1, cost = passCost(nxt), shown = Math.max(PASS_MAX, p.lv + 3);
   let cards = '';
   for(let n = 1; n <= shown; n++){
-    const R = passRewards(n), its = passItems(R), done = n <= p.lv, cur = n === nxt, big = n%10 === 0 || R.cos.length, cyc = n > PASS_MAX;
-    cards += `<div class="pCard${done ? ' done' : ''}${cur ? ' cur' : ''}${big ? ' big' : ''}${n === 90 ? ' top' : ''}${cyc ? ' cyc' : ''}" data-n="${n}"><div class="pN">${done ? '✔ ' : ''}${n}</div>` +
+    const R = passRewards(n), its = passItems(R), done = n <= p.lv && passClaimed(n), can = n <= p.lv && !done, cur = n === nxt, big = n%10 === 0 || R.cos.length, cyc = n > PASS_MAX;
+    cards += `<div class="pCard${done ? ' done' : ''}${can ? ' can' : ''}${cur ? ' cur' : ''}${big ? ' big' : ''}${n === 90 ? ' top' : ''}${cyc ? ' cyc' : ''}" data-n="${n}"><div class="pN">${done ? '✔ ' : ''}${n}</div>` +
       `<canvas class="pMd" data-n="${n}" width="260" height="200"></canvas>` + its.map(x=>`<div class="pIt"${x.cos ? ` style="color:${RAR_COL[x.cos.r]}"` : ''}><span>${x.i}</span>${x.t}</div>`).join('') +
-      `<div class="pCost">${done ? 'Unlocked' : cur ? `${p.d}/${cost} 💎` : `${passCost(n)} 💎`}</div></div>`;
+      `<div class="pCost">${done ? 'Collected' : can ? 'Tap to collect' : cur ? `${p.d}/${cost} 💎` : `${passCost(n)} 💎`}</div></div>`;
   }
   const nextBig = [10, 20, 25, 30, 40, 45, 50, 60, 65, 70, 80, 90].find(x=>x > p.lv);
   msg.innerHTML = `<h1>Free Pass</h1><div class="hint">Level ${p.lv}${p.lv >= PASS_MAX ? ' · cycle: wooden chests' : ' / ' + PASS_MAX} · clear waves to earn 💎 (${passGems(1)} per wave on waves 1-10, 2 on 11-20, …)</div>
     <div class="pBar"><i style="width:${Math.min(100, p.d/cost*100)}%"></i><b>💎 ${p.d} / ${cost} for level ${nxt}</b></div>
-    <div class="pTrack" id="pTrack">${cards}</div>${nextBig ? `<div class="hint">Next big reward: level ${nextBig}</div>` : ''}<button id="pBack">Back</button>`;
+    <div class="pTrack" id="pTrack">${cards}</div>${passPending() ? `<button id="pAll" class="buy">Collect all (${passPending()})</button>` : ''}${nextBig ? `<div class="hint">Next big reward: level ${nextBig}</div>` : ''}<button id="pBack">Back</button>`;
   const tr = document.getElementById('pTrack'), cu = tr.querySelector('.cur');
   const mdl = cv=>{ if(cv.dataset.done) return; cv.dataset.done = '1'; passModel(passRewards(+cv.dataset.n), cv); };
   try{ const io = new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ io.unobserve(e.target); mdl(e.target); } }), {root:tr, rootMargin:'0px 300px'}); tr.querySelectorAll('.pMd').forEach(c=>io.observe(c)); }catch(e){ tr.querySelectorAll('.pMd').forEach(mdl); }
-  if(cu) tr.scrollLeft = Math.max(0, cu.offsetLeft - tr.clientWidth/2 + cu.offsetWidth/2);
+  const fc = tr.querySelector('.can') || cu;
+  if(typeof keepScroll === 'number') tr.scrollLeft = keepScroll; else if(fc) tr.scrollLeft = Math.max(0, fc.offsetLeft - tr.clientWidth/2 + fc.offsetWidth/2);
+  const got = txt=>{ if(txt){ Snd.play('chestOpen', null, 1); showToast('Collected: ' + txt, 'diamond'); } showPass(tr.scrollLeft); };
+  tr.querySelectorAll('.pCard.can').forEach(el=>el.onclick = ()=>got(passCollect(+el.dataset.n)));
+  const pa = document.getElementById('pAll'); if(pa) pa.onclick = ()=>{ let k = 0; for(let n = 1; n <= career.pass.lv; n++) if(!passClaimed(n) && passCollect(n)) k++; got(k + ' reward' + (k === 1 ? '' : 's')); };
   document.getElementById('pBack').onclick = ()=>{ Snd.play('click'); if(pssR){ try{ pssR.dispose(); }catch(e){} pssR = null; } showHome(); };
 }
 const flagTexCache = {};
@@ -2828,7 +2847,7 @@ function deliverShopChests(){                                            // owne
 function fnv8(str){ let h = 0x811c9dc5; for(let i = 0; i < str.length; i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return h.toString(16).padStart(8, '0'); }
 function saveCodeMake(){
   const c = career, d = {v:1, n:playerName, l:{w:loadout.weapon, f:loadout.finish},
-    c:{xp:c.xp, co:c.coins, bw:c.bestWave, bs:c.bestScore, ru:c.runs, dd:c.dailyDate, dw:c.dailyWave, dc:c.dailyClaimed ? 1 : 0, g:c.guns, p:c.parts, up:c.up, lc:Object.keys(c.lvc || {}).map(Number), wp:c.wild, fi:c.fid, pa:[c.pass.d, c.pass.lv], fr:(c.friends || []).map(f=>[f.id, f.name]), fs:c.fshow === false ? 0 : 1, co2:c.cos, ch:c.chests, sh:(()=>{ const t = shopState(); return {wf:t.woodFree ? 1 : 0, wb:t.woodBought, wt:t.woodT, ib:t.ironBought, it:t.ironT}; })()}};
+    c:{xp:c.xp, co:c.coins, bw:c.bestWave, bs:c.bestScore, ru:c.runs, dd:c.dailyDate, dw:c.dailyWave, dc:c.dailyClaimed ? 1 : 0, g:c.guns, p:c.parts, up:c.up, lc:Object.keys(c.lvc || {}).map(Number), wp:c.wild, fi:c.fid, pa:[c.pass.d, c.pass.lv, Object.keys(c.pass.cl).map(Number), c.pass.cx], fr:(c.friends || []).map(f=>[f.id, f.name]), fs:c.fshow === false ? 0 : 1, co2:c.cos, ch:c.chests, sh:(()=>{ const t = shopState(); return {wf:t.woodFree ? 1 : 0, wb:t.woodBought, wt:t.woodT, ib:t.ironBought, it:t.ironT}; })()}};
   const b = btoa(unescape(encodeURIComponent(JSON.stringify(d)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   return 'FFPS1-' + b + '-' + fnv8(b);
 }
@@ -2846,7 +2865,9 @@ function saveCodeParse(code){                                            // retu
   o.guns = {pistol:true}; o.parts = {}; for(const id in WEAPONS){ if(c.g && c.g[id] === true) o.guns[id] = true; if(c.p) o.parts[id] = I(c.p[id], 9999); }
   o.fid = (typeof c.fi === 'string' && /^[A-Z2-9]{8}$/.test(c.fi)) ? c.fi : career.fid; o.fshow = c.fs !== 0;
   o.friends = Array.isArray(c.fr) ? c.fr.slice(0, 30).filter(x=>Array.isArray(x) && /^[A-Z2-9]{8}$/.test(String(x[0]))).map(x=>({id:String(x[0]), name:(typeof x[1] === 'string' ? x[1] : 'Friend').replace(/[^\p{L}\p{N} _.\-]/gu, '').slice(0, 16) || 'Friend'})) : [];
-  o.pass = {d:I(c.pa && c.pa[0], 1e6), lv:I(c.pa && c.pa[1], 1e5)};
+  o.pass = {d:I(c.pa && c.pa[0], 1e6), lv:I(c.pa && c.pa[1], 1e5), cl:{}, cx:0};
+  if(c.pa && Array.isArray(c.pa[2])){ for(const n of c.pa[2].slice(0, 100)){ const k = I(n, 90); if(k >= 1 && k <= o.pass.lv) o.pass.cl[k] = true; } o.pass.cx = Math.min(Math.max(0, o.pass.lv - 90), I(c.pa[3], 1e5)); }
+  else { for(let n = 1; n <= Math.min(90, o.pass.lv); n++) o.pass.cl[n] = true; o.pass.cx = Math.max(0, o.pass.lv - 90); }      // (older codes: everything was collected automatically)
   o.wild = {}; for(const r of ['common','rare','epic','legendary']) o.wild[r] = I(c.wp && c.wp[r], 9999);
   o.lvc = {}; if(Array.isArray(c.lc)) for(const L of c.lc.slice(0, 200)){ const n = I(L, LV_MAX); if(n >= 1) o.lvc[n] = true; }
   o.up = {}; for(const id in GUN_UPG_TABLE){ o.up[id] = {}; for(const k of UPG_KEYS) o.up[id][k] = (k === 'f' && !GUN_UPG_TABLE[id].f) ? 0 : Math.min(5, I(c.up && c.up[id] && c.up[id][k], 5)); }
@@ -2901,6 +2922,13 @@ function showAccount(){
 }
 // ---- update card: shown once, the first time a player opens the game on a new version. To add one: put a new entry FIRST in UPDATES (same v as GAME_VERSION). ----
 const UPDATES = [
+  {v:'alpha 1.2.1', title:'Co-op rewards, Play Again & AWP scope', items:[
+    'NEW Pass rewards are collected by hand: tap a glowing level (or Collect all) on the Pass page. A red ! on the Pass button shows when something is waiting.',
+    'FIXED Clients now earn XP, coins, daily-mission progress and Pass diamonds for every wave the team clears, so they get their rewards at Game Over.',
+    'NEW Clients get a Play Again button after Game Over. It says Waiting for host… until the host starts a new game, and clients who did not press it are not pulled into the new game.',
+    'CHANGED AWP: SCOPE now keeps you looking through the scope all the time (click to fire) and comes before TOGGLE SCOPE in the mode list. NO SCOPE is 33% less accurate.',
+    'CHANGED Pistol: clicking still has no delay between shots, but Auto shoot now fires it once every 0.16 seconds.',
+    'CHANGED The AWP now starts in TOGGLE SCOPE mode (right click to scope in and out).']},
   {v:'alpha 1.2', title:'Free Pass, slot-machine chests & safety tools', items:[
     'NEW Free Pass (🎟 on the main menu): 90 reward levels, no payment. Clear waves to earn 💎 (1 per wave on waves 1-10, 2 on 11-20, and so on); they go into the Pass automatically. Every 10th level is a big reward, level 90 is the best, and after that it cycles wooden chests.',
     'FIXED Capes with designs on the inside (Royal, Flame, Aurora, Starfall, Champion\'s, red and blue clasps) now show them on the outside. Cosmetic lists are ordered Common, Rare, Epic, Legendary.',
@@ -2989,7 +3017,7 @@ function showHome(){
     <button class="hb hLoad" id="gunsBtn">🔫 Load out<small>${wname}</small></button>
     <button class="hb hCosm" id="cosmBtn">🎨 Cosmetics</button>
     <button class="hb hMp" id="mpBtn">🌐 Multiplayer</button>
-    <button class="hb hPass" id="passBtn">🎟 Free Pass<small>Level ${career.pass.lv}</small></button>
+    <button class="hb hPass" id="passBtn">${passPending() ? '<span class="hBang">!</span>' : ''}🎟 Free Pass<small>Level ${career.pass.lv}</small></button>
     <div class="hModel"></div>
     <button class="hb hDeploy" id="startBtn">Deploy</button>
     <button class="hb hModes" id="modesBtn" style="display:none">Gamemodes</button>
@@ -4318,7 +4346,7 @@ const moveScale = ()=> (curW.shootMove && triggerLive() && energyT <= 0) ? curW.
 const sprintShoot = ()=> energyT > 0 || loadout.weapon === 'pistol';       // energy drink or the pistol: you can fire while sprinting
 const sprintBlocked = ()=> !!(curW.noSprint && holdingGun() && !carriedEnemy && energyT <= 0);          // minigun: no sprinting while it's in your hands
 function toggleFireMode(){
-  if(loadout.weapon === 'awp' && holdingGun()){ awpMode = awpMode === 'none' ? 'toggle' : awpMode === 'toggle' ? 'hold' : 'none'; scoping = false; try{ localStorage.setItem('ffps_awpmode', awpMode); }catch(e){} setFireMode(fireMode); showToast('AWP: ' + AWP_LABEL[awpMode].toLowerCase()); return; }
+  if(loadout.weapon === 'awp' && holdingGun()){ awpMode = awpMode === 'none' ? 'hold' : awpMode === 'hold' ? 'toggle' : 'none'; scoping = false; try{ localStorage.setItem('ffps_awpmode', awpMode); }catch(e){} setFireMode(fireMode); showToast('AWP: ' + AWP_LABEL[awpMode].toLowerCase()); return; }
   if(curW.canAuto && !curW.autoOnly && holdingGun()) setFireMode(fireMode==='auto' ? 'semi' : 'auto'); }
 function doInteract(){            // E: throw the carried bean, open the chest you're looking at, or grab a downed bean
   if(carriedEnemy){ throwCarried(); }
@@ -4478,12 +4506,10 @@ document.body.addEventListener('mousedown', e=>{
   if(e.target.closest && e.target.closest('#pauseBtn')) return;
   if(!lockOK()){ tryLock(); return; }
   const tb = (!carriedEnemy) ? lookedTableBtn() : null; if(tb){ pressTableBtn(tb); return; }       // clicking a table button presses it instead of shooting
-  if(loadout.weapon === 'awp' && awpMode === 'hold' && holdingGun() && !carriedEnemy){ scoping = true; return; }   // AWP: hold to look through the scope, let go to fire
   triggerPress();
 });
 addEventListener('mouseup', ()=>{
   mouseDown = false;
-  if(scoping && awpMode === 'hold'){ const was = scopeOn(); scoping = false; if(was && fireCd <= 0 && lockOK()){ shoot(); fireCd = FIRE_INTERVAL; } }
 });
 document.addEventListener('pointerlockchange', ()=>{ if(document.pointerLockElement!==document.body){ mouseDown=false; scoping=false; } });
 
@@ -4504,7 +4530,7 @@ function shoot(){
   const alive = pool.filter(e=>e.state==='alive').map(e=>e.mesh);
   const blockers = worldMeshes.concat(chests.map(c=>c.group));
   for(let p=0;p<curW.pellets;p++){
-    const r = curW.spread*Math.pow(0.85, upN('Steady Aim'))*Math.sqrt(Math.random()), a = Math.random()*Math.PI*2;
+    const r = curW.spread*(loadout.weapon === 'awp' && awpMode === 'none' ? 1/0.67 : 1)*Math.pow(0.85, upN('Steady Aim'))*Math.sqrt(Math.random()), a = Math.random()*Math.PI*2;
     raycaster.setFromCamera({x:r*Math.cos(a), y:r*Math.sin(a)}, camera);
     let hits = raycaster.intersectObjects(alive, true);
     const wallHits = raycaster.intersectObjects(blockers, true);
@@ -5239,7 +5265,11 @@ function endGame(){
   document.getElementById('retryBtn').addEventListener('click', resetGame);
   document.getElementById('homeBtn').addEventListener('click', showHome);
   if(MP.role === 'host') mpSnap(true);
-  if(MP.role === 'guest'){ const rb = document.getElementById('retryBtn'); rb.textContent = 'Waiting for the host to restart…'; rb.disabled = true; rb.style.opacity = '.6'; }
+  if(MP.role === 'guest'){                                       // clients: Play Again joins the host's next game (or waits for it)
+    MP.again = false; MP.hostNew = false;
+    const rb0 = document.getElementById('retryBtn'), rb = rb0.cloneNode(true); rb0.replaceWith(rb);
+    rb.onclick = ()=>{ if(MP.hostNew){ MP.hostNew = false; resetGame(); } else { MP.again = true; rb.textContent = 'Waiting for host…'; rb.disabled = true; rb.style.opacity = '.7'; } };
+  }
   try{ document.body.classList.remove('playing'); mouseDown = false; joyReset(); document.exitPointerLock(); }catch(e){}
 }
 
@@ -5284,7 +5314,7 @@ function resetGame(){
 
 // ---------- co-op multiplayer (room capability) ----------
 // Host-authoritative: the host runs beans, waves and the flag and broadcasts snapshots (~10/s); guests mirror them and send their hits back.
-const GAME_VERSION = 'alpha 1.2';
+const GAME_VERSION = 'alpha 1.2.1';
 let CAPNOW = false;
 const verTag = ()=>`<div style="position:fixed;right:12px;bottom:8px;font:600 12px system-ui,sans-serif;color:#9fb3cc;opacity:.8;pointer-events:none">Version ${GAME_VERSION}</div>`;
 const MP = {seq:0, hitLog:[], acks:{}, pub:false, pubOff:null, advKey:'', advT:0, lobby:false, startCap:null, startGrp:null, guestLobby:false, role:null, code:'', room:null, ns:null, hostPeer:null, began:false, byId:new Map(), pend:{}, pendT:0, snapT:0, avatars:new Map(), ghosts:new Map(), fps:0, ping:null, fN:0, fT0:0, pgT:0, itemT:0, hadItems:false, offs:[], warned:false};
@@ -5824,6 +5854,12 @@ function mpSnap(go){
   while(JSON.stringify(o).length > 3900 && b.length) b.pop();
   MP.room.emit('snap', o).catch(()=>{});
 }
+function mpGuestWaveReward(w){                                                // guests earn what the host earns for a cleared wave (xp, coins, daily mission, boss bonus)
+  if(career.dailyDate !== todayKey){ career.dailyDate = todayKey; career.dailyWave = 0; career.dailyClaimed = false; }
+  career.dailyWave = Math.max(career.dailyWave || 0, w); career.bestWave = Math.max(career.bestWave, w);
+  careerAward(25 + w*5, 10 + w*2, 'wave clear');
+  if(w - 1 === BOSS_WAVE || w - 1 === CHOPPER_WAVE) careerAward(200, 100, 'boss defeated');
+}
 function mpOnSnap(m){
   if(MP.role !== 'guest' || m.isMe) return;
   const d = m.data;
@@ -5835,14 +5871,14 @@ function mpOnSnap(m){
   if(d.lb && !gameOver){ if(!MP.guestLobby){ MP.guestLobby = true; showToast('Waiting for the host to start the game…', null, true); } }
   else if(MP.guestLobby){ MP.guestLobby = false; toastEl.classList.remove('show'); startCountdown(); }
   if(!MP.began){ MP.began = true; mpPubStop(); mpBadgeUpdate(); resetGame(); }
-  else if(gameOver && !d.go && started) resetGame();                                    // the host restarted
+  else if(gameOver && !d.go && started && +d.f > 0){ MP.hostNew = true; if(MP.again){ MP.again = false; resetGame(); } }          // the host started a new game: only players who pressed Play Again go in
   if(d.ps && typeof d.ps === 'object'){                                                  // everyone's own score; ours is the one on screen
     const ps = {}; for(const k of Object.keys(d.ps).slice(0, 12)){ const v = +d.ps[k]; if(k.length < 80 && Number.isFinite(v)) ps[k] = Math.max(0, Math.min(1e7, Math.floor(v))); }
     MP.pscore = ps; const me0 = MP.room && MP.room.peers().find(x=>x.isMe); if(me0){ score = ps[me0.peer] | 0; scoreEl.textContent = score; }
   }
-  if(d.go){ flagHP = 0; barFill.style.width = '0%'; if(!gameOver) endGame(); return; }
+  if(d.go){ MP.hostNew = false; flagHP = 0; barFill.style.width = '0%'; if(!gameOver) endGame(); return; }
   if(gameOver) return;
-  if(d.w !== wave){ if(d.w === wave + 1 && wave >= 1) passWave(wave); wave = d.w; waveEl.textContent = wave; showWaveSplash(wave); }
+  if(d.w !== wave){ if(d.w === wave + 1 && wave >= 1){ passWave(wave); mpGuestWaveReward(wave); } wave = d.w; waveEl.textContent = wave; showWaveSplash(wave); }
   FLAG_MAX = d.fm > 0 ? d.fm : FLAG_MAX; flagHP = Math.max(0, +d.f || 0); applyFlagSkin(typeof d.fk === 'string' ? d.fk.slice(0, 20) : '');
   waveTarget = Math.max(0, d.l|0); spawnedThisWave = 0;
   const me = MP.room && MP.room.peers().find(x=>x.isMe), ack = (d.ak && me && Number.isInteger(d.ak[me.peer])) ? d.ak[me.peer] : 0;
@@ -6544,7 +6580,7 @@ function frame(now){
     if(mouseDown && fireCd<=0 && lockOK() && (!curW.spinUp || mgSpin >= 1)){ shoot(); fireCd += FIRE_INTERVAL; }
     else if(autoAim && !mouseDown && fireCd<=0 && (!curW.spinUp || mgSpin >= 1)){        // auto shoot: fire while a bean is under the crosshair
       if(curW.burst && fireMode === 'semi'){ if(burstLeft === 0) burstLeft = curW.burst; }
-      else { shoot(); fireCd += FIRE_INTERVAL; }
+      else { shoot(); fireCd += curW.semiOnly ? 0.16 : FIRE_INTERVAL; }                // the pistol has no delay when you click, but auto shoot fires it every 0.16 s
     }
     if(burstLeft > 0){
       if(reloading || carriedEnemy || (sprinting && !sprintShoot()) || ammoInMag <= 0 || !holdingGun()) burstLeft = 0;   // interrupted: drop the rest of the burst
